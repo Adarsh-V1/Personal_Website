@@ -8,12 +8,15 @@ import currency from './currency.png'
 import whatsApp from './whatsApp.png'
 import simulation from './simulation.png'
 import wordle from './wordle.png'
-
+import viralSight from './viralSight.png'
 import yolo from './yolo.png'
+import convoLink from "./convoLink.png"
 
 const ig = {
   
+   convoLink,
    yolo,
+   viralSight,
    wordle,
    simulation,
    win_view,

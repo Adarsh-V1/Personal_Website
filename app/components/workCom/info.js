@@ -2,14 +2,14 @@ import ig from "../../assets/export"
 
 const projectInfo = [
    {
-      'name':'Keet',
-      'desc':'Get Copyright free Images and use them freely in your project, work or something creative.',
-      'techUsed':[' Tailwind ',' React JS ',' Unsplash API '],
-      'winView':ig.win_view,
+      'name':'ViralSight',
+      'desc':'Video Virality Analytics & Sharing Platform - Analyze video performance, predict virality, and share insights with an intuitive dashboard.',
+      'techUsed':['Next JS',' React JS ','Node JS ',' Tailwind ',' Prisma ',' MongoDB ',"trpc"],
+      'winView':ig.viralSight,
       'mbView':"",
-      'liveLink':'https://keet-20.onrender.com',
+      'liveLink':'https://viral-sight-nextjs.vercel.app/',
       'codeLink':'https://github.com/Stack-Sage/image-search-dark',
-      'main':'React JS'
+      'main':'Next JS'
 
    },
    {   
@@ -24,71 +24,17 @@ const projectInfo = [
 
    },
    {   
-      'name':'Password Generator',
-      'desc':"Get Free Strong password fully customized. Don't get hacked again! ",
-      'techUsed':[' Tailwind ',' React JS '],
-         'winView':ig.pass,
+      'name':'ConvoLink',
+      'desc':"Real-Time Chat & Video Calling platform with AI Insights - Connect, chat, and video call with real-time AI-generated insights for enhanced communication.",
+      'techUsed':[' Tailwind ',' React JS ', ' Next JS ' ,' Convex ',' WebRTC '],
+         'winView':ig.convoLink,
 
-      'liveLink':'https://passgen-01.onrender.com/',
-      'codeLink':'https://github.com/Stack-Sage/PasswordGenerator',
-      'main':'React JS'
-
-   },
-   {   
-      'name':'Currency-converter',
-      'desc':"Convert and Check You currency in respect to any other!  ",
-      'techUsed':[' Tailwind ',' React JS '],
-      'winView':ig.currency,
-
-      'liveLink':'https://currency-converter2-pxst.onrender.com',
-      'codeLink':'https://github.com/Stack-Sage/currency_converter',
-      'main':'React JS'
-
-   },
-   {   
-      'name':'WhatsApp Chat Analyzer',
-      'desc':"Aanlyze and get insights , trends of your whatsApp Chat either of Groups or two Individual chats. ",
-      'techUsed':[' Python ',' Streamlit ',' Linear Regression ',' Matplotlib ',' CSS '],
-      'winView':ig.whatsApp,
-
-      'liveLink':'https://chat-insights-1223.onrender.com/',
-      'codeLink':'https://github.com/Stack-Sage/WhatsApp_chat_analyzer',
-      'main':'Python'
-
-   },
-   {   
-      'name':'Add Your Todos',
-      'desc':"Add your daily todos and task! Stay updated and tuned with your work! ",
-      'techUsed':[' React ',' Tailwind '],
-      'winView':ig.todo,
-
-      'liveLink':'https://todo-112.onrender.com/',
-      'codeLink':'https://github.com/Stack-Sage/todo-redux',
-      'main':'React JS'
-
-   },
-   {   
-      'name':'Tiny Piano',
-      'desc':"Wanna Try playing a Piano! See If You've got any skills!",
-      'techUsed':[' Html ',' CSS ', ' JavaScript '],
-      'winView':ig.piano,
-
-      'liveLink':'https://tinypiano-2-12.onrender.com/',
-      'codeLink':'https://github.com/Stack-Sage/piano',
-      'main':'JavaScript'
-
-   },
-   {   
-      'name':' Object Threat Detection ',
-      'desc':"Yolo Based Object Threat Detection! or basic object detection ! note -> still in progress ",
-      'techUsed':['Next JS ',' Tailwind ', ' Python ',' YOLOv11 ',' API Handling ',' Fast API '],
-      'winView':ig.yolo,
-
-      'liveLink':'https://object-detection23412.onrender.com/',
-      'codeLink':'https://github.com/Stack-Sage/Object_Detection',
+      'liveLink':'https://convo-link-delta.vercel.app/',
+      'codeLink':'https://github.com/Adarsh-V1/chatRoom/',
       'main':'Next JS'
 
    },
+  
    {   
       'name':' Space Stimulation Game ',
       'desc':"A Space Stiumlation game designed with 3d models and level up points to advance the timeline of space and universe note - still in progress ",
