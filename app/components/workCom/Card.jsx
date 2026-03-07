@@ -95,7 +95,7 @@ const Card = () => {
             {filteredProjects.map((project, index) => (
               <div
                 key={index}
-                className="flex lg:scale-90 theme-card  shadow-md shadow-neutral-700 rounded-lg bg-white dark:bg-gradient-to-br from-black via-slate-950 to-black hover:shadow-lg transition-transform duration-300 ease-in-out  mb-0 lg:mb-10 md:mb-10 md:max-w-xl md:flex-row flex-col     scale-[0.75]  md:scale-[0.85]  "
+                className="flex lg:scale-90 theme-card  shadow-md shadow-neutral-700 rounded-lg bg-white dark:bg-linear-to-br from-black via-slate-950 to-black hover:shadow-lg transition-transform duration-300 ease-in-out  mb-0 lg:mb-10 md:mb-10 md:max-w-xl md:flex-row flex-col     scale-[0.75]  md:scale-[0.85]  "
               >
                 <img
                   className="h-96 max-sm:h-48 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"

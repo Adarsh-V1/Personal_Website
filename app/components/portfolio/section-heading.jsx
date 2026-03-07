@@ -19,7 +19,7 @@ export default function SectionHeading({
       <p className="mb-4 text-xs font-semibold uppercase tracking-[0.32em] text-teal-700">
         {eyebrow}
       </p>
-      <h2 className="text-pretty font-[family-name:var(--font-space-grotesk)] text-3xl text-slate-900 sm:text-4xl md:text-5xl">
+      <h2 className="text-pretty font-(family-name:--font-space-grotesk) text-3xl text-slate-900 sm:text-4xl md:text-5xl">
         {title}
       </h2>
       <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg">

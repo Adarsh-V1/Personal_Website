@@ -142,10 +142,10 @@
   }
 
   .portfolio-panel {
-    @apply mx-auto flex min-h-[100svh] w-full max-w-7xl scroll-mt-24 items-start px-5 pb-10 pt-28 sm:px-8 sm:pb-14 sm:pt-32 lg:px-10 lg:pt-32;
+    @apply mx-auto flex min-h-svh w-full max-w-7xl scroll-mt-24 items-start px-5 pb-10 pt-28 sm:px-8 sm:pb-14 sm:pt-32 lg:px-10 lg:pt-32;
   }
 
   .page-top-shell {
-    @apply min-h-[100svh] pt-24 sm:pt-28 lg:pt-32;
+    @apply min-h-svh pt-24 sm:pt-28 lg:pt-32;
   }
 }
