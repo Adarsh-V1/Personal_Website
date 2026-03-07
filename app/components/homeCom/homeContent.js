@@ -1,9 +1,9 @@
 
 export const skills = {
-   frontend: ["React", "Next.js", "JavaScript", "HTML", "CSS", "Tailwind"],
-   backend: ["Node.js", "Express", "MongoDB", "Firebase"],
-   languages: ["Python", "JavaScript", "C++"],
-   tools: ["Git", "VS Code", "Postman", "Vercel"],
+  frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "TanStack Query", "Zustand"],
+  backend: ["Node.js", "Hono.js", "tRPC", "Prisma", "PostgreSQL", "MongoDB", "Better Auth", "NextAuth.js"],
+  languages: ["TypeScript", "JavaScript", "SQL"],
+  tools: ["Git", "GitHub", "Postman", "Vercel", "GitHub Copilot", "Cursor", "Convex"],
    other: ["Chess Tactics ", "Debugging Rage "]
  };
  

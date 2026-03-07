@@ -1,39 +1,18 @@
-'use client'
-import Image from "next/image";
+import PortfolioShell from "./components/portfolio/portfolio-shell";
+import { buildPageMetadata } from "../lib/seo";
 
-
-import { Button } from "./components/ui/button";
-
-
-import AnimatedWrapper from "./components/homeCom/AnimatedWrapper";
-import AnimatedWrapper2 from "./components/homeCom/AnimatedWrapper2";
-
-import Body from "./components/homeCom/Body"
-import {TracingBeam} from "./components/ui/tracing-beam"
-
-
-
+export const metadata = buildPageMetadata({
+  description:
+    "Portfolio of Adarsh Pathania, a full-stack developer focused on Next.js, React, TypeScript, Node.js, Prisma, MongoDB, scalable web apps, and polished product engineering.",
+  path: "/",
+  keywords: [
+    "Adarsh Pathania full stack developer",
+    "Adarsh Pathania portfolio website",
+    "Next.js portfolio",
+    "React TypeScript developer",
+  ],
+});
 
 export default function Home() {
-  
-  return (
-    <>
-      <div className="z-10 min-h-screen  max-w-screen min-w-[100vw] ">
-        <div className=" flex  pt-[100px] lg:pt-[0px] flex-col dark:bg-gradient-to-b dark:from-[#05011e] dark:via-black dark:to-[#070122] theme-bg
- ">
-          <div className=" min-w-[100vw]  ">
-            <AnimatedWrapper2>
-         
-           
-            <Body/>
-           
-        
-            </AnimatedWrapper2>
-          </div>
-          
-          
-        </div>
-      </div>
-    </>
-  );
+  return <PortfolioShell />;
 }

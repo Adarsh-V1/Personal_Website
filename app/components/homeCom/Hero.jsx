@@ -19,7 +19,7 @@ const Hero = () => {
 
   return (
 
-    <div className="flex justify-around md:flex-row flex-col lg:flex-row  lg:w-full max-w-screen min-w-[100vw] text-blue-950  ">
+    <div className="flex justify-around md:flex-row flex-col lg:flex-row  lg:w-full max-w-screen min-w-screen text-blue-950  ">
 
     <div className="relative max-w-screen min-h-screen lg:mt-10 md:mt-10 flex flex-col lg:flex-col -mt-56 items-center justify-center text-center gap-10  mx-6 lg:px-20 text-blue-950 overflow-hidden">
       {/* Image Section */}

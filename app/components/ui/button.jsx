@@ -40,6 +40,7 @@ function Button({
   variant,
   size,
   asChild = false,
+  feedback = true,
   ...props
 }) {
   const Comp = asChild ? Slot : "button"
@@ -47,6 +48,7 @@ function Button({
   return (
     <Comp
       data-slot="button"
+      data-ui-feedback={feedback ? "" : undefined}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props} />
   );

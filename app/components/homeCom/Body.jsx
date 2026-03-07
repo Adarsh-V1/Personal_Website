@@ -12,7 +12,7 @@ const Body = () => {
 
   return (
     <div>
-      <div className="flex scale-75 md:scale-90 lg:scale-90 min-w-[100vw]">
+      <div className="flex scale-75 md:scale-90 lg:scale-90 min-w-screen">
         <Hero/>
       </div>
     

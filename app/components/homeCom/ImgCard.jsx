@@ -43,7 +43,7 @@ const SkillsGrid = () => {
           variants={cardVariant}
           whileHover="hover"
           whileTap="tap"
-          className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 dark:from-black dark:via-gray-900 dark:to-gray-800
+          className="bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 dark:from-black dark:via-gray-900 dark:to-gray-800
                      rounded-2xl w-full max-w-xs h-72 flex flex-col items-center justify-center p-6 text-center cursor-pointer
                      text-white shadow-lg"
         >

@@ -42,7 +42,7 @@ export default function ServicesPage() {
   ];
 
   return (
-    <div className=" h-full w-full min-h-screen flex justify-center items-center flex-col dark:bg-gradient-to-br  dark:from-cyan-950 dark:via-black contrast-125  dark:to-cyan-950  ">
+    <div className=" h-full w-full min-h-screen flex justify-center items-center flex-col dark:bg-linear-to-br  dark:from-cyan-950 dark:via-black contrast-125  dark:to-cyan-950  ">
       
       <div className="  items-center ">
 
