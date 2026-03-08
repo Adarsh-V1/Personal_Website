@@ -1,18 +1,37 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 
 import AnimatedBackdrop from "../components/animated-backdrop";
-import { AnimatedPinDemo } from "../components/contactCom/Social";
-import { GlobeDemo } from "../components/contactCom/Globe";
 import ContactForm from "../components/contactCom/ContactForm";
+
+const AnimatedPinDemo = dynamic(
+  () => import("../components/contactCom/Social").then((module) => module.AnimatedPinDemo),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[24rem] w-full rounded-3xl border border-cyan-400/20 bg-cyan-400/5" />
+    ),
+  }
+);
+
+const GlobeDemo = dynamic(
+  () => import("../components/contactCom/Globe").then((module) => module.GlobeDemo),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[20rem] w-[20rem] rounded-full border border-cyan-400/20 bg-cyan-400/10 blur-[1px]" />
+    ),
+  }
+);
 
 const ContactPageContent = () => {
   return (
     <main className="relative isolate w-full min-h-screen overflow-hidden bg-slate-950 text-white">
       <AnimatedBackdrop variant="contactPage" />
 
-      <div className="absolute left-0 -top-28 z-20 w-full items-center justify-center saturate-100 contrast-100 transition-[transform,filter] duration-1000 ease-in-out hover:hue-rotate-180 hover:saturate-150 hover:contrast-150 dark:-hue-rotate-180 dark:invert lg:left-4/12 lg:top-52 lg:z-30 lg:h-fit lg:w-fit">
+      <div className="absolute left-0 -top-28 z-20 hidden w-full items-center justify-center saturate-100 contrast-100 transition-[transform,filter] duration-1000 ease-in-out hover:hue-rotate-180 hover:saturate-150 hover:contrast-150 dark:-hue-rotate-180 dark:invert lg:flex lg:left-4/12 lg:top-52 lg:z-30 lg:h-fit lg:w-fit">
         <GlobeDemo />
       </div>
 

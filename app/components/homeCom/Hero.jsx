@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Cover } from "../ui/cover";
 import { FlipWords } from "../ui/flip-words";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import React, { useState, useEffect } from "react";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import Card from "./Cube";
@@ -97,14 +97,14 @@ const Hero = () => {
           <div className="flex gap-10 mt-2">
             <motion.a
               whileHover={{ scale: 1.2 }}
-              href="https://github.com/Stack-Sage"
+              href="https://github.com/Adarsh-V1"
               target="_blank"
               >
               <FaGithub size={28} />
             </motion.a>
             <motion.a
               whileHover={{ scale: 1.2 }}
-              href="https://linkedin.com/in/adarsh-pathania177/"
+              href="https://www.linkedin.com/in/adarshpathania04/"
               target="_blank"
               >
               <FaLinkedin size={28} />

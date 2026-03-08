@@ -9,19 +9,21 @@ export const navItems = [
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "experience", label: "Experience" },
+  { id: "tech-stack", label: "Stack" },
+  { id: "achievements", label: "Achievements" },
   { id: "contact", label: "Contact" },
 ];
 
 export const socialLinks = [
   {
     label: "GitHub",
-    href: "https://github.com/Adarsh",
-    shortLabel: "github.com/Adarsh",
+    href: "https://github.com/Adarsh-V1",
+    shortLabel: "github.com/Adarsh-V1",
   },
   {
     label: "LinkedIn",
-    href: "https://linkedin.com/in/Adarsh",
-    shortLabel: "linkedin.com/in/Adarsh",
+    href: "https://www.linkedin.com/in/adarshpathania04/",
+    shortLabel: "linkedin.com/in/adarshpathania04",
   },
   {
     label: "Email",
@@ -230,37 +232,37 @@ export const techStack = [
 
 export const achievementItems = [
   {
-    value: "Next.js",
-    label: "production work",
+    value: "2000+",
+    label: "Chess rating",
     description:
-      "Currently contributing to a production-grade application instead of limiting the work to portfolio-only experiments.",
+      "State-level chess player with a 2000+ rating and a 4-0 individual record at state-level competition.",
   },
   {
-    value: "Type-safe",
-    label: "delivery approach",
+    value: "2x Gold",
+    label: "IBM ICE Day",
     description:
-      "I prefer APIs, schemas, and frontend flows that stay strongly typed from development through shipping.",
+      "Gold medal winner two times at IBM ICE Day in 2024 and 2025.",
   },
   {
-    value: "Full-stack",
-    label: "core skill set",
+    value: "AI / ML / DL / NLP",
+    label: "Project presentation",
     description:
-      "Strong across frontend architecture, backend services, database tooling, and modern product-focused implementation.",
+      "Project presentation work focused on AI, machine learning, deep learning, and natural language processing contexts.",
   },
 ];
 
 export const contactCards = [
   {
-    title: "Best fit",
-    detail: "Full-stack products, SaaS dashboards, modern landing pages, and polished interfaces backed by reliable APIs.",
+    title: "Future goals",
+    detail: "Actively building toward stronger DevOps execution and React Native delivery for cross-platform product work.",
   },
   {
-    title: "Current stack",
-    detail: "Next.js, React, TypeScript, Node.js, Hono.js, tRPC, Prisma, PostgreSQL, MongoDB, Zustand, TanStack Query, and shadcn/ui.",
+    title: "Further exploration",
+    detail: "Exploring more backend architectures while going deeper into NLP and deep learning model implementation.",
   },
   {
-    title: "Direct contact",
-    detail: "adarsh.pathania.04@gmail.com • +91 78890 78854",
+    title: "Collaboration",
+    detail: "If you want to collaborate on product, AI, or engineering ideas, reach out directly on LinkedIn or email.",
   },
 ];
 

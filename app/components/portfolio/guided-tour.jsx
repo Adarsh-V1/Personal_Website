@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, ArrowRight, CornerDownLeft, X } from "lucide-react";
 import { Button } from "../ui/button";
 

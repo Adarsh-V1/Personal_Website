@@ -1,11 +1,11 @@
-"use client";;
-import { useEffect, useRef, useState } from "react";
+"use client";
+import { useEffect, useMemo, useRef } from "react";
 import { Color, Scene, Fog, PerspectiveCamera, Vector3 } from "three";
 import ThreeGlobe from "three-globe";
 import { useThree, Canvas, extend } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
-import countries from '../../data/globe.json'
+import countries from "../../data/globe.json";
 
 extend({ ThreeGlobe });
 
@@ -13,55 +13,36 @@ const RING_PROPAGATION_SPEED = 3;
 const aspect = 1.2;
 const cameraZ = 300;
 
-let numbersOfRings = [0];
-
 export function Globe({
   globeConfig,
   data
 }) {
-  const [globeData, setGlobeData] = useState(null);
-
   const globeRef = useRef(null);
 
-  const defaultProps = {
-    pointSize: 1,
-    atmosphereColor: "#ffffff",
-    showAtmosphere: true,
-    atmosphereAltitude: 0.1,
-    polygonColor: "rgba(255,255,255,0.7)",
-    globeColor: "#1d072e",
-    emissive: "#000000",
-    emissiveIntensity: 0.1,
-    shininess: 0.9,
-    arcTime: 2000,
-    arcLength: 0.9,
-    rings: 1,
-    maxRings: 3,
-    ...globeConfig,
-  };
+  const defaultProps = useMemo(
+    () => ({
+      pointSize: 1,
+      atmosphereColor: "#ffffff",
+      showAtmosphere: true,
+      atmosphereAltitude: 0.1,
+      polygonColor: "rgba(255,255,255,0.7)",
+      globeColor: "#1d072e",
+      emissive: "#000000",
+      emissiveIntensity: 0.1,
+      shininess: 0.9,
+      arcTime: 2000,
+      arcLength: 0.9,
+      rings: 1,
+      maxRings: 3,
+      ...globeConfig,
+    }),
+    [globeConfig]
+  );
 
-  useEffect(() => {
-    if (globeRef.current) {
-      _buildData();
-      _buildMaterial();
-    }
-  }, [globeRef.current]);
-
-  const _buildMaterial = () => {
-    if (!globeRef.current) return;
-
-    const globeMaterial = globeRef.current.globeMaterial();
-    globeMaterial.color = new Color(globeConfig.globeColor);
-    globeMaterial.emissive = new Color(globeConfig.emissive);
-    globeMaterial.emissiveIntensity = globeConfig.emissiveIntensity || 0.1;
-    globeMaterial.shininess = globeConfig.shininess || 0.9;
-  };
-
-  const _buildData = () => {
-    const arcs = data;
-    let points = [];
-    for (let i = 0; i < arcs.length; i++) {
-      const arc = arcs[i];
+  const globeData = useMemo(() => {
+    const points = [];
+    for (let i = 0; i < data.length; i += 1) {
+      const arc = data[i];
       const rgb = hexToRgb(arc.color);
       points.push({
         size: defaultProps.pointSize,
@@ -79,31 +60,32 @@ export function Globe({
       });
     }
 
-    // remove duplicates for same lat and lng
-    const filteredPoints = points.filter((v, i, a) =>
-      a.findIndex((v2) =>
-        ["lat", "lng"].every((k) => v2[k] === v[k])) === i);
+    return points.filter(
+      (value, index, array) =>
+        array.findIndex((point) => point.lat === value.lat && point.lng === value.lng) === index
+    );
+  }, [data, defaultProps.pointSize]);
 
-    setGlobeData(filteredPoints);
+  const _buildMaterial = () => {
+    if (!globeRef.current) return;
+
+    const globeMaterial = globeRef.current.globeMaterial();
+    globeMaterial.color = new Color(defaultProps.globeColor);
+    globeMaterial.emissive = new Color(defaultProps.emissive);
+    globeMaterial.emissiveIntensity = defaultProps.emissiveIntensity || 0.1;
+    globeMaterial.shininess = defaultProps.shininess || 0.9;
   };
 
   useEffect(() => {
-    if (globeRef.current && globeData) {
-      globeRef.current
-        .hexPolygonsData(countries.features)
-        .hexPolygonResolution(3)
-        .hexPolygonMargin(0.7)
-        .showAtmosphere(defaultProps.showAtmosphere)
-        .atmosphereColor(defaultProps.atmosphereColor)
-        .atmosphereAltitude(defaultProps.atmosphereAltitude)
-        .hexPolygonColor((e) => {
-          return defaultProps.polygonColor;
-        });
-      startAnimation();
-    }
-  }, [globeData]);
+    _buildMaterial();
+  }, [
+    defaultProps.emissive,
+    defaultProps.emissiveIntensity,
+    defaultProps.globeColor,
+    defaultProps.shininess,
+  ]);
 
-  const startAnimation = () => {
+  const _startAnimation = () => {
     if (!globeRef.current || !globeData) return;
 
     globeRef.current
@@ -140,19 +122,44 @@ export function Globe({
   };
 
   useEffect(() => {
+    if (!globeRef.current || !globeData.length) return;
+
+    globeRef.current
+      .hexPolygonsData(countries.features)
+      .hexPolygonResolution(3)
+      .hexPolygonMargin(0.7)
+      .showAtmosphere(defaultProps.showAtmosphere)
+      .atmosphereColor(defaultProps.atmosphereColor)
+      .atmosphereAltitude(defaultProps.atmosphereAltitude)
+      .hexPolygonColor(() => defaultProps.polygonColor);
+
+    _startAnimation();
+  }, [
+    defaultProps.arcLength,
+    defaultProps.arcTime,
+    defaultProps.atmosphereAltitude,
+    defaultProps.atmosphereColor,
+    defaultProps.maxRings,
+    defaultProps.polygonColor,
+    defaultProps.rings,
+    defaultProps.showAtmosphere,
+    globeData,
+  ]);
+
+  useEffect(() => {
     if (!globeRef.current || !globeData) return;
 
     const interval = setInterval(() => {
       if (!globeRef.current || !globeData) return;
-      numbersOfRings = genRandomNumbers(0, data.length, Math.floor((data.length * 4) / 5));
+      const numbersOfRings = genRandomNumbers(0, data.length, Math.floor((data.length * 2) / 5));
 
       globeRef.current.ringsData(globeData.filter((d, i) => numbersOfRings.includes(i)));
-    }, 2000);
+    }, 3000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [globeRef.current, globeData]);
+  }, [data.length, globeData]);
 
   return (<>
     <threeGlobe ref={globeRef} />
@@ -163,20 +170,30 @@ export function WebGLRendererConfig() {
   const { gl, size } = useThree();
 
   useEffect(() => {
-    gl.setPixelRatio(window.devicePixelRatio);
+    gl.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
     gl.setSize(size.width, size.height);
     gl.setClearColor(0xffaaff, 0);
-  }, []);
+  }, [gl, size.height, size.width]);
 
   return null;
 }
 
 export function World(props) {
   const { globeConfig } = props;
-  const scene = new Scene();
-  scene.fog = new Fog(0xffffff, 400, 2000);
+  const scene = useMemo(() => {
+    const nextScene = new Scene();
+    nextScene.fog = new Fog(0xffffff, 400, 2000);
+    return nextScene;
+  }, []);
+  const camera = useMemo(() => new PerspectiveCamera(50, aspect, 180, 1800), []);
+
   return (
-    (<Canvas scene={scene} camera={new PerspectiveCamera(50, aspect, 180, 1800)}>
+    (<Canvas
+      dpr={[1, 1.25]}
+      gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
+      scene={scene}
+      camera={camera}
+    >
       <WebGLRendererConfig />
       <ambientLight color={globeConfig.ambientLight} intensity={0.6} />
       <directionalLight
@@ -195,7 +212,7 @@ export function World(props) {
         enableZoom={false}
         minDistance={cameraZ}
         maxDistance={cameraZ}
-        autoRotateSpeed={1}
+        autoRotateSpeed={0.6}
         autoRotate={true}
         minPolarAngle={Math.PI / 3.5}
         maxPolarAngle={Math.PI - Math.PI / 3} />

@@ -1,10 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 
 import AnimatedBackdrop from "../components/animated-backdrop";
-import { HoverEffect } from "../components/servicesCom/HoverEffect";
-import ProjectForm from "../components/servicesCom/ServiceForm";
+
+const HoverEffect = dynamic(
+  () => import("../components/servicesCom/HoverEffect").then((module) => module.HoverEffect),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="grid w-full grid-cols-1 gap-4 py-20 md:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div
+            key={index}
+            className="h-48 rounded-3xl border border-cyan-200/20 bg-cyan-300/5"
+          />
+        ))}
+      </div>
+    ),
+  }
+);
+
+const ProjectForm = dynamic(() => import("../components/servicesCom/ServiceForm"), {
+  ssr: false,
+});
 
 const services = [
   {

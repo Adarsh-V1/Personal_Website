@@ -7,10 +7,45 @@ export default function nextConfig(phase) {
     // Keep build artifacts separate so `next build` does not corrupt the
     // active `.next` dev cache when local validation runs in parallel.
     distDir: isDevServer ? ".next" : ".next-build",
-    output: "export",
+    reactStrictMode: true,
+    poweredByHeader: false,
+    compress: true,
+    experimental: {
+      optimizePackageImports: ["lucide-react"],
+    },
     images: {
-      unoptimized: true,
-      domains: ["images.unsplash.com"],
+      formats: ["image/avif", "image/webp"],
+      remotePatterns: [
+        {
+          protocol: "https",
+          hostname: "images.unsplash.com",
+        },
+        {
+          protocol: "https",
+          hostname: "www.jbg.org.uk",
+        },
+        {
+          protocol: "https",
+          hostname: "www.legitsecurity.com",
+        },
+      ],
+    },
+    async headers() {
+      if (isDevServer) {
+        return [];
+      }
+
+      return [
+        {
+          source: "/images/:path*",
+          headers: [
+            {
+              key: "Cache-Control",
+              value: "public, max-age=31536000, immutable",
+            },
+          ],
+        },
+      ];
     },
   };
 }

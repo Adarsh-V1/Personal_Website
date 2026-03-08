@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { FaReact, FaPython, FaJs, FaChess } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { motion } from "motion/react";
 
 const skills = [
   { title: 'React.js', description: 'Building interactive UIs with reusable components.', icon: <FaReact /> },

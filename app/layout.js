@@ -1,8 +1,10 @@
-import { Manrope, Space_Grotesk } from "next/font/google";
+import { Cinzel, Manrope, Space_Grotesk, Spectral } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import LenisWrapper from "./components/LenisWrapper";
 import UiFeedback from "./components/ui-feedback";
+import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange";
+import { ThemeProvider } from "./components/theme-provider";
 import { getSiteUrl, getStructuredDataGraph, siteConfig } from "../lib/seo";
 
 const manrope = Manrope({
@@ -13,6 +15,17 @@ const manrope = Manrope({
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
+});
+
+const cinzel = Cinzel({
+  variable: "--font-lotm-heading",
+  subsets: ["latin"],
+});
+
+const spectral = Spectral({
+  variable: "--font-lotm-body",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata = {
@@ -70,19 +83,29 @@ export default function RootLayout({ children }) {
   const structuredData = getStructuredDataGraph();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${manrope.variable} ${spaceGrotesk.variable} min-w-screen antialiased`}
+        className={`${manrope.variable} ${spaceGrotesk.variable} ${cinzel.variable} ${spectral.variable} min-w-screen antialiased`}
       >
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-        <LenisWrapper>
-          <UiFeedback />
-          <Navbar />
-          {children}
-        </LenisWrapper>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          storageKey="portfolio-theme"
+          themes={["light", "lotm"]}
+          disableTransitionOnChange
+        >
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          />
+          <LenisWrapper>
+            <ScrollToTopOnRouteChange />
+            <UiFeedback />
+            <Navbar />
+            {children}
+          </LenisWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

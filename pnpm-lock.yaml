@@ -44,15 +44,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      emailjs:
-        specifier: ^4.0.3
-        version: 4.0.3(typescript@5.9.3)
-      emailjs-com:
-        specifier: ^3.2.0
-        version: 3.2.0
-      framer-motion:
-        specifier: ^12.23.12
-        version: 12.35.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       gsap:
         specifier: ^3.13.0
         version: 3.14.2
@@ -1646,20 +1637,6 @@ packages:
 
   earcut@3.0.2:
     resolution: {integrity: sha512-X7hshQbLyMJ/3RPhyObLARM2sNxxmRALLKx1+NVFFnQ9gKzmCrxm9+uLIAdBcvc8FNLpctqlQ2V6AE92Ol9UDQ==}
-
-  emailjs-com@3.2.0:
-    resolution: {integrity: sha512-Prbz3E1usiAwGjMNYRv6EsJ5c373cX7/AGnZQwOfrpNJrygQJ15+E9OOq4pU8yC977Z5xMetRfc3WmDX6RcjAA==}
-    engines: {node: '>=12.0.0'}
-    deprecated: The SDK name changed to @emailjs/browser
-
-  emailjs@4.0.3:
-    resolution: {integrity: sha512-1CDXoE3FxkSg7QRTlLsDCYG9elFNu/JQsYWu3Xfrk77ubbg5zYgFGg+JRUKQJ56mceM8o3rHHX0VB4wo9XsyLQ==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      typescript: '>=4.3.5'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
@@ -4601,12 +4578,6 @@ snapshots:
       gopd: 1.2.0
 
   earcut@3.0.2: {}
-
-  emailjs-com@3.2.0: {}
-
-  emailjs@4.0.3(typescript@5.9.3):
-    optionalDependencies:
-      typescript: 5.9.3
 
   emoji-regex@9.2.2: {}
 
