@@ -11,36 +11,53 @@ import {
   ArrowRight,
   ArrowUpRight,
   BriefcaseBusiness,
+  CheckCircle2,
   Clock3,
   Code2,
   Compass,
   Eye,
   Layers3,
   MapPin,
+  MessageSquare,
+  Settings2,
   Sparkles,
-  Wand2,
   Trophy,
+  Wand2,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import SectionHeading from "./section-heading";
 import GuidedTour from "./guided-tour";
 import InteractivePanel from "./interactive-panel";
 import TechMarquee from "./tech-marquee";
-import HeroSkillsCloud from "./hero-skills-cloud";
+import HeroTarotCards from "./hero-tarot-cards";
+import ProjectEstimator from "./project-estimator";
+import AvailabilityBanner from "./availability-banner";
+import CommandPalette from "./command-palette";
+import CaseStudyModal from "./case-study-modal";
+import { PexelsSection, PexelsHeroImage, PexelsCardImage, PexelsAvatar, PexelsCardBg, PexelsVideo } from "./pexels-media";
 import {
   aboutCards,
   achievementItems,
+  caseStudies,
   contactCards,
+  deliveryCapabilities,
   experienceItems,
+  faqs,
   heroHighlights,
   heroStats,
   heroThreads,
+  processSteps,
   profileSummary,
   projects,
+  projectFilters,
+  servicesData,
   skillGroups,
   socialLinks,
   techStack,
+  testimonials,
   tourSteps,
+  whyWorkWithMe,
   workflowPrinciples,
 } from "../../data/portfolio";
 import { cn } from "../../utils/cn";
@@ -82,6 +99,47 @@ const KONAMI_CODE = [
   "a",
 ];
 
+function FAQItem({ question, answer, isOpen, onToggle, isLotm }) {
+  return (
+    <div
+      className={cn(
+        "rounded-3xl border border-white/70 bg-white/75 overflow-hidden transition-all duration-300",
+        isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
+      )}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+      >
+        <span className={cn(
+          "font-(family-name:--font-space-grotesk) text-lg text-slate-900",
+          isLotm && "text-[#e8f2ff]"
+        )}>
+          {question}
+        </span>
+        <ChevronDown className={cn(
+          "size-5 shrink-0 text-slate-400 transition-transform duration-300",
+          isOpen && "rotate-180"
+        )} />
+      </button>
+      <div className={cn(
+        "grid transition-all duration-300",
+        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+      )}>
+        <div className="overflow-hidden">
+          <p className={cn(
+            "px-6 pb-5 text-sm leading-7 text-slate-600",
+            isLotm && "text-[#b9cff2]"
+          )}>
+            {answer}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function PortfolioShell() {
   const { resolvedTheme } = useTheme();
   const isLotm = resolvedTheme === "lotm";
@@ -96,6 +154,13 @@ export default function PortfolioShell() {
   const [tourPromptOpen, setTourPromptOpen] = useState(false);
   const [activeTourStep, setActiveTourStep] = useState(-1);
   const [omenMessage, setOmenMessage] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
+  const [selectedCaseStudy, setSelectedCaseStudy] = useState(null);
+
+  const filteredProjects = selectedCategory === "All"
+    ? projects
+    : projects.filter((p) => p.category === selectedCategory);
 
   const revealOmen = useCallback((message) => {
     setOmenMessage(message);
@@ -272,14 +337,34 @@ export default function PortfolioShell() {
         projectsTitle: "Artifacts forged through product work, experiments, and applied systems.",
         contactEyebrow: "Ritual Link",
         contactTitle: "Summon collaboration across product, systems, and interface craft.",
+        servicesEyebrow: "Arcane Services",
+        servicesTitle: "Magics I weave for those who seek.",
+        whyMeEyebrow: "Why Choose",
+        whyMeTitle: "The fool's proven edges.",
+        processEyebrow: "The Ritual",
+        processTitle: "From void to form — my craft sequence.",
+        testimonialsEyebrow: "Witnesses",
+        testimonialsTitle: "What peers and patrons say.",
+        faqEyebrow: "Grimoire",
+        faqTitle: "Answers for the curious seeker.",
       }
     : {
         aboutEyebrow: "About Me",
-        aboutTitle: "Design-led frontend work with a builder’s discipline.",
-        projectsEyebrow: "Projects",
-        projectsTitle: "Selected work across product interfaces, experiments, and applied builds.",
+        aboutTitle: "I build products that solve real problems.",
+        projectsEyebrow: "Featured Work",
+        projectsTitle: "Case studies with measurable outcomes.",
         contactEyebrow: "Contact",
-        contactTitle: "Building something sharp, fast, and memorable?",
+        contactTitle: "Let's build your product.",
+        servicesEyebrow: "What I Build",
+        servicesTitle: "Full-stack development services for startups and agencies.",
+        whyMeEyebrow: "Why Work With Me",
+        whyMeTitle: "Reliability, performance, and clear communication.",
+        processEyebrow: "How I Work",
+        processTitle: "A process designed to reduce risk and deliver results.",
+        testimonialsEyebrow: "Testimonials",
+        testimonialsTitle: "What clients and colleagues say.",
+        faqEyebrow: "FAQs",
+        faqTitle: "Common questions about working together.",
       };
 
   return (
@@ -300,7 +385,9 @@ export default function PortfolioShell() {
             isLotm && "opacity-50"
           )}
         />
+        <AvailabilityBanner onOpenEstimator={() => { document.getElementById("estimator")?.scrollIntoView({ behavior: "smooth" }); }} />
 
+        {/* HERO */}
         <section
           id="hero"
           className={cn(
@@ -353,7 +440,7 @@ export default function PortfolioShell() {
                   isLotm && "font-(family-name:--font-lotm-heading) text-[#f6fbff]"
                 )}
               >
-                <span className={cn(isLotm && "lotm-flicker")}>{profileSummary.name}</span>
+                <span className={cn(isLotm && "lotm-flicker")}>{profileSummary.tagline}</span>
               </h1>
 
               <p
@@ -362,21 +449,28 @@ export default function PortfolioShell() {
                   isLotm && "font-(family-name:--font-lotm-body) text-[#bdd3f5]"
                 )}
               >
-                {profileSummary.tagline}
+                {profileSummary.name} &mdash; {profileSummary.currentRole}
               </p>
 
               <p
                 className={cn(
-                  "mt-6 max-w-2xl text-base leading-7 text-slate-600",
+                  "mt-4 max-w-2xl text-base leading-7 text-slate-600",
                   isLotm && "font-(family-name:--font-lotm-body) text-[#aac2e5]"
                 )}
               >
                 {profileSummary.intro}
               </p>
 
-              <div
-                className="mt-8 flex flex-wrap gap-3"
-              >
+              <div className="mt-6 flex flex-wrap gap-2 text-sm text-slate-500">
+                {["React", "Next.js", "Node.js", "PostgreSQL", "TypeScript"].map((tech) => (
+                  <span key={tech} className="font-medium text-slate-700">
+                    {tech}
+                    {tech !== "TypeScript" ? <span className="ml-2 text-slate-300">•</span> : null}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-2">
                 {heroHighlights.map((item) => (
                   <span
                     key={item}
@@ -391,43 +485,48 @@ export default function PortfolioShell() {
                 ))}
               </div>
 
-              <div
-                className="mt-10 flex flex-col gap-4 sm:flex-row"
-              >
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <Button
                   asChild
+                  data-ui-feedback
                   className={cn(
-                    "h-12 rounded-full bg-slate-950 px-7 text-sm font-semibold text-white shadow-[0_18px_50px_rgba(15,23,42,0.15)] hover:bg-slate-800",
+                    "h-13 rounded-full bg-slate-950 px-8 text-sm font-semibold text-white shadow-[0_18px_50px_rgba(15,23,42,0.15)] hover:bg-slate-800",
                     isLotm && "border border-[#f0b85b]/45 bg-[#c8861f] text-[#f6fbff] hover:bg-[#de9f3a]"
                   )}
                 >
-                  <Link href="#projects">
-                    {isLotm ? "Open Artifacts" : "View Projects"}
+                  <Link href="#contact">
+                    Book a Call
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
 
                 <Button
                   asChild
+                  data-ui-feedback
                   variant="outline"
                   className={cn(
-                    "h-12 rounded-full border-slate-300 bg-white/70 px-7 text-sm font-semibold text-slate-800 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur",
+                    "h-13 rounded-full border-slate-300 bg-white/70 px-8 text-sm font-semibold text-slate-800 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur",
                     isLotm && "border-[#d49a3f]/50 bg-[#070b13]/82 text-[#e6f2ff] hover:bg-[#101a2b]"
                   )}
                 >
-                  <Link href="#contact">{isLotm ? "Ritual Link" : "Contact"}</Link>
+                  <Link href={socialLinks[3].href} target="_blank">
+                    <MessageSquare className="size-4" />
+                    WhatsApp
+                  </Link>
                 </Button>
                 <Button
-                  type="button"
+                  asChild
+                  data-ui-feedback
                   variant="outline"
-                  onClick={startTour}
                   className={cn(
-                    "h-12 rounded-full border-slate-300 bg-transparent px-7 text-sm font-semibold text-slate-700",
-                    isLotm && "border-[#d49a3f]/45 bg-[#070b12]/70 text-[#c3d7f7] hover:bg-[#101a2a]"
+                    "h-13 rounded-full border-slate-300 bg-white/70 px-8 text-sm font-semibold text-slate-800 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur",
+                    isLotm && "border-[#d49a3f]/50 bg-[#070b13]/82 text-[#e6f2ff] hover:bg-[#101a2b]"
                   )}
                 >
-                  <Compass className="size-4" />
-                  {isLotm ? "Occult Tour" : "Interactive Tour"}
+                  <Link href="#projects">
+                    View Projects
+                    <Eye className="size-4" />
+                  </Link>
                 </Button>
               </div>
 
@@ -502,13 +601,8 @@ export default function PortfolioShell() {
                       isLotm && "border-[#0d3b66]/35"
                     )}
                   />
-                  <div className="absolute inset-0 opacity-90">
-                    <HeroSkillsCloud
-                      threads={heroThreads}
-                      activeSkill={activeThread.name}
-                      onActiveChange={handleActiveThreadChange}
-                      lotmMode={isLotm}
-                    />
+                  <div className="absolute inset-0 opacity-95">
+                    <HeroTarotCards lotmMode={isLotm} />
                   </div>
 
                   <motion.div
@@ -623,7 +717,7 @@ export default function PortfolioShell() {
                             isLotm && "font-(family-name:--font-lotm-body) text-[#aec5e7]"
                           )}
                         >
-                          Shipping elegant interfaces with motion, structure, and speed.
+                          {profileSummary.currentRole}
                         </p>
                       </div>
                     </div>
@@ -634,6 +728,7 @@ export default function PortfolioShell() {
           </div>
         </section>
 
+        {/* TECH MARQUEE */}
         <section className="mx-auto w-full max-w-7xl px-5 pb-10 sm:px-8 lg:px-10">
           <div data-reveal className="space-y-4">
             <div
@@ -643,12 +738,125 @@ export default function PortfolioShell() {
               )}
             >
               <Wand2 className={cn("size-4 text-teal-700", isLotm && "text-[#f0b85b]")} />
-              {isLotm ? "Arcane Motion Stack" : "Motion-enabled stack"}
+              {isLotm ? "Arcane Motion Stack" : "Production stack"}
             </div>
             <TechMarquee items={techStack} />
           </div>
         </section>
 
+        {/* TRUST BAR */}
+        <section className="mx-auto w-full max-w-7xl px-5 pb-6 sm:px-8 lg:px-10">
+          <div data-reveal className={cn(
+            "rounded-[32px] border border-white/70 bg-white/72 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.07)] backdrop-blur sm:p-8",
+            isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
+          )}>
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="rounded-2xl bg-teal-700/10 p-3">
+                  <BriefcaseBusiness className={cn("size-6 text-teal-700", isLotm && "text-[#f0b85b]")} />
+                </div>
+                <div>
+                  <p className={cn("font-(family-name:--font-space-grotesk) text-lg text-slate-900", isLotm && "text-[#eef6ff]")}>
+                    {profileSummary.currentRole}
+                  </p>
+                  <p className={cn("text-sm text-slate-500", isLotm && "text-[#aec5e7]")}>
+                    {profileSummary.timezone} &middot; Responds {profileSummary.responseTime}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                {achievementItems.map((item) => (
+                  <div key={item.label} className="flex items-center gap-3 rounded-2xl border border-white/70 bg-white/75 px-4 py-3">
+                    <span className={cn("font-(family-name:--font-space-grotesk) text-2xl text-slate-950", isLotm && "text-[#f6fbff]")}>
+                      {item.value}
+                    </span>
+                    <div>
+                      <p className={cn("text-xs font-medium text-slate-700", isLotm && "text-[#cfe1ff]")}>
+                        {item.label}
+                      </p>
+                      <p className={cn("text-[10px] text-slate-400", isLotm && "text-[#9db7d9]")}>
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SERVICES */}
+<PexelsSection query="abstract tech" gradient="linear-gradient(180deg, rgba(252,250,245,0.88), rgba(252,250,245,0.94))">
+          <section
+            id="services"
+            className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+          >
+            <div className="w-full">
+              <div data-reveal>
+                <SectionHeading
+                  eyebrow={sectionCopy.servicesEyebrow}
+                  title={sectionCopy.servicesTitle}
+                  description="Every service is built with React, Next.js, Node.js, PostgreSQL, TypeScript. You're hiring a delivered outcome, not a technology."
+                />
+              </div>
+
+              <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {servicesData.map((service) => {
+                  const imgQuery = {
+                    "saas-dev": "dashboard analytics",
+                    "mobile-dev": "mobile app",
+                    "dashboards": "data dashboard",
+                    "ml-ai": "neural network",
+                    "backend": "server code",
+                    "mvp": "landing page design",
+                  }[service.id] || "technology";
+                  return (
+                  <InteractivePanel
+                    key={service.id}
+                    data-reveal
+                    data-stack-card
+                    data-lore={`Service: ${service.title}`}
+                    glow="rgba(45, 212, 191, 0.14)"
+                    className={cn(
+                      "mystery-card rounded-4xl border border-white/70 bg-white/76 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur",
+                      isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
+                    )}
+                  >
+                    <div className="flex items-start gap-4">
+                      <PexelsCardImage query={imgQuery} size="small" className="ring-2 ring-white/60" />
+                      <div>
+                        <h3 className="font-(family-name:--font-space-grotesk) text-xl text-slate-950">
+                          {service.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-6 text-slate-600">
+                          {service.description}
+                        </p>
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {service.capabilities.map((cap) => (
+                            <span
+                              key={cap}
+                              className={cn(
+                                "inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-600",
+                                isLotm && "border-[#6f6148] bg-[#201928] text-[#c9bead]"
+                              )}
+                            >
+                              <CheckCircle2 className="size-2.5 text-teal-600" />
+                              {cap}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </InteractivePanel>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        </PexelsSection>
+
+        <PexelsSection query="code screen" gradient="linear-gradient(180deg, rgba(252,250,245,0.9), rgba(252,250,245,0.95))">
+        {/* ABOUT */}
         <section
           id="about"
           className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
@@ -657,11 +865,17 @@ export default function PortfolioShell() {
             <SectionHeading
               eyebrow={sectionCopy.aboutEyebrow}
               title={sectionCopy.aboutTitle}
-              description="I care about how a site feels in motion, how quickly a visitor understands the hierarchy, and how maintainable the code remains after the visual polish ships."
+              description="I build products people use — fast, maintainable web apps with React, Next.js, Node.js, PostgreSQL. I own features from planning to deployment."
             />
 
             <div className="grid gap-5">
-              {aboutCards.map((card, index) => (
+              {aboutCards.map((card, index) => {
+                const imgQuery = {
+                  "Outcome-Focused": "analytics dashboard",
+                  "Full Ownership": "architect blueprint",
+                  "Production Stack": "code screen",
+                }[card.title] || "technology";
+                return (
                 <InteractivePanel
                   key={card.title}
                   data-stack-card
@@ -673,24 +887,491 @@ export default function PortfolioShell() {
                   )}
                 >
                   <div className="flex items-start gap-4">
-                    <div className="rounded-2xl bg-slate-900 p-3 text-white">
-                      <Layers3 className="size-5" />
-                    </div>
+                    <PexelsCardImage query={imgQuery} size="small" className="ring-2 ring-white/60" />
                     <div>
                       <h3 className="font-(family-name:--font-space-grotesk) text-xl text-slate-950">
                         {card.title}
                       </h3>
-                      <p className="mt-3 text-sm leading-7 text-slate-600">
+                      <p className="mt-2 text-sm leading-6 text-slate-600">
                         {card.description}
                       </p>
                     </div>
                   </div>
                 </InteractivePanel>
+                );
+              })}
+
+              <InteractivePanel
+                data-stack-card
+                glow="rgba(249, 115, 22, 0.12)"
+                className={cn(
+                  "mystery-card rounded-[30px] border border-white/70 bg-white/76 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur",
+                  isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  <Clock3 className="size-4 text-teal-600" />
+                  <span className="text-sm text-slate-700">
+                    {profileSummary.currentRole} &middot; {profileSummary.timezone} &middot; Responds {profileSummary.responseTime}
+                  </span>
+                </div>
+              </InteractivePanel>
+            </div>
+          </div>
+        </section>
+        </PexelsSection>
+
+        {/* PROJECTS */}
+        <section
+          id="projects"
+          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+        >
+          <div className="w-full">
+            <div data-reveal>
+              <SectionHeading
+                eyebrow={sectionCopy.projectsEyebrow}
+                title={sectionCopy.projectsTitle}
+                description="Each project includes the problem we solved, the technical approach, and the measurable results delivered."
+              />
+            </div>
+
+            <div
+              data-reveal
+              className="mt-8 flex flex-wrap justify-center gap-2.5"
+            >
+              {projectFilters.map((category) => {
+                const isActive = selectedCategory === category;
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    data-ui-feedback
+                    onClick={() => setSelectedCategory(category)}
+                    className={cn(
+                      "px-5 py-2 text-[10px] font-bold uppercase tracking-[0.22em] rounded-full border transition duration-300 cursor-pointer shadow-sm active:scale-95",
+                      isActive
+                        ? isLotm
+                          ? "bg-[#c8861f] border-[#f0b85b] text-[#f6fbff] shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
+                          : "bg-slate-950 border-slate-950 text-white shadow-[0_8px_20px_rgba(15,23,42,0.18)]"
+                        : isLotm
+                        ? "border-[#d49a3f]/30 bg-[#070b13]/80 text-[#bfd5f6] hover:border-[#d49a3f]/65 hover:text-[#f6fbff]"
+                        : "border-slate-200 bg-white/70 text-slate-600 hover:border-slate-400 hover:text-slate-900"
+                    )}
+                  >
+                    {category}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div data-reveal className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {filteredProjects.map((project) => (
+                <motion.article
+                  key={project.id}
+                  layout
+                  initial="rest"
+                  animate="rest"
+                  whileHover="hover"
+                  className="relative h-[430px] [perspective:1400px]"
+                >
+                  <motion.div
+                    variants={flipCardVariants}
+                    className="relative h-full w-full [transform-style:preserve-3d]"
+                  >
+                    <div className="absolute inset-0 [backface-visibility:hidden]">
+                      <InteractivePanel
+                        data-stack-card
+                        data-lore={`Artifact: ${project.title}`}
+                        className={cn(
+                          "mystery-card group h-full overflow-hidden rounded-4xl border border-white/70 bg-white/78 shadow-[0_22px_90px_rgba(15,23,42,0.08)] backdrop-blur",
+                          isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
+                        )}
+                      >
+                        <div className="relative h-56 overflow-hidden">
+                          <Image
+                            src={project.image}
+                            alt={project.title}
+                            fill
+                            className="object-cover object-top transition duration-500 group-hover:scale-[1.05]"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                          />
+                          <div className="absolute inset-0 bg-linear-to-t from-slate-950/35 via-transparent to-transparent" />
+                          <span className="absolute right-4 top-4 rounded-full border border-white/65 bg-white/84 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-700">
+                            {project.category}
+                          </span>
+                        </div>
+                        <div className="flex h-[calc(100%-14rem)] flex-col justify-between p-6">
+                          <div>
+                            <h3 className="text-hover-float font-(family-name:--font-space-grotesk) text-2xl text-slate-950">
+                              {project.title}
+                            </h3>
+                            <p className="mt-3 text-xs leading-6 text-slate-500">
+                              <span className="font-semibold text-slate-700">Problem:</span> {project.problem}
+                            </p>
+                          </div>
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {project.techStack.slice(0, 3).map((item) => (
+                              <span
+                                key={`${project.id}-${item}`}
+                                className={cn(
+                                  "rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600",
+                                  isLotm && "border-[#6f6148] bg-[#201928] text-[#c9bead]"
+                                )}
+                              >
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </InteractivePanel>
+                    </div>
+
+                    <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                      <div className="flex h-full flex-col rounded-4xl border border-slate-200 bg-[linear-gradient(170deg,#0f172a_0%,#1e293b_52%,#134e4a_100%)] p-6 text-white shadow-[0_22px_90px_rgba(15,23,42,0.24)]">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-200/90">
+                            {project.title}
+                          </p>
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {project.techStack.map((item) => (
+                              <span
+                                key={`${project.id}-back-${item}`}
+                                className="rounded-full border border-white/24 bg-white/8 px-2.5 py-1 text-[11px] font-medium text-slate-200"
+                              >
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="mt-5 space-y-3 text-sm leading-6 text-slate-100/95">
+                          <div>
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-200/80">Solution</p>
+                            <p className="mt-1">{project.solution}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-200/80">Result</p>
+                            <p className="mt-1">{project.result}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-auto flex flex-wrap gap-2 pt-4">
+                          <Button
+                            type="button"
+                            onClick={() => setSelectedCaseStudy(project)}
+                            className="h-9 rounded-full bg-teal-400 text-xs px-3.5 font-bold text-slate-950 hover:bg-teal-300 shadow"
+                          >
+                            <Eye className="size-3.5 mr-1" />
+                            Case Study
+                          </Button>
+                          <Button
+                            asChild
+                            variant="outline"
+                            className="h-9 rounded-full border-white/35 bg-transparent px-3 text-xs text-white hover:bg-white/12"
+                          >
+                            <Link href={project.liveLink} target="_blank">
+                              Demo
+                              <ArrowUpRight className="size-3 ml-0.5" />
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.article>
               ))}
             </div>
           </div>
         </section>
 
+        {/* WHY WORK WITH ME */}
+        <section
+          id="why-me"
+          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+        >
+          <div className="w-full">
+            <div data-reveal>
+              <SectionHeading
+                eyebrow={sectionCopy.whyMeEyebrow}
+                title={sectionCopy.whyMeTitle}
+                description="Freelance clients and agencies care about one thing: can you deliver without headaches? Here's why the answer is yes."
+              />
+            </div>
+
+            <div className="mt-12 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+              <div className="grid gap-5 sm:grid-cols-2">
+                {whyWorkWithMe.map((item) => {
+                  const imgQuery = {
+                    "Production Experience": "office desk",
+                    "Faster Performance": "speed chart",
+                    "Clear Communication": "team chat",
+                    "Web + Mobile": "responsive design",
+                  }[item.title] || "technology";
+                  return (
+                  <InteractivePanel
+                    key={item.title}
+                    data-reveal
+                    data-stack-card
+                    data-lore={`Edge: ${item.title}`}
+                    className={cn(
+                      "mystery-card rounded-4xl border border-white/70 bg-white/78 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur",
+                      isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
+                    )}
+                  >
+                    <div className="flex items-start gap-4">
+                      <PexelsCardImage query={imgQuery} size="small" className="ring-2 ring-white/60" />
+                      <div>
+                        <h3 className="font-(family-name:--font-space-grotesk) text-xl text-slate-950">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-6 text-slate-600">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </InteractivePanel>
+                  );
+                })}
+              </div>
+
+              <InteractivePanel
+                data-reveal
+                {...cardMotion}
+                glow="rgba(249, 115, 22, 0.12)"
+                data-lore="Delivery capabilities"
+                className={cn(
+                  "mystery-card rounded-4xl border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(241,245,249,0.9))] p-7 text-slate-900 shadow-[0_24px_90px_rgba(15,23,42,0.12)]",
+                  isLotm && "border-[#d49a3f]/36 bg-[linear-gradient(180deg,#0b1220_0%,#070c15_100%)] text-[#e4efff]"
+                )}
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-teal-700">
+                  What I Can Deliver
+                </p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {deliveryCapabilities.map((cap) => (
+                    <div
+                      key={cap}
+                      className={cn(
+                        "flex items-center gap-3 rounded-2xl border border-white/70 bg-white/75 px-4 py-3",
+                        isLotm && "border-[#6f6148] bg-[#101a2a]"
+                      )}
+                    >
+                      <CheckCircle2 className="size-4 shrink-0 text-teal-600" />
+                      <span className="text-sm">{cap}</span>
+                    </div>
+                  ))}
+                </div>
+              </InteractivePanel>
+            </div>
+          </div>
+        </section>
+
+        {/* PROCESS */}
+        <section
+          id="process"
+          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+        >
+          <div className="w-full">
+            <div data-reveal>
+              <SectionHeading
+                eyebrow={sectionCopy.processEyebrow}
+                title={sectionCopy.processTitle}
+                description="A structured process ensures predictable timelines, clear expectations, and a smooth working relationship from start to finish."
+              />
+            </div>
+
+            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {processSteps.map((step) => {
+                const imgQuery = {
+                  "01": "brainstorming meeting",
+                  "02": "blueprint architecture",
+                  "03": "coding workspace",
+                  "04": "quality check",
+                  "05": "server deployment",
+                  "06": "customer support",
+                }[step.number] || "technology";
+                return (
+                <InteractivePanel
+                  key={step.number}
+                  data-reveal
+                  data-stack-card
+                  data-lore={`Phase: ${step.title}`}
+                  glow="rgba(45, 212, 191, 0.14)"
+                  className={cn(
+                    "mystery-card rounded-4xl border border-white/70 bg-white/76 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur",
+                    isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
+                  )}
+                >
+                  <div className="flex items-center gap-4">
+                      <PexelsCardImage query={imgQuery} size="small" className="ring-2 ring-white/60" />
+                      <div>
+                        <h3 className="font-(family-name:--font-space-grotesk) text-xl text-slate-950">
+                          <span className={cn("text-teal-700/50", isLotm && "text-[#f0b85b]/50")}>{step.number}</span> {step.title}
+                        </h3>
+                        <p className="mt-1 text-sm leading-6 text-slate-600">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                  </InteractivePanel>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+
+        {/* VIDEO SHOWCASE */}
+        <section className="mx-auto w-full max-w-7xl px-5 pb-6 sm:px-8 lg:px-10">
+          <section className="mx-auto w-full max-w-7xl px-5 pb-6 sm:px-8 lg:px-10">
+          <div className="relative overflow-hidden rounded-[36px] shadow-[0_28px_120px_rgba(15,23,42,0.18)]">
+            <PexelsVideo
+              query="office workspace coding"
+              className="absolute inset-0 h-full w-full"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-slate-950/20" />
+            <div className="relative z-10 flex flex-col items-center gap-6 px-8 py-20 text-center sm:px-16">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-cyan-200 backdrop-blur">
+                <Sparkles className="size-3.5" />
+                Work In Action
+              </div>
+              <h2 className="max-w-2xl font-(family-name:--font-space-grotesk) text-3xl text-white sm:text-4xl">
+                From concept to deployment — I ship production software
+              </h2>
+              <div className="flex flex-wrap justify-center gap-3">
+                {deliveryCapabilities.slice(0, 6).map((cap) => (
+                  <span
+                    key={cap}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-slate-100 backdrop-blur"
+                  >
+                    <CheckCircle2 className="size-3.5 text-cyan-400" />
+                    {cap}
+                  </span>
+                ))}
+              </div>
+              <Button
+                asChild
+                className="mt-2 h-12 rounded-full bg-cyan-400 px-8 font-semibold text-slate-950 hover:bg-cyan-300"
+              >
+                <Link href="#contact">
+                  Start Your Project
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+        </section>
+
+        <PexelsSection query="team collaboration" gradient="linear-gradient(180deg, rgba(252,250,245,0.88), rgba(252,250,245,0.94))">
+        {/* TESTIMONIALS */}
+        <section
+          id="testimonials"
+          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+        >
+          <div className="w-full">
+            <div data-reveal>
+              <SectionHeading
+                eyebrow={sectionCopy.testimonialsEyebrow}
+                title={sectionCopy.testimonialsTitle}
+                description="Feedback from engineering leads, founders, and agency partners."
+              />
+            </div>
+
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              {testimonials.map((testimonial, index) => {
+                const avatarQuery = {
+                  "Engineering Lead": "professional man portrait",
+                  "SaaS Founder": "business woman portrait",
+                  "Agency Client": "creative director portrait",
+                }[testimonial.name] || "professional portrait";
+                return (
+                <InteractivePanel
+                  key={testimonial.name}
+                  data-reveal
+                  data-stack-card
+                  data-lore={`Testimony: ${testimonial.name}`}
+                  glow={index === 1 ? "rgba(249, 115, 22, 0.12)" : "rgba(45, 212, 191, 0.14)"}
+                  className={cn(
+                    "mystery-card rounded-4xl border border-white/70 bg-white/76 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur",
+                    isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <PexelsAvatar query={avatarQuery} size="sm" />
+                    <div>
+                      <p className="font-(family-name:--font-space-grotesk) text-base text-slate-950">
+                        {testimonial.name}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {testimonial.role} &middot; {testimonial.company}
+                      </p>
+                    </div>
+                  </div>
+                  <blockquote className="mt-4 text-sm leading-6 text-slate-600">
+                    &ldquo;{testimonial.content}&rdquo;
+                  </blockquote>
+                </InteractivePanel>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+        </PexelsSection>
+
+        {/* EXPERIENCE */}
+        <section
+          id="experience"
+          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+        >
+          <div className="w-full">
+            <div data-reveal>
+              <SectionHeading
+                eyebrow="Experience"
+                title="Current role and technical focus areas."
+                description="Building production software daily while expanding across the full stack."
+              />
+            </div>
+
+            <div className="mt-12 grid gap-5 lg:grid-cols-3">
+              {experienceItems.map((item, index) => {
+                const imgQuery = {
+                  "Jan 2026 — Present": "office workspace",
+                  "Backend & Systems": "server room",
+                  "Mobile Development": "mobile phone",
+                }[item.period] || "technology";
+                return (
+                <InteractivePanel
+                  key={item.title}
+                  data-reveal
+                  data-stack-card
+                  data-lore={`Chronicle: ${item.period}`}
+                  glow={index === 1 ? "rgba(249, 115, 22, 0.12)" : "rgba(45, 212, 191, 0.14)"}
+                  className={cn(
+                    "mystery-card rounded-4xl border border-white/70 bg-white/76 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur",
+                    isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
+                  )}
+                >
+                  <PexelsCardImage query={imgQuery} size="small" className="mb-4 ring-2 ring-white/60" />
+                  <div className="flex items-center gap-2 text-teal-700">
+                    <BriefcaseBusiness className="size-4" />
+                    <p className="text-xs font-semibold uppercase tracking-[0.26em]">
+                      {item.period}
+                    </p>
+                  </div>
+                  <h3 className="mt-4 font-(family-name:--font-space-grotesk) text-2xl text-slate-950">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">
+                    {item.description}
+                  </p>
+                </InteractivePanel>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* SKILLS */}
         <section
           id="skills"
           className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
@@ -698,9 +1379,9 @@ export default function PortfolioShell() {
           <div className="w-full">
             <div data-reveal>
               <SectionHeading
-                eyebrow="Skills"
-                title="A stack tuned for modern interfaces and flexible product work."
-                description="The portfolio is split between implementation depth and workflow principles, so visitors can see both the tools and the way I use them."
+                eyebrow="Skills & Tools"
+                title="Technologies I use daily to ship production software."
+                description="From frontend to backend to deployment — every tool here has been used in real client projects."
               />
             </div>
 
@@ -782,183 +1463,7 @@ export default function PortfolioShell() {
           </div>
         </section>
 
-        <section
-          id="projects"
-          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
-        >
-          <div className="w-full">
-            <div data-reveal>
-              <SectionHeading
-                eyebrow={sectionCopy.projectsEyebrow}
-                title={sectionCopy.projectsTitle}
-                description="Project cards keep the structure compact: screenshot, problem statement, stack, and links for code or live preview."
-              />
-            </div>
-
-            <div data-reveal className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {projects.map((project) => (
-                <motion.article
-                  key={project.id}
-                  initial="rest"
-                  animate="rest"
-                  whileHover="hover"
-                  className="relative h-[430px] [perspective:1400px]"
-                >
-                  <motion.div
-                    variants={flipCardVariants}
-                    className="relative h-full w-full [transform-style:preserve-3d]"
-                  >
-                    <div className="absolute inset-0 [backface-visibility:hidden]">
-                      <InteractivePanel
-                        data-stack-card
-                        data-lore={`Artifact: ${project.title}`}
-                        className={cn(
-                          "mystery-card group h-full overflow-hidden rounded-4xl border border-white/70 bg-white/78 shadow-[0_22px_90px_rgba(15,23,42,0.08)] backdrop-blur",
-                          isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
-                        )}
-                      >
-                        <div className="relative h-56 overflow-hidden">
-                          <Image
-                            src={project.image}
-                            alt={project.title}
-                            fill
-                            className="object-cover object-top transition duration-500 group-hover:scale-[1.05]"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                          />
-                          <div className="absolute inset-0 bg-linear-to-t from-slate-950/35 via-transparent to-transparent" />
-                          <span className="absolute right-4 top-4 rounded-full border border-white/65 bg-white/84 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-700">
-                            {project.category}
-                          </span>
-                        </div>
-                        <div className="flex h-[calc(100%-14rem)] flex-col justify-between p-6">
-                          <div>
-                            <h3 className="text-hover-float font-(family-name:--font-space-grotesk) text-2xl text-slate-950">
-                              {project.title}
-                            </h3>
-                            <p className="mt-2 text-sm text-slate-500">
-                              Hover to flip for animated details
-                            </p>
-                          </div>
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {project.techStack.slice(0, 3).map((item) => (
-                              <span
-                                key={`${project.id}-${item}`}
-                                className={cn(
-                                  "rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600",
-                                  isLotm && "border-[#6f6148] bg-[#201928] text-[#c9bead]"
-                                )}
-                              >
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </InteractivePanel>
-                    </div>
-
-                    <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]">
-                      <div className="flex h-full flex-col rounded-4xl border border-slate-200 bg-[linear-gradient(170deg,#0f172a_0%,#1e293b_52%,#134e4a_100%)] p-6 text-white shadow-[0_22px_90px_rgba(15,23,42,0.24)]">
-                        <div>
-                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-200/90">
-                            {project.title}
-                          </p>
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {project.techStack.map((item) => (
-                              <span
-                                key={`${project.id}-back-${item}`}
-                                className="rounded-full border border-white/24 bg-white/8 px-2.5 py-1 text-[11px] font-medium text-slate-200"
-                              >
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <motion.p className="mt-5 flex flex-wrap gap-x-1.5 gap-y-1 text-sm leading-6 text-slate-100/95">
-                          {project.description.split(" ").map((word, index) => (
-                            <motion.span
-                              key={`${project.id}-word-${index}`}
-                              custom={index}
-                              variants={descriptionWordVariants}
-                            >
-                              {word}
-                            </motion.span>
-                          ))}
-                        </motion.p>
-
-                        <div className="mt-auto flex gap-3 pt-5">
-                          <Button
-                            asChild
-                            className="h-10 rounded-full bg-cyan-400 px-4 text-slate-950 hover:bg-cyan-300"
-                          >
-                            <Link href={project.liveLink} target="_blank">
-                              Live Demo
-                              <ArrowUpRight className="size-4" />
-                            </Link>
-                          </Button>
-                          <Button
-                            asChild
-                            variant="outline"
-                            className="h-10 rounded-full border-white/35 bg-transparent px-4 text-white hover:bg-white/12"
-                          >
-                            <Link href={project.codeLink} target="_blank">
-                              GitHub
-                            </Link>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </motion.article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="experience"
-          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
-        >
-          <div className="w-full">
-            <div data-reveal>
-              <SectionHeading
-                eyebrow="Experience"
-                title="A portfolio shaped by frontend delivery, interaction work, and rapid iteration."
-                description="This timeline focuses on the work modes that define the portfolio today rather than forcing a generic resume layout."
-              />
-            </div>
-
-            <div className="mt-12 grid gap-5 lg:grid-cols-3">
-              {experienceItems.map((item, index) => (
-                <InteractivePanel
-                  key={item.title}
-                  data-reveal
-                  data-stack-card
-                  data-lore={`Chronicle: ${item.period}`}
-                  glow={index === 1 ? "rgba(249, 115, 22, 0.12)" : "rgba(45, 212, 191, 0.14)"}
-                  className={cn(
-                    "mystery-card rounded-4xl border border-white/70 bg-white/76 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur",
-                    isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
-                  )}
-                >
-                  <div className="flex items-center gap-3 text-teal-700">
-                    <BriefcaseBusiness className="size-5" />
-                    <p className="text-xs font-semibold uppercase tracking-[0.26em]">
-                      {item.period}
-                    </p>
-                  </div>
-                  <h3 className="mt-5 font-(family-name:--font-space-grotesk) text-2xl text-slate-950">
-                    {item.title}
-                  </h3>
-                  <p className="mt-4 text-sm leading-7 text-slate-600">
-                    {item.description}
-                  </p>
-                </InteractivePanel>
-              ))}
-            </div>
-          </div>
-        </section>
-
+        {/* TECH STACK */}
         <section
           id="tech-stack"
           className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
@@ -967,8 +1472,8 @@ export default function PortfolioShell() {
             <div data-reveal>
               <SectionHeading
                 eyebrow="Tech Stack"
-                title="Tools selected for speed, polish, and a reliable build pipeline."
-                description="The stack balances modern UI work, animated presentation, and flexible implementation across frontend and product prototypes."
+                title="Tools selected for speed, polish, and production reliability."
+                description="Every tool here is chosen for real-world performance, not trends."
               />
             </div>
 
@@ -993,50 +1498,51 @@ export default function PortfolioShell() {
           </div>
         </section>
 
+        {/* FAQ */}
         <section
-          id="achievements"
+          id="faq"
           className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
         >
-          <div className="w-full">
+          <div className="w-full max-w-4xl mx-auto">
             <div data-reveal>
               <SectionHeading
-                eyebrow="Achievements"
-                title="Competitive and presentation milestones across chess and AI domains."
-                description="Highlights include state-level chess performance, IBM ICE Day gold medals, and project presentation work spanning AI, ML, DL, and NLP."
+                eyebrow={sectionCopy.faqEyebrow}
+                title={sectionCopy.faqTitle}
+                description="Quick answers to the most common questions about working together."
+                align="center"
               />
             </div>
 
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {achievementItems.map((item, index) => (
-                <InteractivePanel
-                  key={item.label}
-                  data-reveal
-                  data-stack-card
-                  data-lore={`Achievement seal: ${item.label}`}
-                  glow={index === 2 ? "rgba(45, 212, 191, 0.15)" : "rgba(249, 115, 22, 0.12)"}
-                  className={cn(
-                    "mystery-card rounded-4xl border border-white/70 bg-white/76 p-6 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur",
-                    isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82"
-                  )}
-                >
-                  <div className="flex items-center gap-3 text-orange-500">
-                    <Trophy className="size-5" />
-                    <p className="text-xs font-semibold uppercase tracking-[0.26em] text-orange-500">
-                      {item.label}
-                    </p>
-                  </div>
-                  <p className="mt-5 font-(family-name:--font-space-grotesk) text-4xl text-slate-950">
-                    {item.value}
-                  </p>
-                  <p className="mt-4 text-sm leading-7 text-slate-600">
-                    {item.description}
-                  </p>
-                </InteractivePanel>
+            <div data-reveal className="mt-12 space-y-4">
+              {faqs.map((faq, index) => (
+                <FAQItem
+                  key={index}
+                  question={faq.question}
+                  answer={faq.answer}
+                  isOpen={openFaqIndex === index}
+                  onToggle={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
+                  isLotm={isLotm}
+                />
               ))}
             </div>
           </div>
         </section>
 
+        {/* ESTIMATOR */}
+        <section id="estimator" className="mx-auto w-full max-w-7xl scroll-mt-24 px-5 py-16 sm:px-8 lg:px-10">
+          <ProjectEstimator
+            onRequestQuote={(quoteSummary) => {
+              const msgArea = document.querySelector("textarea[name='message']");
+              if (msgArea) {
+                msgArea.value = quoteSummary;
+              }
+              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          />
+        </section>
+
+        <PexelsSection query="modern office" gradient="linear-gradient(180deg, rgba(252,250,245,0.9), rgba(252,250,245,0.95))">
+        {/* CONTACT */}
         <section
           id="contact"
           className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
@@ -1065,20 +1571,26 @@ export default function PortfolioShell() {
                 {sectionCopy.contactTitle}
               </h2>
               <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-                I&apos;m currently pushing toward DevOps, React Native, deeper backend systems, and stronger NLP/DL model work. If you want to collaborate, let&apos;s connect.
+                Looking for a React/Next.js developer? Free discovery call to discuss scope, timeline, and budget.
               </p>
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-[28px] border border-white/70 bg-white/75 p-5">
                   <div className="flex items-center gap-3 text-teal-700">
                     <MapPin className="size-5" />
-                    <span className="text-sm font-medium">{profileSummary.location}</span>
+                    <div>
+                      <span className="text-sm font-medium block">{profileSummary.location}</span>
+                      <span className="text-xs text-slate-500">{profileSummary.timezone}</span>
+                    </div>
                   </div>
                 </div>
                 <div className="rounded-[28px] border border-white/70 bg-white/75 p-5">
                   <div className="flex items-center gap-3 text-teal-700">
                     <Clock3 className="size-5" />
-                    <span className="text-sm font-medium">{profileSummary.timezone}</span>
+                    <div>
+                      <span className="text-sm font-medium block">{profileSummary.responseTime}</span>
+                      <span className="text-xs text-slate-500">Typical response time</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1091,8 +1603,8 @@ export default function PortfolioShell() {
                     isLotm && "border border-[#f0b85b]/45 bg-[#c8861f] text-[#f6fbff] hover:bg-[#de9f3a]"
                   )}
                 >
-                  <Link href={socialLinks[1].href} target="_blank">
-                    Message on LinkedIn
+                  <Link href={profileSummary.bookCallLink}>
+                    Book a Discovery Call
                     <ArrowUpRight className="size-4" />
                   </Link>
                 </Button>
@@ -1104,8 +1616,20 @@ export default function PortfolioShell() {
                     isLotm && "border-[#d49a3f]/50 bg-[#070b13]/72 text-[#deebff] hover:bg-[#101a2a]"
                   )}
                 >
-                  <Link href={socialLinks[0].href} target="_blank">
-                    Explore GitHub
+                  <Link href={socialLinks[3].href} target="_blank">
+                    Message on WhatsApp
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className={cn(
+                    "h-12 rounded-full border-slate-300 bg-transparent px-6 text-slate-800",
+                    isLotm && "border-[#d49a3f]/50 bg-[#070b13]/72 text-[#deebff] hover:bg-[#101a2a]"
+                  )}
+                >
+                  <Link href={socialLinks[1].href} target="_blank">
+                    LinkedIn
                   </Link>
                 </Button>
               </div>
@@ -1159,11 +1683,12 @@ export default function PortfolioShell() {
             </div>
           </div>
         </section>
+        </PexelsSection>
 
         <footer className="mx-auto w-full max-w-7xl px-5 pb-10 pt-6 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-3 border-t border-slate-200/80 py-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-            <p>Adarsh Pathania portfolio</p>
-            <p>Built with Next.js, Tailwind CSS, Framer Motion, GSAP, and Three.js.</p>
+            <p>Adarsh Pathania — Available for freelance projects. <Link href="#contact" className="text-teal-700 underline-offset-2 hover:underline">Let's talk.</Link></p>
+            <p>Built with Next.js, Tailwind CSS, Three.js, and PostgreSQL.</p>
           </div>
         </footer>
 
@@ -1176,6 +1701,9 @@ export default function PortfolioShell() {
           </div>
         ) : null}
       </main>
+
+      <CommandPalette />
+      <CaseStudyModal project={selectedCaseStudy} onClose={() => setSelectedCaseStudy(null)} />
 
       <GuidedTour
         promptOpen={tourPromptOpen}

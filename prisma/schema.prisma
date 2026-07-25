@@ -1,0 +1,75 @@
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://neondb_owner:npg_1jmw7XvcJILt@ep-sparkling-lake-axd1tm50.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Profile {
+  id             String   @id @default("default")
+  name           String
+  tagline        String
+  intro          String
+  availability   String
+  location       String
+  timezone       String
+  responseTime   String
+  currentRole    String
+  whatsAppLink   String
+  bookCallLink   String
+  hireMeLink     String
+  image          String
+  updatedAt      DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  serviceName String
+  icon        String   @default("Wand2")
+  order       Int      @default(0)
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  problem     String   @default("")
+  solution    String   @default("")
+  result      String   @default("")
+  techStack   String[]
+  category    String
+  image       String   @default("/images/placeholder.jpg")
+  liveLink    String
+  codeLink    String
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+}
+
+model Experience {
+  id          String   @id @default(uuid())
+  period      String
+  title       String
+  description String
+  order       Int      @default(0)
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  company   String
+  content   String
+  image     String   @default("/images/me_crop.png")
+  order     Int      @default(0)
+}
+
+model FAQ {
+  id       String   @id @default(uuid())
+  question String
+  answer   String
+  order    Int      @default(0)
+}

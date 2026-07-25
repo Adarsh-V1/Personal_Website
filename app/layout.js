@@ -1,4 +1,4 @@
-import { Cinzel, Manrope, Space_Grotesk, Spectral } from "next/font/google";
+import { Cinzel, Manrope, Space_Grotesk, Spectral, Plus_Jakarta_Sans, Outfit } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import LenisWrapper from "./components/LenisWrapper";
@@ -6,6 +6,18 @@ import UiFeedback from "./components/ui-feedback";
 import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange";
 import { ThemeProvider } from "./components/theme-provider";
 import { getSiteUrl, getStructuredDataGraph, siteConfig } from "../lib/seo";
+
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -85,7 +97,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${manrope.variable} ${spaceGrotesk.variable} ${cinzel.variable} ${spectral.variable} min-w-screen antialiased`}
+        className={`${plusJakarta.variable} ${outfit.variable} ${manrope.variable} ${spaceGrotesk.variable} ${cinzel.variable} ${spectral.variable} min-w-screen antialiased`}
       >
         <ThemeProvider
           attribute="class"

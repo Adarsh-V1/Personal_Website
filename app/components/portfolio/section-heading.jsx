@@ -31,7 +31,7 @@ export default function SectionHeading({
       </p>
       <h2
         className={cn(
-          "text-hover-float text-pretty font-(family-name:--font-space-grotesk) text-3xl text-slate-900 sm:text-4xl md:text-5xl",
+          "text-hover-float text-pretty font-heading font-extrabold tracking-tight text-3xl text-slate-950 sm:text-4xl md:text-5xl leading-tight",
           isLotm && "font-(family-name:--font-lotm-heading) text-[#eef6ff]"
         )}
       >

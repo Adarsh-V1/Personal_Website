@@ -19,7 +19,7 @@ export const HoverEffect = ({ items, className, onItemClick }) => {
           <AnimatePresence>
             {hoveredIndex === idx && (
               <motion.span
-                className="absolute inset-0 h-full w-full dark:bg-cyan-500  block rounded-3xl"
+                className="absolute inset-0 h-full w-full bg-slate-200/50 dark:bg-[#c8861f]/15 border border-slate-300/40 dark:border-[#f0b85b]/30 block rounded-3xl"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, transition: { duration: 0.15 } }}
