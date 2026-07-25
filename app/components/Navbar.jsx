@@ -210,7 +210,7 @@ const Navbar = () => {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-3 sm:px-8 lg:px-10">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-2.5 sm:px-8 lg:px-10">
         <Link
           href="/#hero"
           data-ui-feedback
@@ -219,16 +219,16 @@ const Navbar = () => {
             handleNavItemClick(event, "hero");
           }}
           className={cn(
-            "rounded-full border border-white/70 bg-white/78 px-3.5 py-1.5 text-xs font-semibold tracking-[0.24em] text-slate-900 shadow-[0_12px_36px_rgba(15,23,42,0.08)] backdrop-blur",
+            "relative flex size-9 items-center justify-center rounded-xl border border-white/70 bg-white/80 text-xs font-bold tracking-wider text-slate-900 shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
             isLotm && "border-[#d49a3f]/50 bg-[#070b13]/86 text-[#eef6ff]"
           )}
         >
           AP
         </Link>
 
-        <div
+        <nav
           className={cn(
-            "hidden items-center gap-1.5 rounded-full border border-white/70 bg-white/72 px-1.5 py-1.5 shadow-[0_12px_36px_rgba(15,23,42,0.08)] backdrop-blur lg:flex",
+            "hidden items-center gap-1 rounded-full border border-white/70 bg-white/72 px-1.5 py-1 shadow-[0_12px_36px_rgba(15,23,42,0.08)] backdrop-blur lg:flex",
             isLotm && "border-[#d49a3f]/40 bg-[#070b13]/80"
           )}
         >
@@ -240,7 +240,7 @@ const Navbar = () => {
               onClick={(event) => handleNavItemClick(event, item.id)}
               aria-current={active === item.id ? "page" : undefined}
               className={cn(
-                "text-hover-float rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:text-slate-950",
+                "relative rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-all duration-200 hover:text-slate-950",
                 active === item.id &&
                   (isLotm
                     ? "bg-[#c8861f] text-[#f6fbff] shadow-[0_10px_30px_rgba(0,0,0,0.35)] hover:text-[#f6fbff]"
@@ -248,10 +248,16 @@ const Navbar = () => {
                 isLotm && active !== item.id && "text-[#c8dcff] hover:text-[#e6f2ff]"
               )}
             >
+              {active === item.id && (
+                <span className={cn(
+                  "absolute -bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-current opacity-60",
+                  isLotm && "bg-[#f0b85b]"
+                )} />
+              )}
               {navLabelMap[item.id] ?? item.label}
             </Link>
           ))}
-        </div>
+        </nav>
 
         <div className="hidden items-center gap-1.5 lg:flex">
           <ThemeControls />
@@ -280,14 +286,19 @@ const Navbar = () => {
         </button>
       </div>
 
-      {mobileOpen ? (
+      <div
+        className={cn(
+          "mx-4 overflow-hidden transition-all duration-300 ease-out sm:mx-8 lg:hidden",
+          mobileOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+        )}
+      >
         <div
           className={cn(
-            "mx-5 rounded-[24px] border border-white/70 bg-white/90 p-3 shadow-[0_18px_56px_rgba(15,23,42,0.12)] backdrop-blur sm:mx-8 lg:hidden",
+            "mt-1 rounded-2xl border border-white/70 bg-white/92 p-3 shadow-[0_18px_56px_rgba(15,23,42,0.12)] backdrop-blur",
             isLotm && "border-[#d49a3f]/45 bg-[#070b13]/92"
           )}
         >
-          <nav className="flex flex-col gap-1.5">
+          <nav className="flex flex-col gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.id}
@@ -296,7 +307,7 @@ const Navbar = () => {
                 onClick={(event) => handleNavItemClick(event, item.id)}
                 aria-current={active === item.id ? "page" : undefined}
                 className={cn(
-                  "text-hover-float rounded-2xl px-4 py-2.5 text-sm font-medium text-slate-700 transition",
+                  "rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 transition-all duration-200",
                   active === item.id &&
                     (isLotm
                       ? "bg-[#c8861f] text-[#f6fbff] shadow-[0_12px_30px_rgba(0,0,0,0.35)]"
@@ -307,20 +318,22 @@ const Navbar = () => {
                 {navLabelMap[item.id] ?? item.label}
               </Link>
             ))}
-            <ThemeControls mobile />
-            <Button
-              onClick={triggerTour}
-              className={cn(
-                "mt-2 h-9 rounded-2xl text-white",
-                isLotm ? "bg-[#c8861f] hover:bg-[#de9f3a]" : "bg-slate-950 hover:bg-slate-800"
-              )}
-            >
-              <Sparkles className="size-4" />
-              Take Tour
-            </Button>
+            <div className="mt-1 flex items-center justify-between border-t border-slate-200/60 pt-2">
+              <ThemeControls mobile />
+              <Button
+                onClick={triggerTour}
+                className={cn(
+                  "h-8 rounded-xl px-3 text-xs text-white",
+                  isLotm ? "bg-[#c8861f] hover:bg-[#de9f3a]" : "bg-slate-950 hover:bg-slate-800"
+                )}
+              >
+                <Sparkles className="size-3.5 mr-1" />
+                Tour
+              </Button>
+            </div>
           </nav>
         </div>
-      ) : null}
+      </div>
     </header>
   );
 };
