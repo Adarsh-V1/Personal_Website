@@ -6,13 +6,16 @@ const {
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./app/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}",
+    "./lib/**/*.{js,jsx,ts,tsx}"
+  ],
   darkMode: "class",
   theme: {
-    // rest of the code
+    extend: {},
   },
   plugins: [
-    // rest of the code
     addVariablesForColors,
   ],
 };

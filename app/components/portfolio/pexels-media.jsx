@@ -26,13 +26,16 @@ export function usePexelsImage(query, orientation = "landscape") {
           `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&orientation=${orientation}&per_page=1`,
           { headers: { Authorization: PEXELS_API_KEY } }
         );
+        if (!res.ok) {
+          throw new Error(`Pexels API error: ${res.status} ${res.statusText}`);
+        }
         const data = await res.json();
         if (!cancelled && data.photos?.length) {
           cacheRef.current[cacheKey] = data.photos[0];
           setImage(data.photos[0]);
         }
       } catch (e) {
-        console.warn("Pexels fetch failed:", e);
+        console.warn(`Pexels image fetch failed for "${query}":`, e);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -74,7 +77,6 @@ export function PexelsSection({
   orientation = "landscape",
   className,
   children,
-  opacity = 0.25,
   gradient = "linear-gradient(180deg, rgba(252,250,245,0.92), rgba(252,250,245,0.96))",
 }) {
   const { image, loading } = usePexelsImage(query, orientation);
@@ -109,14 +111,22 @@ export function PexelsHeroImage({ query, orientation = "landscape", className, c
 
   return (
     <div
-      className={cn("relative overflow-hidden bg-cover bg-center", height, className)}
-      style={{
-        backgroundImage: `url(${src})`,
-        opacity: loaded ? 1 : 0,
-        transition: "opacity 0.6s ease",
-      }}
-      onLoad={() => setLoaded(true)}
+      className={cn("relative overflow-hidden", height, className)}
     >
+      {/* Hidden img to trigger onLoad, then fade in via background-image */}
+      <img
+        src={src}
+        alt=""
+        className="hidden"
+        onLoad={() => setLoaded(true)}
+      />
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-opacity duration-500"
+        style={{
+          backgroundImage: `url(${src})`,
+          opacity: loaded ? 1 : 0,
+        }}
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent" />
       {children ? <div className="relative z-10 h-full">{children}</div> : null}
     </div>
@@ -206,8 +216,11 @@ export function PexelsVideo({ query, className, poster, muted = true, loop = tru
       try {
         const res = await fetch(
           `https://api.pexels.com/videos/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`,
-          { headers: { Authorization: process.env.NEXT_PUBLIC_PEXEL_API_KEY || "" } }
+          { headers: { Authorization: PEXELS_API_KEY } }
         );
+        if (!res.ok) {
+          throw new Error(`Pexels video API error: ${res.status} ${res.statusText}`);
+        }
         const data = await res.json();
         if (!cancelled && data.videos?.length) {
           const video = data.videos[0];

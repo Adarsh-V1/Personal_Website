@@ -97,7 +97,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${plusJakarta.variable} ${outfit.variable} ${manrope.variable} ${spaceGrotesk.variable} ${cinzel.variable} ${spectral.variable} min-w-screen antialiased`}
+        className={`${plusJakarta.variable} ${outfit.variable} ${manrope.variable} ${spaceGrotesk.variable} ${cinzel.variable} ${spectral.variable} min-w-full w-full antialiased`}
       >
         <ThemeProvider
           attribute="class"

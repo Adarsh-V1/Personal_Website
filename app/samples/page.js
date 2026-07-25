@@ -19,7 +19,7 @@ export const metadata = buildPageMetadata({
 const Samples = ()=>{
 
    return(
-      <main className="w-screen min-h-screen h-full overflow-x-hidden bg-slate-950 px-6 pb-16 pt-28 text-white dark:bg-linear-to-br dark:from-black dark:via-slate-950 dark:to-black lg:px-10">
+      <main className="w-full min-h-screen h-full overflow-x-hidden bg-slate-950 px-6 pb-16 pt-28 text-white dark:bg-linear-to-br dark:from-black dark:via-slate-950 dark:to-black lg:px-10">
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-10">
                <section className="max-w-3xl space-y-4">
                   <p className="text-sm font-semibold uppercase tracking-[0.35em] text-cyan-300">

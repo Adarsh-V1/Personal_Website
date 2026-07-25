@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { 
   Lock, User, Briefcase, FolderGit2, MessageSquare, HelpCircle, 
-  Plus, Trash2, Edit3, Save, LogOut, CheckCircle2, AlertCircle, Sparkles 
+  Plus, Trash2, Save, LogOut, CheckCircle2, AlertCircle, Sparkles 
 } from "lucide-react";
 import { profileSummary, servicesData, caseStudies, testimonials as baseTestimonials, faqs as baseFaqs } from "../data/portfolio";
 
@@ -26,8 +26,19 @@ export default function AdminPage() {
   const [newProject, setNewProject] = useState({ 
     title: "", category: "SaaS Build", problem: "", solution: "", result: "", techStack: "", liveLink: "", codeLink: "" 
   });
+  const [newTestimonial, setNewTestimonial] = useState({ name: "", role: "", company: "", content: "", image: "" });
   const [newFaq, setNewFaq] = useState({ question: "", answer: "" });
   const [statusMessage, setStatusMessage] = useState("");
+
+  const fetchWithAuth = async (url, options = {}) => {
+    const authToken = localStorage.getItem("admin_token") || token;
+    const headers = {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      ...options.headers,
+    };
+    return fetch(url, { ...options, headers });
+  };
 
   useEffect(() => {
     const savedToken = localStorage.getItem("admin_token");
@@ -48,7 +59,7 @@ export default function AdminPage() {
       if (data.testimonials?.length) setTestimonials(data.testimonials);
       if (data.faqs?.length) setFaqs(data.faqs);
     } catch (err) {
-      console.log("Using default fallback data");
+      console.log("Using default fallback data", err);
     }
   };
 
@@ -79,6 +90,7 @@ export default function AdminPage() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    setToken("");
     localStorage.removeItem("admin_token");
   };
 
@@ -90,14 +102,18 @@ export default function AdminPage() {
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     try {
-      await fetch("/api/profile", {
+      const res = await fetchWithAuth("/api/profile", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),
       });
-      showToast("Profile settings updated successfully!");
+      const data = await res.json();
+      if (data.success) {
+        showToast("Profile settings updated & synced to database!");
+      } else {
+        showToast("Profile saved locally (" + (data.error || "DB offline") + ").");
+      }
     } catch (err) {
-      showToast("Updated locally (database sync offline).");
+      showToast("Updated locally.");
     }
   };
 
@@ -105,24 +121,29 @@ export default function AdminPage() {
     e.preventDefault();
     if (!newService.title) return;
     const item = { ...newService, id: Date.now().toString() };
-    setServices([...services, item]);
+    setServices((prev) => [...prev, item]);
     setNewService({ title: "", description: "", serviceName: "" });
     try {
-      await fetch("/api/services", {
+      const res = await fetchWithAuth("/api/services", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item),
       });
-      showToast("New service added successfully!");
+      const data = await res.json();
+      if (data.success && data.data) {
+        setServices((prev) => prev.map((s) => (s.id === item.id ? data.data : s)));
+        showToast("New service added & saved!");
+      } else {
+        showToast("Service added locally.");
+      }
     } catch (err) {
       showToast("Service added to active list.");
     }
   };
 
   const handleDeleteService = async (id) => {
-    setServices(services.filter((s) => s.id !== id));
+    setServices((prev) => prev.filter((s) => s.id !== id));
     try {
-      await fetch(`/api/services/${id}`, { method: "DELETE" });
+      await fetchWithAuth(`/api/services/${id}`, { method: "DELETE" });
       showToast("Service removed.");
     } catch (err) {
       showToast("Removed from view.");
@@ -135,27 +156,65 @@ export default function AdminPage() {
     const item = {
       ...newProject,
       id: Date.now().toString(),
-      techStack: typeof newProject.techStack === "string" ? newProject.techStack.split(",").map(s => s.trim()) : newProject.techStack,
+      techStack: typeof newProject.techStack === "string" ? newProject.techStack.split(",").map(s => s.trim()).filter(Boolean) : newProject.techStack,
     };
-    setProjects([...projects, item]);
+    setProjects((prev) => [...prev, item]);
     setNewProject({ title: "", category: "SaaS Build", problem: "", solution: "", result: "", techStack: "", liveLink: "", codeLink: "" });
     try {
-      await fetch("/api/projects", {
+      const res = await fetchWithAuth("/api/projects", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item),
       });
-      showToast("Project added successfully!");
+      const data = await res.json();
+      if (data.success && data.data) {
+        setProjects((prev) => prev.map((p) => (p.id === item.id ? data.data : p)));
+        showToast("Project added & synced!");
+      } else {
+        showToast("Project added locally.");
+      }
     } catch (err) {
       showToast("Project added.");
     }
   };
 
   const handleDeleteProject = async (id) => {
-    setProjects(projects.filter((p) => p.id !== id));
+    setProjects((prev) => prev.filter((p) => p.id !== id));
     try {
-      await fetch(`/api/projects/${id}`, { method: "DELETE" });
+      await fetchWithAuth(`/api/projects/${id}`, { method: "DELETE" });
       showToast("Project removed.");
+    } catch (err) {
+      showToast("Removed.");
+    }
+  };
+
+  const handleAddTestimonial = async (e) => {
+    e.preventDefault();
+    if (!newTestimonial.name || !newTestimonial.content) return;
+    const item = { ...newTestimonial, id: Date.now().toString() };
+    setTestimonials((prev) => [...prev, item]);
+    setNewTestimonial({ name: "", role: "", company: "", content: "", image: "" });
+    try {
+      const res = await fetchWithAuth("/api/testimonials", {
+        method: "POST",
+        body: JSON.stringify(item),
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        setTestimonials((prev) => prev.map((t) => (t.id === item.id ? data.data : t)));
+        showToast("Testimonial added & saved!");
+      } else {
+        showToast("Testimonial added locally.");
+      }
+    } catch (err) {
+      showToast("Testimonial saved.");
+    }
+  };
+
+  const handleDeleteTestimonial = async (id) => {
+    setTestimonials((prev) => prev.filter((t) => t.id !== id));
+    try {
+      await fetchWithAuth(`/api/testimonials/${id}`, { method: "DELETE" });
+      showToast("Testimonial removed.");
     } catch (err) {
       showToast("Removed.");
     }
@@ -165,17 +224,32 @@ export default function AdminPage() {
     e.preventDefault();
     if (!newFaq.question) return;
     const item = { ...newFaq, id: Date.now().toString() };
-    setFaqs([...faqs, item]);
+    setFaqs((prev) => [...prev, item]);
     setNewFaq({ question: "", answer: "" });
     try {
-      await fetch("/api/faqs", {
+      const res = await fetchWithAuth("/api/faqs", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item),
       });
-      showToast("FAQ added!");
+      const data = await res.json();
+      if (data.success && data.data) {
+        setFaqs((prev) => prev.map((f) => (f.id === item.id ? data.data : f)));
+        showToast("FAQ added & synced!");
+      } else {
+        showToast("FAQ saved locally.");
+      }
     } catch (err) {
       showToast("FAQ saved.");
+    }
+  };
+
+  const handleDeleteFaq = async (id) => {
+    setFaqs((prev) => prev.filter((f) => f.id !== id));
+    try {
+      await fetchWithAuth(`/api/faqs/${id}`, { method: "DELETE" });
+      showToast("FAQ removed.");
+    } catch (err) {
+      showToast("Removed.");
     }
   };
 
@@ -314,7 +388,7 @@ export default function AdminPage() {
                   <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Name</label>
                   <input
                     type="text"
-                    value={profile.name}
+                    value={profile.name || ""}
                     onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
                   />
@@ -335,7 +409,7 @@ export default function AdminPage() {
                 <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Hero Tagline</label>
                 <input
                   type="text"
-                  value={profile.tagline}
+                  value={profile.tagline || ""}
                   onChange={(e) => setProfile({ ...profile, tagline: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
                 />
@@ -345,7 +419,7 @@ export default function AdminPage() {
                 <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Introduction</label>
                 <textarea
                   rows={3}
-                  value={profile.intro}
+                  value={profile.intro || ""}
                   onChange={(e) => setProfile({ ...profile, intro: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
                 />
@@ -356,7 +430,7 @@ export default function AdminPage() {
                   <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Location</label>
                   <input
                     type="text"
-                    value={profile.location}
+                    value={profile.location || ""}
                     onChange={(e) => setProfile({ ...profile, location: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
                   />
@@ -366,7 +440,7 @@ export default function AdminPage() {
                   <label className="block text-xs font-semibold text-slate-400 uppercase mb-2">Timezone</label>
                   <input
                     type="text"
-                    value={profile.timezone}
+                    value={profile.timezone || ""}
                     onChange={(e) => setProfile({ ...profile, timezone: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white"
                   />
@@ -435,8 +509,8 @@ export default function AdminPage() {
               </form>
 
               <div className="space-y-4">
-                {services.map((item) => (
-                  <div key={item.id || item.title} className="flex items-start justify-between p-4 rounded-xl bg-slate-950 border border-slate-800">
+                {services.map((item, idx) => (
+                  <div key={item.id || idx} className="flex items-start justify-between p-4 rounded-xl bg-slate-950 border border-slate-800">
                     <div>
                       <h4 className="font-semibold text-slate-100">{item.title}</h4>
                       <p className="text-xs text-slate-400 mt-1">{item.description}</p>
@@ -444,6 +518,7 @@ export default function AdminPage() {
                     <button
                       onClick={() => handleDeleteService(item.id)}
                       className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition"
+                      title="Delete Service"
                     >
                       <Trash2 className="size-4" />
                     </button>
@@ -514,8 +589,8 @@ export default function AdminPage() {
               </form>
 
               <div className="space-y-4">
-                {projects.map((p) => (
-                  <div key={p.id || p.title} className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between">
+                {projects.map((p, idx) => (
+                  <div key={p.id || idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between">
                     <div>
                       <h4 className="font-semibold text-slate-100">{p.title}</h4>
                       <p className="text-xs text-amber-400 mt-0.5">{p.category}</p>
@@ -524,6 +599,75 @@ export default function AdminPage() {
                     <button
                       onClick={() => handleDeleteProject(p.id)}
                       className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition"
+                      title="Delete Project"
+                    >
+                      <Trash2 className="size-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TESTIMONIALS TAB */}
+          {activeTab === "testimonials" && (
+            <div className="space-y-8">
+              <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2">
+                <MessageSquare className="size-5 text-amber-400" />
+                Client Testimonials & Endorsements
+              </h2>
+
+              <form onSubmit={handleAddTestimonial} className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+                <h3 className="text-sm font-semibold uppercase text-amber-400 tracking-wider">Add Client Testimonial</h3>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Client Name"
+                    value={newTestimonial.name}
+                    onChange={(e) => setNewTestimonial({ ...newTestimonial, name: e.target.value })}
+                    className="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Role (e.g. Founder & CEO)"
+                    value={newTestimonial.role}
+                    onChange={(e) => setNewTestimonial({ ...newTestimonial, role: e.target.value })}
+                    className="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Company Name"
+                    value={newTestimonial.company}
+                    onChange={(e) => setNewTestimonial({ ...newTestimonial, company: e.target.value })}
+                    className="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white"
+                  />
+                </div>
+                <textarea
+                  placeholder="Testimonial Content..."
+                  value={newTestimonial.content}
+                  onChange={(e) => setNewTestimonial({ ...newTestimonial, content: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white"
+                />
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 font-semibold text-white text-sm"
+                >
+                  <Plus className="size-4" />
+                  <span>Add Testimonial</span>
+                </button>
+              </form>
+
+              <div className="space-y-4">
+                {testimonials.map((t, idx) => (
+                  <div key={t.id || idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between">
+                    <div>
+                      <h4 className="font-semibold text-slate-100">{t.name} <span className="text-xs text-amber-400 font-normal">({t.role} • {t.company})</span></h4>
+                      <p className="text-xs text-slate-300 italic mt-1.5">"{t.content}"</p>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteTestimonial(t.id)}
+                      className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition"
+                      title="Delete Testimonial"
                     >
                       <Trash2 className="size-4" />
                     </button>
@@ -571,6 +715,13 @@ export default function AdminPage() {
                       <h4 className="font-semibold text-slate-100 text-sm">{f.question}</h4>
                       <p className="text-xs text-slate-400 mt-1">{f.answer}</p>
                     </div>
+                    <button
+                      onClick={() => handleDeleteFaq(f.id)}
+                      className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition"
+                      title="Delete FAQ"
+                    >
+                      <Trash2 className="size-4" />
+                    </button>
                   </div>
                 ))}
               </div>

@@ -1,8 +1,6 @@
 'use client'
 import React, { useRef, useEffect, useState } from "react";
 import projectInfo from "./info";
-
-import { ReactLenis } from "lenis/react";
 import { BackgroundBeamsWithCollision } from "./background-beams-with-collision";
 import Select from "react-select";
 
@@ -39,21 +37,6 @@ const customStyles = {
 };
 
 const Card = () => {
-  const lenisRef = useRef(null);
-
-  useEffect(() => {
-    let animationFrame;
-
-    const update = (time) => {
-      lenisRef.current?.lenis?.raf(time);
-      animationFrame = requestAnimationFrame(update);
-    };
-
-    animationFrame = requestAnimationFrame(update);
-
-    return () => cancelAnimationFrame(animationFrame);
-  }, []);
-
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
   const filteredProjects =
@@ -65,11 +48,10 @@ const Card = () => {
 
   return (
     <>
-      <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
       <BackgroundBeamsWithCollision>
-        <div className="flex h-full justify-center flex-col items-center  p-10  ">
+        <div className="flex h-full justify-center flex-col items-center p-4 sm:p-10">
           {/* Header */}
-          <div className="fixed top-20 z-10 w-full px-20 py-2  flex flex-col lg:flex-row md:flex-row justify-around items-center gap-4  ">
+          <div className="sticky top-20 z-10 w-full px-4 sm:px-20 py-2 flex flex-col lg:flex-row md:flex-row justify-around items-center gap-4">
             <h1 className="theme-text dark:text-neutral-200 text-2xl lg:text-3xl font-bold text-center">
               Featured Projects
             </h1>

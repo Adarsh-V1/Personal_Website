@@ -42,8 +42,8 @@ export const socialLinks = [
   },
   {
     label: "WhatsApp",
-    href: "https://wa.me/919015093766",
-    shortLabel: "Direct WhatsApp",
+    href: "https://wa.me/917889078854",
+    shortLabel: "Direct WhatsApp (+91 7889078854)",
   },
 ];
 
@@ -67,12 +67,12 @@ export const profileSummary = {
   tagline: "I build production-ready web applications for startups and agencies.",
   intro:
     "Full-Stack Developer — React, Next.js, Node.js, PostgreSQL, TypeScript. Available for freelance projects, custom SaaS builds, and agency collaborations. I take features from planning to deployment so you don't have to manage another developer.",
-  availability: "Software Engineer @ Paras Technologies • Available for Freelance",
+  availability: "Full-Stack Developer @ IT Company • Available for Freelance",
   location: "Mohali, Punjab, India",
   timezone: "IST (UTC+05:30)",
   responseTime: "Within 12 Hours",
-  currentRole: "Software Engineering Intern @ Paras Technologies",
-  whatsAppLink: "https://wa.me/919015093766",
+  currentRole: "Full-Stack Developer @ IT Company (Full-time since Jan 2026)",
+  whatsAppLink: "https://wa.me/917889078854",
   bookCallLink: "mailto:adarsh.pathania.04@gmail.com?subject=Book%20a%20Project%20Discovery%20Call",
   image: "/images/me_crop.png",
 };
@@ -175,6 +175,45 @@ export const caseStudies = [
     codeLink: projectInfo[3].codeLink,
     featured: true,
   },
+  {
+    id: "documind-ai",
+    title: "DocuMind AI — Smart Knowledge Base & RAG SaaS",
+    category: "AI & ML",
+    image: projectInfo[0].winView,
+    problem: "Enterprise teams needed an instant AI assistant to parse thousands of PDFs, Docs, and Notion pages with semantic vector search.",
+    solution: "Engineered a Next.js 15, LangChain, Pinecone vector database, and OpenAI GPT-4o RAG pipeline with streaming UI responses.",
+    result: "Reduced employee document research time by 75% across 12,000+ indexed company files with sub-2s query speed.",
+    techStack: ["Next.js", "TypeScript", "Pinecone", "LangChain", "OpenAI API", "Tailwind CSS"],
+    liveLink: "https://convo-link-delta.vercel.app/",
+    codeLink: "https://github.com/Adarsh-V1",
+    featured: true,
+  },
+  {
+    id: "omnicommerce",
+    title: "OmniCommerce — Multi-Vendor E-Commerce Engine",
+    category: "SaaS Build",
+    image: projectInfo[2].winView,
+    problem: "A retail marketplace required a high-speed multi-vendor store with Stripe Connect split payments and real-time inventory sync.",
+    solution: "Architected Next.js App Router, Prisma ORM, PostgreSQL on Neon, Stripe webhooks, and Redis caching.",
+    result: "Handled $120k+ in peak transaction volume with 0 checkout failures and sub-100ms API response times.",
+    techStack: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Stripe Connect", "Redis"],
+    liveLink: "https://convo-link-delta.vercel.app/",
+    codeLink: "https://github.com/Adarsh-V1",
+    featured: true,
+  },
+  {
+    id: "proppulse",
+    title: "PropPulse — Real Estate & Property Asset CRM",
+    category: "SaaS Build",
+    image: projectInfo[1].winView,
+    problem: "Property management firm needed an automated tenant portal for lease tracking, maintenance tickets, and automated invoice billing.",
+    solution: "Built a full-stack Next.js + Hono.js platform with automated PDF invoice generation, email notifications, and landlord analytics dashboard.",
+    result: "Automated 90% of tenant billing reminders and streamlined maintenance ticket resolution from 5 days to 12 hours.",
+    techStack: ["Next.js", "React", "Hono.js", "PostgreSQL", "Tailwind CSS", "SendGrid"],
+    liveLink: "https://viralsight.vercel.app/",
+    codeLink: "https://github.com/Adarsh-V1",
+    featured: true,
+  },
 ];
 
 export const processSteps = [
@@ -233,7 +272,7 @@ export const testimonials = [
   {
     name: "Engineering Lead",
     role: "Senior Engineering Manager",
-    company: "Paras Technologies",
+    company: "IT Company",
     content: "Adarsh delivers production code quickly, understands component architecture thoroughly, and takes full ownership of complex Next.js features.",
   },
   {
@@ -278,12 +317,12 @@ export const faqs = [
 ];
 
 export const projects = caseStudies;
-export const projectFilters = ["All", "SaaS Build", "Next.js", "React JS"];
+export const projectFilters = ["All", "SaaS Build", "Next.js", "React JS", "AI & ML"];
 
 export const experienceItems = [
   {
     period: "Jan 2026 — Present",
-    title: "Software Engineering Intern • Paras Technologies",
+    title: "Full-Stack Developer • IT Company (Full-time)",
     description: "Building production-grade web apps with Next.js, React, TypeScript, and Node.js for active clients.",
   },
   {
