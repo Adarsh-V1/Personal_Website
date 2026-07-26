@@ -51,6 +51,7 @@ import {
   whyWorkWithMe,
 } from "../../data/portfolio";
 import { cn } from "../../utils/cn";
+import FeaturedProjectsSection from "./featured-projects-section";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -757,6 +758,9 @@ export default function PortfolioShell() {
             </div>
           </div>
         </section>
+
+        {/* FEATURED PROJECTS — premium case-study cards */}
+        <FeaturedProjectsSection />
 
         {/* PROJECTS — compact grid with hover reveal */}
         <section
