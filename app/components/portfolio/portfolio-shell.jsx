@@ -4,8 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+// gsap removed for performance
 import { useTheme } from "next-themes";
 import {
   ArrowRight,
@@ -28,19 +27,13 @@ import InteractivePanel from "./interactive-panel";
 import CommandPalette from "./command-palette";
 import {
   Dev21ServiceCard,
-  Dev21AboutCard,
-  Dev21WhyMeCard,
-  Dev21ProcessCard,
 } from "./dev21-cards";
 import CaseStudyModal from "./case-study-modal";
-import { PexelsSection, PexelsCardImage, PexelsAvatar, PexelsCardBg, PexelsVideo } from "./pexels-media";
+// Pexels media removed for extreme performance optimization and crisp SaaS aesthetic
 import {
-  aboutCards,
   experienceItems,
-  faqs,
   heroStats,
   heroThreads,
-  processSteps,
   profileSummary,
   projects,
   servicesData,
@@ -48,12 +41,10 @@ import {
   techStack,
   testimonials,
   tourSteps,
-  whyWorkWithMe,
 } from "../../data/portfolio";
 import { cn } from "../../utils/cn";
-import FeaturedProjectsSection from "./featured-projects-section";
 
-gsap.registerPlugin(ScrollTrigger);
+// ScrollTrigger removed for performance
 
 const cardMotion = {
   initial: { opacity: 0, y: 18 },
@@ -115,58 +106,6 @@ function AnimatedCount({ value, className }) {
   return <span ref={ref} className={className}>{display || value}</span>;
 }
 
-function FAQItem({ question, answer, isOpen, onToggle, isLotm }) {
-  return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-2xl border border-white/70 bg-white/70 shadow-sm backdrop-blur transition-all duration-300 hover:shadow-md",
-        isLotm && "border-[#d49a3f]/36 bg-[#0a101b]/82 hover:border-[#f0b85b]/30",
-        isOpen && "border-teal-500/40 shadow-md",
-        isLotm && isOpen && "border-[#f0b85b]/40"
-      )}
-    >
-      <div className="relative z-10">
-        <button
-          type="button"
-          onClick={onToggle}
-          className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
-        >
-          <span className="flex items-start gap-3">
-            <HelpCircle className={cn(
-              "mt-0.5 size-4 shrink-0 text-teal-600",
-              isLotm && "text-[#f0b85b]"
-            )} />
-            <span className={cn(
-              "font-(family-name:--font-space-grotesk) text-sm font-semibold text-slate-900",
-              isLotm && "font-(family-name:--font-lotm-heading) text-[#e8f2ff]"
-            )}>
-              {question}
-            </span>
-          </span>
-          <ChevronDown className={cn(
-            "size-4 shrink-0 text-slate-400 transition-transform duration-300",
-            isOpen && "rotate-180 text-teal-600",
-            isLotm && isOpen && "text-[#f0b85b]"
-          )} />
-        </button>
-        <div className={cn(
-          "grid transition-all duration-300",
-          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-        )}>
-          <div className="overflow-hidden">
-            <p className={cn(
-              "px-5 pb-4 text-sm leading-6 text-slate-600",
-              isLotm && "text-[#b9cff2]"
-            )}>
-              {answer}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function CopyEmailButton({ isLotm }) {
   const [copied, setCopied] = useState(false);
   const email = "adarsh.pathania.04@gmail.com";
@@ -217,7 +156,6 @@ export default function PortfolioShell() {
   const [tourPromptOpen, setTourPromptOpen] = useState(false);
   const [activeTourStep, setActiveTourStep] = useState(-1);
   const [omenMessage, setOmenMessage] = useState("");
-  const [openFaqIndex, setOpenFaqIndex] = useState(null);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState(null);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [testimonialPaused, setTestimonialPaused] = useState(false);
@@ -305,77 +243,7 @@ export default function PortfolioShell() {
       return;
     }
 
-    const ctx = gsap.context(() => {
-      if (heroCopyRef.current) {
-        gsap.fromTo(
-          heroCopyRef.current.children,
-          { autoAlpha: 0, y: 34 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.78,
-            stagger: 0.08,
-            ease: "power3.out",
-          }
-        );
-      }
-
-      if (heroBgRef.current) {
-        const floats = heroBgRef.current.querySelectorAll(".gsap-float");
-        floats.forEach((el) => {
-          const delay = parseFloat(el.getAttribute("data-delay")) || 0;
-          gsap.to(el, {
-            y: "+=18",
-            rotation: "+=4",
-            duration: 3.5 + delay,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-            delay,
-          });
-        });
-      }
-
-      if (heroStatsRef.current) {
-        gsap.fromTo(
-          heroStatsRef.current.children,
-          { autoAlpha: 0, y: 26, scale: 0.96 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.7,
-            stagger: 0.08,
-            ease: "power3.out",
-            delay: 0.25,
-          }
-        );
-      }
-
-      const revealElements = gsap.utils.toArray("[data-reveal]");
-
-      gsap.set(revealElements, { autoAlpha: 0, y: 42 });
-
-      ScrollTrigger.batch(revealElements, {
-        start: "top 84%",
-        once: true,
-        onEnter: (elements) =>
-          gsap.to(elements, {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.72,
-            stagger: 0.08,
-            ease: "power3.out",
-            overwrite: true,
-          }),
-      });
-
-    }, mainRef);
-
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
+    // GSAP removed for performance optimization
   }, []);
 
   const startTour = () => {
@@ -447,27 +315,23 @@ export default function PortfolioShell() {
       <main
         ref={mainRef}
         className={cn(
-          "portfolio-main relative overflow-x-clip",
+          "portfolio-main relative overflow-x-clip antialiased",
           isLotm
-            ? "lotm-main bg-[#02050a]"
-            : "bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.12),transparent_28%),radial-gradient(circle_at_85%_15%,rgba(45,212,191,0.15),transparent_26%),linear-gradient(180deg,#fcfaf5_0%,#f7f1e8_48%,#fcfbf8_100%)]"
+            ? "lotm-main bg-slate-950 text-white"
+            : "bg-white text-zinc-900 selection:bg-blue-200 selection:text-blue-900"
         )}
       >
         <div
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute inset-x-0 top-0 h-180 bg-[linear-gradient(rgba(15,23,42,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.05)_1px,transparent_1px)] bg-size-[64px_64px] mask-[radial-gradient(circle_at_top,black,transparent_82%)]",
-            isLotm && "opacity-50"
+            "pointer-events-none absolute inset-0 -z-10 h-full w-full",
+            isLotm 
+              ? "bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:16px_16px] opacity-20"
+              : "bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"
           )}
         />
 
-        {/* Persistent background video — single source across all sections */}
-        <div className="pointer-events-none fixed inset-0 -z-10">
-          <PexelsVideo
-            query={isLotm ? "dark technology abstract" : "technology coding workspace"}
-            className="h-full w-full object-cover"
-          />
-        </div>
+        {/* Removed persistent background video to improve performance and remove lag */}
 
         {/* Section overlay gradients — each section gets its own vibe */}
         {[
@@ -500,18 +364,7 @@ export default function PortfolioShell() {
             ref={heroBgRef}
             className="pointer-events-none absolute inset-0 overflow-hidden"
           >
-            <div className="gsap-float absolute left-[6%] top-[18%] size-36 rotate-12 opacity-[0.07] blur-sm">
-              <PexelsCardImage query="code screen" size="large" className="!size-36" />
-            </div>
-            <div className="gsap-float absolute right-[10%] top-[12%] size-28 -rotate-6 opacity-[0.06] blur-sm" data-delay="0.3">
-              <PexelsCardImage query="dashboard analytics" size="large" className="!size-28" />
-            </div>
-            <div className="gsap-float absolute left-[4%] bottom-[28%] size-24 rotate-45 opacity-[0.07] blur-sm" data-delay="0.6">
-              <PexelsCardImage query="team meeting" size="large" className="!size-24" />
-            </div>
-            <div className="gsap-float absolute right-[6%] bottom-[22%] size-32 -rotate-12 opacity-[0.05] blur-sm" data-delay="0.9">
-              <PexelsCardImage query="mobile technology" size="large" className="!size-32" />
-            </div>
+            {/* Hero background elements simplified for performance and clean aesthetic */}
           </div>
 
           <div className={cn(
@@ -559,15 +412,15 @@ export default function PortfolioShell() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
                 className={cn(
-                  "mt-8 max-w-4xl text-balance font-(family-name:--font-space-grotesk) text-5xl font-extrabold leading-[1.02] text-slate-950 sm:text-6xl lg:text-7xl tracking-tight",
-                  isLotm && "font-(family-name:--font-lotm-heading) text-[#f6fbff]"
+                  "mt-8 max-w-4xl text-balance font-(family-name:--font-space-grotesk) text-5xl font-black leading-[1.1] text-zinc-950 sm:text-6xl lg:text-7xl tracking-tighter",
+                  isLotm && "font-(family-name:--font-lotm-heading) text-white"
                 )}
               >
-                I Build{" "}
-                <span className="animated-gradient-text bg-gradient-to-r from-teal-600 via-emerald-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent dark:from-teal-400 dark:via-cyan-400 dark:to-emerald-400">
-                  Production-Ready
-                </span>{" "}
-                Web Applications.
+                Building the Best{" "}
+                <span className="text-blue-600 dark:text-blue-400">
+                  Modern Web Applications
+                </span>
+                .
               </motion.h1>
 
               <motion.p
@@ -575,11 +428,11 @@ export default function PortfolioShell() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.35 }}
                 className={cn(
-                  "mt-6 max-w-2xl text-lg font-medium leading-8 text-slate-700 dark:text-slate-300 sm:text-xl",
-                  isLotm && "font-(family-name:--font-lotm-body) text-[#bdd3f5]"
+                  "mt-6 max-w-2xl text-lg font-medium leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-xl",
+                  isLotm && "font-(family-name:--font-lotm-body) text-slate-300"
                 )}
               >
-                {profileSummary.intro}
+                I design and develop ultra-fast, robust, and scalable solutions tailored to elevate your business. Let's create something extraordinary together.
               </motion.p>
 
               {/* Thread selector — interactive specialization pills */}
@@ -595,10 +448,10 @@ export default function PortfolioShell() {
                       key={thread.name}
                       onClick={() => handleActiveThreadChange(thread)}
                       className={cn(
-                        "rounded-full border px-3 py-1.5 text-xs font-semibold shadow-sm backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:shadow-md",
+                        "rounded-full border px-4 py-2 text-xs font-semibold shadow-sm transition-all duration-300 hover:scale-105",
                         activeThread?.name === thread.name
-                          ? "border-teal-500/50 bg-teal-500/15 text-teal-700"
-                          : "border-white/70 bg-white/60 text-slate-700 hover:border-teal-500/30 hover:bg-teal-500/5 hover:text-teal-600",
+                          ? "border-blue-500/50 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                          : "border-zinc-200 bg-white text-zinc-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700",
                         isLotm && (
                           activeThread?.name === thread.name
                             ? "border-[#f0b85b]/60 bg-[#f0b85b]/15 text-[#f0b85b]"
@@ -633,7 +486,7 @@ export default function PortfolioShell() {
                   asChild
                   data-ui-feedback
                   className={cn(
-                    "group/btn h-12 rounded-full bg-slate-950 px-7 text-sm font-bold text-white shadow-[0_18px_50px_rgba(15,23,42,0.18)] transition-all duration-300 hover:scale-105 hover:bg-slate-800 hover:shadow-[0_24px_60px_rgba(15,23,42,0.28)] active:scale-95 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200",
+                    "group/btn h-12 rounded-full bg-blue-600 px-7 text-sm font-bold text-white shadow-[0_8px_20px_rgba(37,99,235,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_12px_28px_rgba(37,99,235,0.35)] active:scale-95",
                     isLotm && "border border-[#f0b85b]/45 bg-[#c8861f] text-[#f6fbff] hover:bg-[#de9f3a] hover:shadow-[0_24px_60px_rgba(240,184,91,0.24)]"
                   )}
                 >
@@ -648,7 +501,7 @@ export default function PortfolioShell() {
                   data-ui-feedback
                   variant="outline"
                   className={cn(
-                    "group/btn h-12 rounded-full border-white/70 bg-white/70 px-6 text-sm font-semibold text-slate-800 shadow-sm backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:bg-white hover:shadow-md dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800",
+                    "group/btn h-12 rounded-full border border-zinc-200 bg-white px-6 text-sm font-semibold text-zinc-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-300 hover:bg-zinc-50 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800",
                     isLotm && "border-[#d49a3f]/50 bg-[#070b13]/82 text-[#e6f2ff] hover:bg-[#101a2b]"
                   )}
                 >
@@ -662,7 +515,7 @@ export default function PortfolioShell() {
                   data-ui-feedback
                   variant="outline"
                   className={cn(
-                    "group/btn h-12 rounded-full border-white/70 bg-white/70 px-6 text-sm font-semibold text-slate-800 shadow-sm backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:bg-white hover:shadow-md dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800",
+                    "group/btn h-12 rounded-full border border-zinc-200 bg-white px-6 text-sm font-semibold text-zinc-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-300 hover:bg-zinc-50 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800",
                     isLotm && "border-[#d49a3f]/50 bg-[#070b13]/82 text-[#e6f2ff] hover:bg-[#101a2b]"
                   )}
                 >
@@ -725,7 +578,7 @@ export default function PortfolioShell() {
         {/* SERVICES */}
         <section
           id="services"
-          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+          className="mx-auto flex w-full max-w-7xl scroll-mt-24 items-center px-5 py-16 sm:px-8 lg:px-10"
         >
           <div className="w-full">
             <div data-reveal>
@@ -759,13 +612,12 @@ export default function PortfolioShell() {
           </div>
         </section>
 
-        {/* FEATURED PROJECTS — premium case-study cards */}
-        <FeaturedProjectsSection />
+        {/* FEATURED PROJECTS removed to reduce scrolling length */}
 
         {/* PROJECTS — compact grid with hover reveal */}
         <section
           id="projects"
-          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+          className="mx-auto flex w-full max-w-7xl scroll-mt-24 items-center px-5 py-16 sm:px-8 lg:px-10"
         >
           <div className="w-full">
             <div data-reveal>
@@ -893,7 +745,7 @@ export default function PortfolioShell() {
         {/* ABOUT — multi-layout: cards grid + condensed timeline + process grid */}
         <section
           id="about"
-          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+          className="mx-auto flex w-full max-w-7xl scroll-mt-24 items-center px-5 py-16 sm:px-8 lg:px-10"
           >
             <div className="w-full">
               <div data-reveal>
@@ -936,37 +788,10 @@ export default function PortfolioShell() {
                 </div>
               </motion.div>
 
-              {/* How I Work — merged philosophy + why-work-with-me */}
-              <div className="mt-10">
-                <p className={cn("mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-slate-400", isLotm && "text-[#b4c8e3]")}>How I Work</p>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {aboutCards.map((card, i) => (
-                    <motion.div
-                      key={card.title}
-                      initial={{ opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.35, delay: i * 0.06 }}
-                    >
-                      <Dev21AboutCard card={card} isLotm={isLotm} />
-                    </motion.div>
-                  ))}
-                  {whyWorkWithMe.map((item, i) => (
-                    <motion.div
-                      key={item.title}
-                      initial={{ opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.35, delay: (i + aboutCards.length) * 0.06 }}
-                    >
-                      <Dev21WhyMeCard title={item.title} description={item.description} isLotm={isLotm} />
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Experience — compact timeline */}
-              <div className="mt-10">
+              {/* Experience and Technologies Side-by-Side */}
+              <div className="mt-10 grid gap-8 md:grid-cols-2">
+                {/* Experience — compact timeline */}
+                <div>
                 <p className={cn("mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-slate-400", isLotm && "text-[#b4c8e3]")}>Experience</p>
                 <div className="relative">
                   <div className="absolute left-[13px] top-0 h-full w-0.5 bg-gradient-to-b from-amber-500/30 via-teal-500/20 to-transparent" />
@@ -992,26 +817,8 @@ export default function PortfolioShell() {
                 </div>
               </div>
 
-              {/* Process — compact 2-col grid */}
-              <div className="mt-10">
-                <p className={cn("mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-slate-400", isLotm && "text-[#b4c8e3]")}>Process</p>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {processSteps.map((step, i) => (
-                    <motion.div
-                      key={step.number}
-                      initial={{ opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.35, delay: i * 0.05 }}
-                    >
-                      <Dev21ProcessCard step={step} isLotm={isLotm} />
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
               {/* Technologies — compact badge wall */}
-              <div className="mt-10">
+              <div>
                 <p className={cn("mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-slate-400", isLotm && "text-[#b4c8e3]")}>Technologies</p>
                 <div className="flex flex-wrap gap-1.5">
                   {techStack.map((t) => (
@@ -1028,12 +835,13 @@ export default function PortfolioShell() {
                 </div>
               </div>
             </div>
-          </section>
+          </div>
+        </section>
 
         {/* TESTIMONIALS — carousel */}
         <section
           id="testimonials"
-          className="mx-auto flex min-h-screen w-full max-w-5xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+          className="mx-auto flex w-full max-w-5xl scroll-mt-24 items-center px-5 py-16 sm:px-8 lg:px-10"
         >
           <div className="w-full">
             <div data-reveal>
@@ -1071,7 +879,7 @@ export default function PortfolioShell() {
                       i !== activeTestimonial && "pointer-events-none absolute inset-0"
                     )}
                   >
-                    <PexelsCardBg query={avatarQuery} className="absolute inset-0 opacity-[0.04]" />
+                    <div className="absolute inset-0 bg-blue-50/50 dark:bg-slate-900/50 opacity-10" />
                     <div className="relative z-10 p-8 sm:p-10">
                       <span className={cn(
                         "select-none text-[120px] font-heading leading-none text-teal-600/10 sm:text-[160px]",
@@ -1084,7 +892,9 @@ export default function PortfolioShell() {
                         {t.content}
                       </blockquote>
                       <div className="mt-6 flex items-center gap-4">
-                        <PexelsAvatar query={avatarQuery} size="lg" />
+                        <div className="flex size-14 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-700 shadow-inner dark:bg-blue-900/40 dark:text-blue-300">
+                          {t.name.charAt(0)}
+                        </div>
                         <div>
                           <p className={cn(
                             "font-(family-name:--font-space-grotesk) text-lg font-semibold text-slate-950",
@@ -1143,47 +953,12 @@ export default function PortfolioShell() {
           </div>
         </section>
 
-        {/* FAQ — 2-column grid expandable cards */}
-        <section
-          id="faq"
-          className="mx-auto flex min-h-screen w-full max-w-7xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
-        >
-          <div className="w-full max-w-5xl mx-auto">
-            <div data-reveal className="text-center">
-              <SectionHeading
-                eyebrow={sectionCopy.faqEyebrow}
-                title={sectionCopy.faqTitle}
-                description="Quick answers to the most common questions about working together."
-                align="center"
-              />
-            </div>
-
-            <div className="mt-10 grid gap-3 sm:grid-cols-2">
-              {faqs.map((faq, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.25, delay: index * 0.03 }}
-                >
-                  <FAQItem
-                    question={faq.question}
-                    answer={faq.answer}
-                    isOpen={openFaqIndex === index}
-                    onToggle={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
-                    isLotm={isLotm}
-                  />
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* FAQ removed to reduce scrolling length */}
 
         {/* CONTACT — single centered column */}
         <section
           id="contact"
-          className="mx-auto flex min-h-screen w-full max-w-3xl scroll-mt-24 items-center px-5 py-24 sm:px-8 lg:px-10"
+          className="mx-auto flex w-full max-w-3xl scroll-mt-24 items-center px-5 py-16 sm:px-8 lg:px-10"
         >
           <InteractivePanel
             data-reveal

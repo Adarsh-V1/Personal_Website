@@ -7,11 +7,7 @@ export const navItems = [
   { id: "hero", label: "Home" },
   { id: "services", label: "Services" },
   { id: "projects", label: "Projects" },
-  { id: "why-me", label: "Why Me" },
-  { id: "process", label: "Process" },
-  { id: "testimonials", label: "Testimonials" },
-  { id: "estimator", label: "Estimate Scope" },
-  { id: "faq", label: "FAQ" },
+  { id: "testimonials", label: "Reviews" },
   { id: "contact", label: "Contact" },
 ];
 
