@@ -162,8 +162,13 @@ export default function ThemeControls({ mobile = false }) {
   };
 
   const toggleTheme = () => {
-    const nextTheme = resolvedTheme === "lotm" ? "light" : "lotm";
-    setTheme(nextTheme);
+    if (resolvedTheme === "dark") {
+      setTheme("lotm");
+    } else if (resolvedTheme === "lotm") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
   };
 
   useEffect(() => {

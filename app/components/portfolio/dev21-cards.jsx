@@ -94,7 +94,7 @@ export function Dev21WhyMeCard({ title, description, isLotm }) {
     <div
       onMouseMove={handleMouseMove}
       className={cn(
-        "group relative overflow-hidden rounded-3xl border border-white/80 bg-white/80 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_80px_rgba(15,23,42,0.14)] dark:bg-slate-900/80 dark:border-slate-800",
+        "group relative overflow-hidden rounded-3xl border border-white/80 bg-white/80 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_80px_rgba(15,23,42,0.14)] dark:bg-[#0a0e17]/85 dark:border-white/10 dark:shadow-[0_18px_60px_rgba(0,0,0,0.6)] hover:dark:border-white/20",
         isLotm && "border-[#d49a3f]/38 bg-[#090f18]/90 shadow-[0_18px_60px_rgba(0,0,0,0.4)]"
       )}
     >
@@ -153,7 +153,7 @@ export function Dev21DeliveryItem({ text, isLotm }) {
   return (
     <div
       className={cn(
-        "group flex items-center gap-3.5 rounded-2xl border border-slate-200/80 bg-white/70 p-3.5 shadow-sm backdrop-blur-md transition-all duration-200 hover:border-teal-500/40 hover:bg-white hover:shadow-md dark:border-slate-800 dark:bg-slate-900/60 dark:hover:bg-slate-900",
+        "group flex items-center gap-3.5 rounded-2xl border border-slate-200/80 bg-white/70 p-3.5 shadow-sm backdrop-blur-md transition-all duration-200 hover:border-teal-500/40 hover:bg-white hover:shadow-md dark:border-white/10 dark:bg-[#0a0e17]/70 dark:hover:bg-[#0f1422] dark:hover:border-cyan-400/30",
         isLotm && "border-[#d49a3f]/25 bg-[#080d16]/80 text-[#e4efff] hover:border-[#d49a3f]/60 hover:bg-[#0c1524]"
       )}
     >
@@ -241,7 +241,7 @@ export function Dev21ProcessCard({ step, isLotm }) {
     <div
       onMouseMove={handleMouseMove}
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/80 bg-white/80 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_26px_90px_rgba(15,23,42,0.14)] dark:bg-slate-900/80 dark:border-slate-800",
+        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/80 bg-white/80 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_26px_90px_rgba(15,23,42,0.14)] dark:bg-[#0a0e17]/85 dark:border-white/10 dark:shadow-[0_18px_60px_rgba(0,0,0,0.6)] hover:dark:border-white/20",
         isLotm && "border-[#d49a3f]/38 bg-[#090f18]/90"
       )}
     >
@@ -308,7 +308,7 @@ export function Dev21ServiceCard({ service, isLotm }) {
   return (
     <div
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/80 bg-white/80 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_80px_rgba(15,23,42,0.14)] dark:bg-slate-900/80 dark:border-slate-800",
+        "group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/80 bg-white/80 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_80px_rgba(15,23,42,0.14)] dark:bg-[#0a0e17]/85 dark:border-white/10 dark:shadow-[0_18px_60px_rgba(0,0,0,0.6)] hover:dark:border-white/20",
         isLotm && "border-[#d49a3f]/38 bg-[#090f18]/90"
       )}
     >
@@ -321,7 +321,7 @@ export function Dev21ServiceCard({ service, isLotm }) {
             <IconComp className="size-6" />
           </div>
 
-          <span className={cn("rounded-full border border-slate-200/80 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300", isLotm && "border-[#d49a3f]/35 bg-[#141d2b] text-[#f0b85b]")}>
+          <span className={cn("rounded-full border border-slate-200/80 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200", isLotm && "border-[#d49a3f]/35 bg-[#141d2b] text-[#f0b85b]")}>
             {service.serviceName}
           </span>
         </div>
@@ -339,11 +339,11 @@ export function Dev21ServiceCard({ service, isLotm }) {
             <span
               key={cap}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-slate-50/80 px-2.5 py-1 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-300",
+                "inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-slate-50/80 px-2.5 py-1 text-xs font-medium text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-300",
                 isLotm && "border-[#6f6148]/60 bg-[#161220] text-[#c9bead]"
               )}
             >
-              <Check className="size-3 text-teal-600 dark:text-teal-400" />
+              <Check className="size-3 text-teal-600 dark:text-emerald-400" />
               {cap}
             </span>
           ))}
@@ -370,7 +370,7 @@ export function Dev21AboutCard({ card, isLotm }) {
   return (
     <div
       className={cn(
-        "group relative flex items-start gap-4 rounded-3xl border border-white/80 bg-white/80 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 dark:bg-slate-900/80 dark:border-slate-800",
+        "group relative flex items-start gap-4 rounded-3xl border border-white/80 bg-white/80 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 dark:bg-[#0a0e17]/85 dark:border-white/10 dark:shadow-[0_18px_60px_rgba(0,0,0,0.6)] hover:dark:border-white/20",
         isLotm && "border-[#d49a3f]/38 bg-[#090f18]/90"
       )}
     >

@@ -18,38 +18,23 @@ export default function SamplesClient() {
 
   return (
     <main className={cn(
-      "relative min-h-screen overflow-x-hidden px-6 pb-16 pt-28 lg:px-10",
-      lotm
-        ? "bg-[#02050a] text-white"
-        : "bg-[#fcfaf5] text-slate-900"
+      "relative min-h-screen overflow-x-hidden px-6 pb-16 pt-28 lg:px-10 bg-[#050608] text-white",
+      lotm && "bg-[#02050a]"
     )}>
-      <div aria-hidden="true" className={cn(
-        "pointer-events-none fixed inset-0",
-        lotm ? "opacity-30" : "opacity-100"
-      )}>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.04)_1px,transparent_1px)] bg-size-[64px_64px]" />
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 opacity-20">
+        <div className="absolute inset-0 bg-[radial-gradient(#00f5a0_1px,transparent_1px)] [background-size:32px_32px]" />
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-10">
         <section className="max-w-3xl space-y-4">
-          <p className={cn(
-            "text-xs font-semibold uppercase tracking-[0.32em]",
-            lotm ? "text-[#f0b85b]" : "text-teal-700"
-          )}>
-            Featured Work
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-cyan-400">
+            Featured Engineering & Architecture
           </p>
-          <h1 className={cn(
-            "text-4xl font-bold leading-tight sm:text-5xl",
-            lotm ? "text-[#eef6ff]" : "text-slate-950"
-          )}>
-            Projects, product experiments, and development samples.
+          <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl text-white">
+            Production Systems, Generative AI & Architecture
           </h1>
-          <p className={cn(
-            "text-base leading-7 sm:text-lg",
-            lotm ? "text-slate-300" : "text-slate-600"
-          )}>
-            Explore selected work across React, Next.js, JavaScript, Python, APIs, and
-            interactive frontends built to demonstrate real product thinking.
+          <p className="text-base leading-7 sm:text-lg text-slate-300">
+            Real production architectures built with Next.js 15, WebRTC, PyTorch, tRPC, and multi-model AI workflows.
           </p>
         </section>
 

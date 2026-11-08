@@ -1,0 +1,255 @@
+'use client';
+
+import React, { useRef, useState, useEffect } from 'react';
+import { Sound } from './sound';
+
+export default function QuestionNode({
+  nodeData,
+  physicsPoint,
+  isExplored = false,
+  isActive = false,
+  onOpenModal,
+  onDragStart,
+  onDragMove,
+  onDragEnd,
+  zeroGravity = false,
+  lightingMode = 'cyber-void',
+  registerNodeRef,
+}) {
+  const cardRef = useRef(null);
+  const dragStartPos = useRef({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // Register card element for direct 60/120fps DOM transforms
+  useEffect(() => {
+    if (cardRef.current && registerNodeRef) {
+      registerNodeRef(nodeData.id, cardRef.current);
+    }
+  }, [nodeData.id, registerNodeRef]);
+
+  if (!physicsPoint) return null;
+
+  const handlePointerDown = (e) => {
+    e.stopPropagation();
+    Sound.init();
+
+    // Lock pointer capture to this card so cursor NEVER slips off during fast drag
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (_) {}
+
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    dragStartPos.current = { x: clientX, y: clientY };
+    setIsDragging(true);
+
+    if (onDragStart) {
+      onDragStart(physicsPoint, clientX, clientY);
+    }
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging) return;
+    if (onDragMove) {
+      onDragMove(e.clientX, e.clientY);
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch (_) {}
+
+    const distMoved = Math.hypot(
+      e.clientX - dragStartPos.current.x,
+      e.clientY - dragStartPos.current.y
+    );
+
+    if (distMoved < 7) {
+      // Intentional click -> open modal
+      Sound.click();
+      if (onOpenModal) onOpenModal(nodeData, physicsPoint);
+    } else {
+      // Elastic slingshot release
+      Sound.pluck(0.75);
+    }
+
+    if (onDragEnd) {
+      onDragEnd();
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      Sound.click();
+      if (onOpenModal) onOpenModal(nodeData, physicsPoint);
+    }
+  };
+
+  const isDanger = nodeData.id === 'easter-egg';
+  const isLight = lightingMode === 'light';
+
+  const nodeColor = isExplored
+    ? (isLight ? '#d97706' : lightingMode === 'synthwave' ? '#f472b6' : '#fbbf24')
+    : isDanger
+    ? '#ef4444'
+    : isLight
+    ? '#2563eb'
+    : nodeData.color || '#00f0ff';
+
+  // Dynamic Theme Styling
+  let themeCardStyle = 'bg-[#080d1a]/90 border-white/15 text-slate-100';
+  let titleColor = 'text-slate-100 group-hover:text-white';
+  let subtextColor = 'text-slate-400/80';
+  let arrowColor = nodeColor;
+
+  if (isDanger) {
+    themeCardStyle = isLight
+      ? 'bg-red-50/95 border-red-300 text-red-900 shadow-md'
+      : 'bg-red-950/50 border-red-500/60 text-red-200';
+    titleColor = isLight ? 'text-red-700 font-bold' : 'text-red-300 font-bold tracking-wider';
+  } else if (isLight) {
+    themeCardStyle = 'bg-white/95 border-slate-300 text-slate-900 shadow-xl shadow-slate-200/50';
+    titleColor = 'text-slate-900 font-semibold group-hover:text-blue-600';
+    subtextColor = 'text-slate-500 font-mono font-medium';
+    arrowColor = '#2563eb';
+  } else if (lightingMode === 'lo-fi-lamp') {
+    themeCardStyle = 'bg-[#231b14]/95 border-amber-500/40 text-amber-100 shadow-[0_15px_35px_rgba(0,0,0,0.6)]';
+    titleColor = 'text-amber-100 group-hover:text-amber-300 font-serif';
+    subtextColor = 'text-amber-400/70 font-mono';
+    arrowColor = '#ffb347';
+  } else if (lightingMode === 'blueprint') {
+    themeCardStyle = 'bg-[#041525]/95 border-cyan-400/50 text-cyan-200 font-mono shadow-[0_15px_35px_rgba(0,0,0,0.6)]';
+    titleColor = 'text-cyan-200 group-hover:text-cyan-100';
+    subtextColor = 'text-cyan-400/70';
+    arrowColor = '#00f0ff';
+  } else if (lightingMode === 'synthwave') {
+    themeCardStyle = 'bg-[#18042c]/95 border-pink-500/50 text-pink-100 shadow-[0_15px_35px_rgba(0,0,0,0.6)]';
+    titleColor = 'text-pink-100 group-hover:text-pink-300';
+    subtextColor = 'text-pink-400/70 font-mono';
+    arrowColor = '#ec4899';
+  } else if (lightingMode === 'matrix') {
+    themeCardStyle = 'bg-[#02180a]/95 border-emerald-500/50 text-emerald-300 font-mono shadow-[0_15px_35px_rgba(0,0,0,0.6)]';
+    titleColor = 'text-emerald-300 group-hover:text-emerald-100';
+    subtextColor = 'text-emerald-400/70';
+    arrowColor = '#10b981';
+  } else if (lightingMode === 'lotm') {
+    themeCardStyle = 'bg-[#0a0f1d]/95 border-[#f0b85b]/40 text-[#f0b85b] font-serif shadow-[0_15px_35px_rgba(0,0,0,0.6)]';
+    titleColor = 'text-[#f0b85b] group-hover:text-[#ffd68a]';
+    subtextColor = 'text-[#d49a3f]/70 font-mono';
+    arrowColor = '#f0b85b';
+  }
+
+  return (
+    <div
+      ref={cardRef}
+      tabIndex={0}
+      role="button"
+      aria-label={`Question: ${nodeData.label}`}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onKeyDown={handleKeyDown}
+      onFocus={() => {
+        setIsFocused(true);
+        Sound.pluck(0.3);
+      }}
+      onBlur={() => setIsFocused(false)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        Sound.pluck(0.2);
+      }}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        transform: `translate3d(${physicsPoint.x}px, ${physicsPoint.y}px, 0) translate(-50%, -50%)`,
+        borderColor: isDragging || isFocused ? (isLight ? '#0f172a' : '#ffffff') : nodeColor,
+        boxShadow: isDragging || isFocused
+          ? `0 0 40px ${nodeColor}, 0 12px 45px rgba(0,0,0,0.85)`
+          : isHovered
+          ? `0 0 24px ${nodeData.glow || 'rgba(0,240,255,0.4)'}, 0 8px 30px rgba(0,0,0,0.6)`
+          : isLight
+          ? `0 4px 20px rgba(0,0,0,0.08), 0 0 10px ${nodeColor}25`
+          : `0 0 14px ${nodeData.glow ? nodeData.glow.replace('0.35', '0.18') : 'rgba(0,240,255,0.15)'}, 0 4px 20px rgba(0,0,0,0.5)`,
+        touchAction: 'none',
+      }}
+      className={`
+        absolute select-none cursor-grab active:cursor-grabbing z-20 outline-none
+        group rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5
+        backdrop-blur-xl border transition-shadow duration-150 will-change-transform
+        flex items-center gap-3 max-w-[280px] sm:max-w-[320px] md:max-w-[350px]
+        ${themeCardStyle}
+        ${isExplored ? (isLight ? 'ring-1 ring-amber-500/50' : 'ring-1 ring-amber-400/40') : ''}
+        ${isFocused ? (isLight ? 'ring-2 ring-blue-600 scale-105 z-30' : 'ring-2 ring-white scale-105 z-30') : ''}
+      `}
+    >
+      {/* Tether Socket Indicator (hidden in zero-g) */}
+      {!zeroGravity && (
+        <div
+          className={`absolute -top-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center ${
+            isLight ? 'bg-white' : 'bg-[#050608]'
+          }`}
+          style={{ borderColor: nodeColor }}
+        >
+          <div
+            className="w-1.5 h-1.5 rounded-full animate-pulse"
+            style={{ backgroundColor: nodeColor }}
+          />
+        </div>
+      )}
+
+      {/* Icon Beacon */}
+      <div
+        className="shrink-0 w-8 h-8 rounded-xl flex items-center justify-center text-sm font-semibold transition-transform duration-300 group-hover:scale-110"
+        style={{
+          backgroundColor: isExplored
+            ? (isLight ? 'rgba(217, 119, 6, 0.12)' : 'rgba(251, 191, 36, 0.15)')
+            : `${nodeColor}18`,
+          color: nodeColor,
+          border: `1px solid ${nodeColor}40`,
+        }}
+      >
+        {isExplored ? (
+          <span className={isLight ? 'text-amber-600 font-bold' : 'text-amber-400'}>✓</span>
+        ) : isDanger ? (
+          <span className="text-red-400 animate-pulse">⚠️</span>
+        ) : (
+          <span>✦</span>
+        )}
+      </div>
+
+      {/* Question Text */}
+      <div className="flex-1 min-w-0">
+        <p
+          className={`text-xs sm:text-sm font-medium leading-snug tracking-tight transition-colors duration-200 ${titleColor}`}
+        >
+          {nodeData.label}
+        </p>
+        <div className="flex items-center gap-2 mt-1">
+          <span className={`text-[10px] uppercase font-mono tracking-wider ${subtextColor}`}>
+            {isExplored ? 'Explored' : isFocused ? '[Press Enter]' : 'Drag / Click'}
+          </span>
+          {isExplored && (
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                isLight ? 'bg-amber-600 shadow-[0_0_8px_#d97706]' : 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'
+              }`}
+            />
+          )}
+        </div>
+      </div>
+
+      <div
+        className="shrink-0 text-xs font-mono opacity-40 group-hover:opacity-100 transition-all duration-200 group-hover:translate-x-0.5"
+        style={{ color: arrowColor }}
+      >
+        →
+      </div>
+    </div>
+  );
+}

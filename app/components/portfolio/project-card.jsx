@@ -69,7 +69,7 @@ export default function ProjectCard({ project, index }) {
           style={{ rotateX, rotateY }}
           transition={{ type: "spring", stiffness: 120, damping: 15 }}
           className={cn(
-            "relative overflow-hidden rounded-[28px] border border-white/70 bg-white/75 shadow-[0_22px_90px_rgba(15,23,42,0.08)] backdrop-blur transition-shadow duration-500 hover:shadow-[0_32px_120px_rgba(15,23,42,0.14)]",
+            "relative overflow-hidden rounded-[28px] border border-zinc-800/80 bg-zinc-950/85 text-white shadow-[0_22px_90px_rgba(0,0,0,0.6)] backdrop-blur transition-shadow duration-500 hover:shadow-[0_32px_120px_rgba(6,182,212,0.15)]",
             isLotm &&
               "border-[#d49a3f]/30 bg-[#0a101b]/85 shadow-[0_22px_90px_rgba(0,0,0,0.4)] hover:shadow-[0_32px_120px_rgba(0,0,0,0.6)]",
           )}
@@ -80,7 +80,7 @@ export default function ProjectCard({ project, index }) {
               "pointer-events-none absolute -inset-px rounded-[28px] opacity-0 transition-opacity duration-500 group-hover:opacity-100",
               isLotm
                 ? "shadow-[inset_0_0_40px_rgba(240,184,91,0.08)]"
-                : "shadow-[inset_0_0_40px_rgba(15,118,110,0.08)]",
+                : "shadow-[inset_0_0_40px_rgba(34,211,238,0.1)]",
             )}
           />
 
@@ -89,13 +89,13 @@ export default function ProjectCard({ project, index }) {
             <div className="absolute left-5 top-5 z-20">
               <span
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-50/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-800 shadow-sm backdrop-blur-sm",
+                  "inline-flex items-center gap-1.5 rounded-full border border-cyan-500/40 bg-zinc-950/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-cyan-400 shadow-sm backdrop-blur-md",
                   isLotm &&
                     "border-[#f0b85b]/40 bg-[#1a180e]/90 text-[#f0b85b]",
                 )}
               >
-                <Sparkles className="size-3" />
-                Featured Project
+                <Sparkles className="size-3 text-cyan-400" />
+                Featured Flagship
               </span>
             </div>
           )}
@@ -122,13 +122,13 @@ export default function ProjectCard({ project, index }) {
               </div>
               <div
                 className={cn(
-                  "absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent",
+                  "absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent",
                   isReversed
-                    ? "lg:bg-gradient-to-r lg:from-black/25 lg:via-transparent lg:to-transparent"
-                    : "lg:bg-gradient-to-l lg:from-black/25 lg:via-transparent lg:to-transparent",
+                    ? "lg:bg-gradient-to-r lg:from-black/50 lg:via-transparent lg:to-transparent"
+                    : "lg:bg-gradient-to-l lg:from-black/50 lg:via-transparent lg:to-transparent",
                 )}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
             </div>
 
             {/* Content side */}
@@ -136,7 +136,7 @@ export default function ProjectCard({ project, index }) {
               {/* Category label */}
               <span
                 className={cn(
-                  "inline-flex w-fit rounded-full border border-teal-500/20 bg-teal-500/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-teal-700",
+                  "inline-flex w-fit rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-300",
                   isLotm && "border-[#f0b85b]/30 bg-[#f0b85b]/10 text-[#f0b85b]",
                 )}
               >
@@ -146,7 +146,7 @@ export default function ProjectCard({ project, index }) {
               {/* Title */}
               <h3
                 className={cn(
-                  "mt-3 font-(family-name:--font-space-grotesk) text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl",
+                  "mt-3 font-(family-name:--font-space-grotesk) text-2xl font-extrabold tracking-tight text-white sm:text-3xl",
                   isLotm && "font-(family-name:--font-lotm-heading) text-[#eef6ff]",
                 )}
               >
@@ -156,7 +156,7 @@ export default function ProjectCard({ project, index }) {
               {/* Hook */}
               <p
                 className={cn(
-                  "mt-2 text-sm leading-relaxed text-teal-700/80 font-medium italic",
+                  "mt-2 text-sm leading-relaxed text-cyan-400 font-medium italic",
                   isLotm && "text-[#f0b85b]/80",
                 )}
               >
@@ -166,7 +166,7 @@ export default function ProjectCard({ project, index }) {
               {/* Description */}
               <p
                 className={cn(
-                  "mt-3 text-sm leading-relaxed text-slate-600",
+                  "mt-3 text-sm leading-relaxed text-zinc-300",
                   isLotm && "text-[#b9cff2]",
                 )}
               >
@@ -179,13 +179,13 @@ export default function ProjectCard({ project, index }) {
                   <li
                     key={f}
                     className={cn(
-                      "flex items-start gap-2 text-xs leading-relaxed text-slate-600",
+                      "flex items-start gap-2 text-xs leading-relaxed text-zinc-300",
                       isLotm && "text-[#b9cff2]",
                     )}
                   >
                     <CheckCircle2
                       className={cn(
-                        "mt-0.5 size-3.5 shrink-0 text-teal-600",
+                        "mt-0.5 size-3.5 shrink-0 text-emerald-400",
                         isLotm && "text-[#f0b85b]",
                       )}
                     />
@@ -193,7 +193,7 @@ export default function ProjectCard({ project, index }) {
                   </li>
                 ))}
                 {project.features.length > 4 && (
-                  <li className="flex items-center gap-2 text-xs text-slate-400">
+                  <li className="flex items-center gap-2 text-xs text-zinc-400">
                     <span className="ml-5">+{project.features.length - 4} more</span>
                   </li>
                 )}
@@ -207,7 +207,7 @@ export default function ProjectCard({ project, index }) {
                 {project.techStack.length > 5 && (
                   <span
                     className={cn(
-                      "inline-flex items-center rounded-full px-2 py-1 text-[11px] font-medium text-slate-400",
+                      "inline-flex items-center rounded-full px-2 py-1 text-[11px] font-medium text-zinc-400",
                       isLotm && "text-[#8899bb]",
                     )}
                   >
@@ -221,7 +221,7 @@ export default function ProjectCard({ project, index }) {
                 <a
                   href={project.caseStudyUrl}
                   className={cn(
-                    "group/btn inline-flex items-center gap-1.5 rounded-full bg-slate-950 px-5 py-2.5 text-xs font-bold text-white shadow-[0_12px_30px_rgba(15,23,42,0.12)] transition-all duration-300 hover:bg-slate-800 hover:shadow-[0_16px_40px_rgba(15,23,42,0.2)] active:scale-95",
+                    "group/btn inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 px-5 py-2.5 text-xs font-bold text-black shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300 hover:scale-105 active:scale-95",
                     isLotm &&
                       "border border-[#f0b85b]/40 bg-[#c8861f] text-[#f6fbff] hover:bg-[#de9f3a]",
                   )}
@@ -234,7 +234,7 @@ export default function ProjectCard({ project, index }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-4 py-2.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur transition-all duration-300 hover:border-teal-500/40 hover:bg-white hover:text-teal-700 hover:shadow-md active:scale-95",
+                    "inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 px-4 py-2.5 text-xs font-semibold text-zinc-200 shadow-sm backdrop-blur transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-800 hover:text-white active:scale-95",
                     isLotm &&
                       "border-[#d49a3f]/40 bg-[#070b13]/70 text-[#deebff] hover:border-[#f0b85b]/50 hover:bg-[#101a2b] hover:text-[#f0b85b]",
                   )}
@@ -248,7 +248,7 @@ export default function ProjectCard({ project, index }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-4 py-2.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur transition-all duration-300 hover:border-slate-400 hover:bg-white hover:text-slate-900 hover:shadow-md active:scale-95",
+                      "inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 px-4 py-2.5 text-xs font-semibold text-zinc-200 shadow-sm backdrop-blur transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-800 hover:text-white active:scale-95",
                       isLotm &&
                         "border-[#d49a3f]/40 bg-[#070b13]/70 text-[#deebff] hover:border-[#f0b85b]/50 hover:bg-[#101a2b] hover:text-[#f0b85b]",
                     )}
@@ -263,7 +263,7 @@ export default function ProjectCard({ project, index }) {
               <button
                 onClick={() => setExpanded(!expanded)}
                 className={cn(
-                  "mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 transition-colors hover:text-teal-600",
+                  "mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 transition-colors hover:text-cyan-400",
                   isLotm && "hover:text-[#f0b85b]",
                 )}
               >
@@ -292,7 +292,7 @@ export default function ProjectCard({ project, index }) {
           >
             <div
               className={cn(
-                "mt-3 rounded-2xl border border-white/70 bg-white/65 p-6 shadow-sm backdrop-blur sm:p-8",
+                "mt-3 rounded-2xl border border-zinc-800 bg-zinc-950/90 p-6 shadow-xl backdrop-blur sm:p-8",
                 isLotm &&
                   "border-[#d49a3f]/25 bg-[#0a101b]/75",
               )}
@@ -302,13 +302,13 @@ export default function ProjectCard({ project, index }) {
                   <div className="flex items-center gap-2">
                     <Target
                       className={cn(
-                        "size-4 text-teal-600",
+                        "size-4 text-cyan-400",
                         isLotm && "text-[#f0b85b]",
                       )}
                     />
                     <h4
                       className={cn(
-                        "text-xs font-bold uppercase tracking-wider text-slate-500",
+                        "text-xs font-bold uppercase tracking-wider text-zinc-400",
                         isLotm && "text-[#b4c8e3]",
                       )}
                     >
@@ -317,7 +317,7 @@ export default function ProjectCard({ project, index }) {
                   </div>
                   <p
                     className={cn(
-                      "mt-2 text-sm leading-relaxed text-slate-600",
+                      "mt-2 text-sm leading-relaxed text-zinc-300",
                       isLotm && "text-[#b9cff2]",
                     )}
                   >
@@ -328,13 +328,13 @@ export default function ProjectCard({ project, index }) {
                   <div className="flex items-center gap-2">
                     <Lightbulb
                       className={cn(
-                        "size-4 text-amber-600",
+                        "size-4 text-emerald-400",
                         isLotm && "text-[#f0b85b]",
                       )}
                     />
                     <h4
                       className={cn(
-                        "text-xs font-bold uppercase tracking-wider text-slate-500",
+                        "text-xs font-bold uppercase tracking-wider text-zinc-400",
                         isLotm && "text-[#b4c8e3]",
                       )}
                     >
@@ -343,7 +343,7 @@ export default function ProjectCard({ project, index }) {
                   </div>
                   <p
                     className={cn(
-                      "mt-2 text-sm leading-relaxed text-slate-600",
+                      "mt-2 text-sm leading-relaxed text-zinc-300",
                       isLotm && "text-[#b9cff2]",
                     )}
                   >
@@ -354,13 +354,13 @@ export default function ProjectCard({ project, index }) {
                   <div className="flex items-center gap-2">
                     <Zap
                       className={cn(
-                        "size-4 text-teal-600",
+                        "size-4 text-cyan-400",
                         isLotm && "text-[#f0b85b]",
                       )}
                     />
                     <h4
                       className={cn(
-                        "text-xs font-bold uppercase tracking-wider text-slate-500",
+                        "text-xs font-bold uppercase tracking-wider text-zinc-400",
                         isLotm && "text-[#b4c8e3]",
                       )}
                     >
@@ -372,13 +372,13 @@ export default function ProjectCard({ project, index }) {
                       <li
                         key={c}
                         className={cn(
-                          "flex items-start gap-2 text-sm leading-relaxed text-slate-600",
+                          "flex items-start gap-2 text-sm leading-relaxed text-zinc-300",
                           isLotm && "text-[#b9cff2]",
                         )}
                       >
                         <span
                           className={cn(
-                            "mt-1.5 size-1.5 shrink-0 rounded-full bg-teal-500",
+                            "mt-1.5 size-1.5 shrink-0 rounded-full bg-cyan-400",
                             isLotm && "bg-[#f0b85b]",
                           )}
                         />
@@ -391,13 +391,13 @@ export default function ProjectCard({ project, index }) {
                   <div className="flex items-center gap-2">
                     <Trophy
                       className={cn(
-                        "size-4 text-amber-600",
+                        "size-4 text-emerald-400",
                         isLotm && "text-[#f0b85b]",
                       )}
                     />
                     <h4
                       className={cn(
-                        "text-xs font-bold uppercase tracking-wider text-slate-500",
+                        "text-xs font-bold uppercase tracking-wider text-zinc-400",
                         isLotm && "text-[#b4c8e3]",
                       )}
                     >
@@ -406,7 +406,7 @@ export default function ProjectCard({ project, index }) {
                   </div>
                   <p
                     className={cn(
-                      "mt-2 text-sm leading-relaxed text-slate-600",
+                      "mt-2 text-sm leading-relaxed text-zinc-300",
                       isLotm && "text-[#b9cff2]",
                     )}
                   >

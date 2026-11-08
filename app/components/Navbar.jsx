@@ -12,14 +12,6 @@ import ThemeControls from "./theme-controls";
 
 const NAV_SCROLL_OFFSET = 108;
 
-const emojiMap = {
-  hero: "🏠",
-  services: "💼",
-  projects: "🚀",
-  testimonials: "💬",
-  contact: "📬",
-};
-
 const getRouteActiveItem = (pathname) => {
   if (!pathname || pathname === "/") {
     return "hero";
@@ -40,6 +32,7 @@ const Navbar = () => {
   const { resolvedTheme } = useTheme();
   const isHome = pathname === "/";
   const isLotm = resolvedTheme === "lotm";
+  const isDark = resolvedTheme === "dark" || resolvedTheme === "lotm" || !resolvedTheme;
 
   useEffect(() => {
     if (!isHome) {
@@ -227,8 +220,12 @@ const Navbar = () => {
             handleNavItemClick(event, "hero");
           }}
           className={cn(
-            "relative flex size-9 items-center justify-center rounded-xl border border-white/70 bg-white/80 text-xs font-bold tracking-wider text-slate-900 shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
-            isLotm && "border-[#d49a3f]/50 bg-[#070b13]/86 text-[#eef6ff]"
+            "relative flex size-9 items-center justify-center rounded-xl border text-xs font-bold tracking-wider shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
+            isLotm
+              ? "border-[#d49a3f]/50 bg-[#070b13]/86 text-[#eef6ff]"
+              : isDark
+              ? "border-white/10 bg-[#0a0e17]/85 text-white hover:border-cyan-500/40 hover:shadow-[0_0_15px_rgba(0,217,245,0.25)]"
+              : "border-white/70 bg-white/80 text-slate-900"
           )}
         >
           AP
@@ -236,12 +233,15 @@ const Navbar = () => {
 
         <nav
           className={cn(
-            "hidden items-center gap-1 rounded-full border border-white/70 bg-white/72 px-1.5 py-1 shadow-[inset_0_1px_1px_rgba(255,255,255,1),0_12px_36px_rgba(15,23,42,0.12)] backdrop-blur-md lg:flex transition-all duration-300 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,1),0_20px_40px_rgba(15,23,42,0.15)]",
-            isLotm && "border-[#d49a3f]/40 bg-[#070b13]/80 shadow-[inset_0_1px_1px_rgba(212,154,63,0.3),0_12px_36px_rgba(0,0,0,0.5)] hover:shadow-[inset_0_1px_1px_rgba(212,154,63,0.3),0_20px_40px_rgba(0,0,0,0.6)]"
+            "hidden items-center gap-1 rounded-full border px-1.5 py-1 backdrop-blur-md lg:flex transition-all duration-300",
+            isLotm
+              ? "border-[#d49a3f]/40 bg-[#070b13]/80 shadow-[inset_0_1px_1px_rgba(212,154,63,0.3),0_12px_36px_rgba(0,0,0,0.5)] hover:shadow-[inset_0_1px_1px_rgba(212,154,63,0.3),0_20px_40px_rgba(0,0,0,0.6)]"
+              : isDark
+              ? "border-white/10 bg-[#0a0e17]/85 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_12px_36px_rgba(0,0,0,0.7)] hover:border-white/20 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.08),0_16px_44px_rgba(0,0,0,0.85)]"
+              : "border-white/70 bg-white/72 shadow-[inset_0_1px_1px_rgba(255,255,255,1),0_12px_36px_rgba(15,23,42,0.12)] hover:shadow-[inset_0_1px_1px_rgba(255,255,255,1),0_20px_40px_rgba(15,23,42,0.15)]"
           )}
         >
           {navItems.map((item) => {
-            const emoji = emojiMap[item.id];
             return (
               <Link
                 key={item.id}
@@ -250,26 +250,21 @@ const Navbar = () => {
                 onClick={(event) => handleNavItemClick(event, item.id)}
                 aria-current={active === item.id ? "page" : undefined}
                 className={cn(
-                  "group relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold text-slate-600 transition-all duration-300 hover:text-slate-950",
+                  "group relative flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold tracking-wide transition-all duration-300",
+                  isDark ? "text-slate-400 hover:text-white" : "text-slate-600 hover:text-slate-950",
                   active === item.id &&
                     (isLotm
                       ? "bg-gradient-to-b from-[#dfa03a] to-[#c8861f] text-[#f6fbff] shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_6px_20px_rgba(200,134,31,0.4)] hover:text-[#f6fbff]"
+                      : isDark
+                      ? "bg-gradient-to-r from-cyan-500/20 via-emerald-500/20 to-cyan-500/20 border border-cyan-400/40 text-cyan-300 shadow-[0_0_20px_rgba(0,245,160,0.2)] hover:text-white"
                       : "bg-gradient-to-b from-blue-600 to-indigo-700 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(79,70,229,0.3)] hover:text-white"),
                   isLotm && active !== item.id && "text-[#c8dcff] hover:text-[#e6f2ff]"
                 )}
               >
-                {emoji && (
-                  <span className={cn(
-                    "text-lg drop-shadow-sm transition-transform duration-300 group-hover:scale-125 group-hover:-translate-y-0.5",
-                    active === item.id ? "scale-110 drop-shadow-md" : "grayscale-[30%] opacity-80 group-hover:grayscale-0 group-hover:opacity-100"
-                  )}>
-                    {emoji}
-                  </span>
-                )}
                 {active === item.id && (
                   <span className={cn(
-                    "absolute -bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-current opacity-60",
-                    isLotm && "bg-[#f0b85b]"
+                    "size-1.5 rounded-full",
+                    isLotm ? "bg-[#f0b85b]" : isDark ? "bg-emerald-400 shadow-[0_0_6px_#00f5a0]" : "bg-current"
                   )} />
                 )}
                 <span>{navLabelMap[item.id] ?? item.label}</span>
@@ -283,8 +278,12 @@ const Navbar = () => {
           <Button
             onClick={triggerTour}
             className={cn(
-              "h-9 rounded-full px-4 text-xs font-semibold text-white",
-              isLotm ? "bg-[#c8861f] hover:bg-[#de9f3a]" : "bg-slate-950 hover:bg-slate-800"
+              "h-9 rounded-full px-4 text-xs font-semibold",
+              isLotm
+                ? "bg-[#c8861f] text-white hover:bg-[#de9f3a]"
+                : isDark
+                ? "bg-gradient-to-r from-cyan-500 to-emerald-500 font-bold text-slate-950 shadow-[0_0_25px_rgba(0,245,160,0.3)] hover:from-cyan-400 hover:to-emerald-400 hover:shadow-[0_0_30px_rgba(0,245,160,0.5)]"
+                : "bg-slate-950 text-white hover:bg-slate-800"
             )}
           >
             <Sparkles className="size-4" />
@@ -296,8 +295,12 @@ const Navbar = () => {
           type="button"
           onClick={() => setMobileOpen((open) => !open)}
           className={cn(
-            "rounded-full border border-white/70 bg-white/78 p-2.5 text-slate-900 shadow-[0_12px_36px_rgba(15,23,42,0.08)] backdrop-blur lg:hidden",
-            isLotm && "border-[#d49a3f]/50 bg-[#070b13]/86 text-[#eef6ff]"
+            "rounded-full border p-2.5 shadow-[0_12px_36px_rgba(15,23,42,0.08)] backdrop-blur lg:hidden",
+            isLotm
+              ? "border-[#d49a3f]/50 bg-[#070b13]/86 text-[#eef6ff]"
+              : isDark
+              ? "border-white/10 bg-[#0a0e17]/85 text-white shadow-[0_12px_36px_rgba(0,0,0,0.6)]"
+              : "border-white/70 bg-white/78 text-slate-900"
           )}
           aria-label="Toggle navigation"
         >
@@ -313,13 +316,16 @@ const Navbar = () => {
       >
         <div
           className={cn(
-            "mt-1 rounded-2xl border border-white/70 bg-white/92 p-3 shadow-[0_18px_56px_rgba(15,23,42,0.12)] backdrop-blur",
-            isLotm && "border-[#d49a3f]/45 bg-[#070b13]/92"
+            "mt-1 rounded-2xl border p-3 shadow-[0_18px_56px_rgba(15,23,42,0.12)] backdrop-blur",
+            isLotm
+              ? "border-[#d49a3f]/45 bg-[#070b13]/92"
+              : isDark
+              ? "border-white/10 bg-[#0a0e17]/95 shadow-[0_24px_60px_rgba(0,0,0,0.9)]"
+              : "border-white/70 bg-white/92"
           )}
         >
           <nav className="flex flex-col gap-1">
             {navItems.map((item) => {
-              const emoji = emojiMap[item.id];
               return (
                 <Link
                   key={item.id}
@@ -328,33 +334,38 @@ const Navbar = () => {
                   onClick={(event) => handleNavItemClick(event, item.id)}
                   aria-current={active === item.id ? "page" : undefined}
                   className={cn(
-                    "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition-all duration-300",
+                    "flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300",
+                    isDark ? "text-slate-300 hover:bg-white/5" : "text-slate-700 hover:bg-slate-100",
                     active === item.id &&
                       (isLotm
                         ? "bg-gradient-to-b from-[#dfa03a] to-[#c8861f] text-[#f6fbff] shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_8px_24px_rgba(200,134,31,0.3)]"
+                        : isDark
+                        ? "bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 border border-cyan-400/30 text-cyan-300 shadow-[0_0_15px_rgba(0,245,160,0.2)]"
                         : "bg-gradient-to-b from-blue-600 to-indigo-700 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(79,70,229,0.3)]"),
                     isLotm && active !== item.id && "text-[#bfd5f6]"
                   )}
                 >
-                  {emoji && (
-                    <span className={cn(
-                      "text-xl drop-shadow-sm",
-                      active === item.id ? "drop-shadow-md" : "grayscale-[30%] opacity-80"
-                    )}>
-                      {emoji}
-                    </span>
-                  )}
                   <span>{navLabelMap[item.id] ?? item.label}</span>
+                  {active === item.id && (
+                    <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#00f5a0]" />
+                  )}
                 </Link>
               );
             })}
-            <div className="mt-1 flex items-center justify-between border-t border-slate-200/60 pt-2">
+            <div className={cn(
+              "mt-1 flex items-center justify-between border-t pt-2",
+              isDark ? "border-white/10" : "border-slate-200/60"
+            )}>
               <ThemeControls mobile />
               <Button
                 onClick={triggerTour}
                 className={cn(
-                  "h-8 rounded-xl px-3 text-xs text-white",
-                  isLotm ? "bg-[#c8861f] hover:bg-[#de9f3a]" : "bg-slate-950 hover:bg-slate-800"
+                  "h-8 rounded-xl px-3 text-xs",
+                  isLotm
+                    ? "bg-[#c8861f] text-white hover:bg-[#de9f3a]"
+                    : isDark
+                    ? "bg-gradient-to-r from-cyan-500 to-emerald-500 font-bold text-slate-950"
+                    : "bg-slate-950 text-white hover:bg-slate-800"
                 )}
               >
                 <Sparkles className="size-3.5 mr-1" />

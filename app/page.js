@@ -1,19 +1,21 @@
-import PortfolioShell from "./components/portfolio/portfolio-shell";
+import HomeViewManager from "./components/living-threads/HomeViewManager";
 import { buildPageMetadata } from "../lib/seo";
 
 export const metadata = buildPageMetadata({
+  title: "Adarsh Pathania | The Living Threads Interactive Portfolio",
   description:
-    "Adarsh Pathania — hire a freelance full-stack developer for React, Next.js, Node.js, PostgreSQL projects. SaaS, dashboards, admin panels, AI integration, and mobile apps. Available for contract and agency collaborations.",
+    "An atmospheric, zero-gravity interactive developer portfolio. Explore provocative, casual questions tethered by glowing Verlet physics threads, rich signature modals, and an embedded contextual AI twin.",
   path: "/",
   keywords: [
     "hire full stack developer",
     "Adarsh Pathania freelance developer",
+    "Living Threads interactive portfolio",
     "React Next.js developer for hire",
-    "freelance SaaS developer",
-    "admin dashboard developer",
+    "Verlet physics portfolio",
+    "interactive developer portfolio",
   ],
 });
 
 export default function Home() {
-  return <PortfolioShell />;
+  return <HomeViewManager />;
 }

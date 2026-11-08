@@ -1,8 +1,7 @@
-import { Cinzel, Manrope, Space_Grotesk, Spectral, Plus_Jakarta_Sans, Outfit } from "next/font/google";
+import { Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import LenisWrapper from "./components/LenisWrapper";
-import UiFeedback from "./components/ui-feedback";
 import ScrollToTopOnRouteChange from "./components/ScrollToTopOnRouteChange";
 import { ThemeProvider } from "./components/theme-provider";
 import { getSiteUrl, getStructuredDataGraph, siteConfig } from "../lib/seo";
@@ -10,34 +9,14 @@ import { getSiteUrl, getStructuredDataGraph, siteConfig } from "../lib/seo";
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
-});
-
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
-});
-
-const cinzel = Cinzel({
-  variable: "--font-lotm-heading",
-  subsets: ["latin"],
-});
-
-const spectral = Spectral({
-  variable: "--font-lotm-body",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata = {
@@ -97,14 +76,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${plusJakarta.variable} ${outfit.variable} ${manrope.variable} ${spaceGrotesk.variable} ${cinzel.variable} ${spectral.variable} min-w-full w-full antialiased`}
+        className={`${plusJakarta.variable} ${spaceGrotesk.variable} min-w-full w-full antialiased bg-[#050608] text-white`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="dark"
           enableSystem={false}
           storageKey="portfolio-theme"
-          themes={["light", "lotm"]}
+          themes={["dark", "light", "lotm"]}
           disableTransitionOnChange
         >
           <script
@@ -113,7 +92,6 @@ export default function RootLayout({ children }) {
           />
           <LenisWrapper>
             <ScrollToTopOnRouteChange />
-            <UiFeedback />
             <Navbar />
             {children}
           </LenisWrapper>

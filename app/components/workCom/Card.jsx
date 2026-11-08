@@ -77,31 +77,29 @@ const Card = () => {
             {filteredProjects.map((project, index) => (
               <div
                 key={index}
-                className="flex lg:scale-90 theme-card  shadow-md shadow-neutral-700 rounded-lg bg-white dark:bg-linear-to-br from-black via-slate-950 to-black hover:shadow-lg transition-transform duration-300 ease-in-out  mb-0 lg:mb-10 md:mb-10 md:max-w-xl md:flex-row flex-col     scale-[0.75]  md:scale-[0.85]  "
+                className="flex lg:scale-90 theme-card shadow-2xl rounded-2xl border border-white/10 bg-[#0a0e17] hover:border-cyan-400/40 hover:shadow-[0_0_30px_rgba(0,217,245,0.15)] transition-all duration-300 ease-in-out mb-0 lg:mb-10 md:mb-10 md:max-w-xl md:flex-row flex-col scale-[0.75] md:scale-[0.85] overflow-hidden"
               >
                 <img
-                  className="h-96 max-sm:h-48 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-                  src={project.winView.src}
+                  className="h-96 max-sm:h-48 w-full object-cover md:h-auto md:w-56"
+                  src={project.winView.src || project.winView}
                   alt={project.name}
                 />
                 <div className="flex flex-col justify-start p-4 lg:p-6 gap-2 lg:gap-4">
-                  <h5 className="text-2xl font-medium text-neutral-800 dark:text-neutral-50 text-center lg:text-left">
+                  <h5 className="text-xl font-bold text-white text-center lg:text-left">
                     {project.name}
                   </h5>
-                  <p className="text-base text-neutral-600 dark:text-neutral-200">
+                  <p className="text-sm text-slate-300 line-clamp-3">
                     {project.desc}
                   </p>
-                  <p className="text-sm text-neutral-500 dark:text-neutral-300">
-                    {project.techUsed.join(" | ")}
+                  <p className="text-xs text-cyan-400 font-mono">
+                    {project.techUsed.join(" • ")}
                   </p>
-                  <div className="flex flex-col md:flex-row lg:text-xl md:text-lg text-md gap-2 theme-text  dark:text-neutral-200 justify-between">
+                  <div className="flex flex-col md:flex-row text-sm gap-2 mt-2 justify-between">
                     <a
                       href={project.codeLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="ring-1 ring-neutral-500 shadow-md shadow-black rounded-md px-4 py-2 text-center  hover:ring-slate-400 dark:hover:bg-slate-800 
-                      transition-transform duration-500 ease-in-out
-                        contrast-125  dark:hover:text-neutral-100  active:scale-[0.95] theme-btn "
+                      className="border border-white/15 bg-white/5 rounded-xl px-4 py-2 text-center text-xs font-semibold text-slate-200 hover:bg-white/10 hover:border-white/25 transition"
                     >
                       Source Code
                     </a>
@@ -110,8 +108,7 @@ const Card = () => {
                         href={project.liveLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="ring-1 ring-neutral-500 shadow-md shadow-black rounded-md px-4 py-2 text-center transition-transform duration-200 ease-in-out hover:ring-slate-400 dark:hover:bg-slate-800 
-                        contrast-125 dark:hover:text-neutral-100 active:scale-[0.95] theme-btn"
+                        className="bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-xl px-4 py-2 text-center text-xs font-bold text-slate-950 hover:from-cyan-400 hover:to-emerald-400 shadow-[0_0_15px_rgba(0,245,160,0.3)] transition"
                       >
                         Live Website
                       </a>

@@ -1,368 +1,287 @@
 "use client";
 
-import { Float, OrbitControls, Sparkles, Stars } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
-import * as THREE from "three";
+import React, { useEffect, useRef, useState } from "react";
 
-const fallbackThreads = [
-  { label: "React", color: "#06b6d4" },
-  { label: "Next.js", color: "#0f172a" },
-  { label: "Node.js", color: "#0f766e" },
-  { label: "TypeScript", color: "#2563eb" },
-  { label: "DevOps", color: "#ea580c" },
-  { label: "NLP", color: "#0891b2" },
-  { label: "Deep Learning", color: "#1d4ed8" },
-  { label: "React Native", color: "#0f766e" },
-];
+// Precomputed 12 vertices of an icosahedron (normalized)
+const PHI = (1 + Math.sqrt(5)) / 2;
+const ICO_VERTICES = [
+  [-1,  PHI, 0], [ 1,  PHI, 0], [-1, -PHI, 0], [ 1, -PHI, 0],
+  [ 0, -1,  PHI], [ 0,  1,  PHI], [ 0, -1, -PHI], [ 0,  1, -PHI],
+  [ PHI, 0, -1], [ PHI, 0,  1], [-PHI, 0, -1], [-PHI, 0,  1],
+].map(([x, y, z]) => {
+  const len = Math.hypot(x, y, z);
+  return [x / len, y / len, z / len];
+});
 
-function ArcaneCore({ lotmMode = false, motionFactor = 1 }) {
-  const coreRef = useRef(null);
-  const knotRef = useRef(null);
-  const ringRef = useRef(null);
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-
-    if (coreRef.current) {
-      coreRef.current.rotation.x += 0.004 * motionFactor;
-      coreRef.current.rotation.y += 0.008 * motionFactor;
-      const scale = 1 + Math.sin(t * (1.3 * motionFactor || 0.001)) * 0.04;
-      coreRef.current.scale.setScalar(scale);
+// 30 edges connecting adjacent vertices (distance ~ 1.0515)
+const ICO_EDGES = [];
+for (let i = 0; i < ICO_VERTICES.length; i++) {
+  for (let j = i + 1; j < ICO_VERTICES.length; j++) {
+    const dx = ICO_VERTICES[i][0] - ICO_VERTICES[j][0];
+    const dy = ICO_VERTICES[i][1] - ICO_VERTICES[j][1];
+    const dz = ICO_VERTICES[i][2] - ICO_VERTICES[j][2];
+    const dist = Math.hypot(dx, dy, dz);
+    if (dist < 1.15) {
+      ICO_EDGES.push([i, j]);
     }
-
-    if (knotRef.current) {
-      knotRef.current.rotation.y -= 0.006 * motionFactor;
-      knotRef.current.rotation.z += 0.003 * motionFactor;
-    }
-
-    if (ringRef.current) {
-      ringRef.current.rotation.x = Math.sin(t * (0.45 * motionFactor || 0.001)) * 0.22;
-      ringRef.current.rotation.z -= 0.004 * motionFactor;
-    }
-  });
-
-  return (
-    <group>
-      <mesh ref={coreRef} castShadow>
-        <icosahedronGeometry args={[0.62, 1]} />
-        <meshPhysicalMaterial
-          color={lotmMode ? "#eef6ff" : "#e2e8f0"}
-          metalness={0.35}
-          roughness={0.2}
-          clearcoat={1}
-          clearcoatRoughness={0.08}
-          emissive={lotmMode ? "#f0b85b" : "#38bdf8"}
-          emissiveIntensity={lotmMode ? 0.35 : 0.2}
-        />
-      </mesh>
-
-      <mesh ref={knotRef} rotation={[0.3, 0.1, 0.1]}>
-        <torusKnotGeometry args={[1.02, 0.08, 220, 30, 2, 5]} />
-        <meshStandardMaterial
-          color={lotmMode ? "#0d3b66" : "#fb923c"}
-          transparent
-          opacity={0.62}
-        />
-      </mesh>
-
-      <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.45, 0.03, 30, 200]} />
-        <meshStandardMaterial
-          color={lotmMode ? "#f0b85b" : "#93c5fd"}
-          transparent
-          opacity={0.5}
-        />
-      </mesh>
-    </group>
-  );
+  }
 }
 
-function OrbitalGlyph({
-  thread,
-  index,
-  total,
-  lotmMode = false,
-  activeName,
-  motionFactor = 1,
-  onHover,
-  onLeave,
-  onSelect,
-}) {
-  const groupRef = useRef(null);
-  const ringRef = useRef(null);
-  const glowRef = useRef(null);
-  const baseAngle = useMemo(() => (index / total) * Math.PI * 2, [index, total]);
+// Generate background star particles
+const PARTICLES = Array.from({ length: 65 }, () => ({
+  x: (Math.random() - 0.5) * 450,
+  y: (Math.random() - 0.5) * 450,
+  z: (Math.random() - 0.5) * 350,
+  size: Math.random() * 1.8 + 0.6,
+  speed: Math.random() * 0.008 + 0.004,
+  pulse: Math.random() * Math.PI * 2,
+}));
 
-  const isActive = activeName === thread.name;
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    const radius = 2.35 + (index % 2 === 0 ? 0.2 : -0.15);
-    const speed = (0.18 + index * 0.01) * motionFactor;
-
-    if (groupRef.current) {
-      const x = Math.cos(baseAngle + t * speed) * radius;
-      const z = Math.sin(baseAngle + t * speed) * radius;
-      const y = Math.sin(baseAngle * 1.6 + t * 0.9) * 0.55;
-      groupRef.current.position.set(x, y, z);
-
-      const targetScale = isActive ? 1.35 : 1;
-      groupRef.current.scale.x = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.12);
-      groupRef.current.scale.y = THREE.MathUtils.lerp(groupRef.current.scale.y, targetScale, 0.12);
-      groupRef.current.scale.z = THREE.MathUtils.lerp(groupRef.current.scale.z, targetScale, 0.12);
-    }
-
-    if (ringRef.current) {
-      ringRef.current.rotation.z += 0.02 * motionFactor;
-    }
-
-    if (glowRef.current) {
-      const pulse = 1 + Math.sin(t * 3 + index) * 0.12;
-      glowRef.current.scale.setScalar(pulse);
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      <mesh ref={glowRef}>
-        <sphereGeometry args={[0.22, 24, 24]} />
-        <meshBasicMaterial
-          color={thread.color}
-          transparent
-          opacity={isActive ? 0.2 : 0.1}
-        />
-      </mesh>
-
-      <mesh castShadow>
-        <octahedronGeometry args={[0.14, 1]} />
-        <meshStandardMaterial
-          color={thread.color}
-          emissive={thread.color}
-          emissiveIntensity={isActive ? 0.85 : 0.45}
-          roughness={0.28}
-          metalness={0.2}
-        />
-      </mesh>
-
-      <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.24, 0.02, 18, 64]} />
-        <meshBasicMaterial
-          color={lotmMode ? "#f0b85b" : "#e2e8f0"}
-          transparent
-          opacity={isActive ? 0.9 : 0.55}
-        />
-      </mesh>
-
-      <mesh
-        onPointerOver={(event) => {
-          event.stopPropagation();
-          onHover(thread);
-        }}
-        onPointerOut={() => {
-          onLeave();
-        }}
-        onClick={(event) => {
-          event.stopPropagation();
-          onSelect(thread);
-        }}
-      >
-        <sphereGeometry args={[0.38, 20, 20]} />
-        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
-      </mesh>
-    </group>
-  );
-}
-
-function ArcaneOrrery({
-  threads,
-  activeSkill,
-  onActiveChange,
-  lotmMode = false,
-  motionFactor = 1,
-  sparklesCount = 80,
-}) {
-  const clusterRef = useRef(null);
-  const [hoveredThread, setHoveredThread] = useState(null);
-
-  const normalizedThreads = useMemo(
-    () =>
-      threads.map((thread) => ({
-        ...thread,
-        name: thread.name ?? thread.label,
-        color: thread.color ?? "#2563eb",
-      })),
-    [threads]
-  );
-
-  const activeName = hoveredThread?.name ?? activeSkill;
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    if (clusterRef.current) {
-      clusterRef.current.rotation.y = THREE.MathUtils.lerp(
-        clusterRef.current.rotation.y,
-        t * (0.06 * motionFactor || 0.001) + state.pointer.x * 0.18,
-        0.03 * motionFactor
-      );
-      clusterRef.current.rotation.x = THREE.MathUtils.lerp(
-        clusterRef.current.rotation.x,
-        Math.sin(t * (0.4 * motionFactor || 0.001)) * 0.05 - state.pointer.y * 0.1,
-        0.04 * motionFactor
-      );
-    }
-  });
-
-  return (
-    <group
-      ref={clusterRef}
-      onPointerMissed={() => {
-        setHoveredThread(null);
-      }}
-    >
-      <Float
-        speed={1.05 * motionFactor}
-        floatIntensity={0.4 * motionFactor}
-        rotationIntensity={0.2 * motionFactor}
-      >
-        <ArcaneCore lotmMode={lotmMode} motionFactor={motionFactor} />
-
-        {normalizedThreads.map((thread, index) => (
-          <OrbitalGlyph
-            key={`${thread.name}-${index}`}
-            thread={thread}
-            index={index}
-            total={normalizedThreads.length}
-            lotmMode={lotmMode}
-            activeName={activeName}
-            motionFactor={motionFactor}
-            onHover={(value) => {
-              setHoveredThread(value);
-              onActiveChange(value);
-            }}
-            onLeave={() => {
-              setHoveredThread(null);
-            }}
-            onSelect={onActiveChange}
-          />
-        ))}
-
-        <Sparkles
-          count={sparklesCount}
-          scale={[8, 5.5, 6.2]}
-          size={2.4}
-          speed={0.2 * motionFactor}
-          color={lotmMode ? "#f0b85b" : "#94a3b8"}
-        />
-      </Float>
-    </group>
-  );
-}
-
-export default function HeroScene({
-  threads = fallbackThreads.map((thread) => ({
-    name: thread.label,
-    color: thread.color,
-  })),
-  activeSkill,
-  onActiveChange = () => {},
-  lotmMode = false,
-}) {
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [compactMode, setCompactMode] = useState(false);
-  const normalizedThreads = threads.length ? threads : fallbackThreads;
-  const motionFactor = reducedMotion ? 0.45 : compactMode ? 0.7 : 1;
-  const starCount = reducedMotion ? 0 : compactMode ? 84 : 160;
-  const sparklesCount = reducedMotion ? 28 : compactMode ? 44 : 80;
+export default function HeroScene({ activeSkill, onActiveChange, lotmMode = false }) {
+  const canvasRef = useRef(null);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const rotRef = useRef({ x: 0.35, y: 0.45, vx: 0.003, vy: 0.006 });
+  const mouseRef = useRef({ x: 0, y: 0, down: false, lastX: 0, lastY: 0 });
 
   useEffect(() => {
-    const reducedMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const compactModeMedia = window.matchMedia("(max-width: 1024px)");
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const updateMode = () => {
-      setReducedMotion(reducedMotionMedia.matches);
-      setCompactMode(compactModeMedia.matches);
+    let animId;
+    let width = (canvas.width = canvas.parentElement?.clientWidth || 400);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || 450);
+
+    const handleResize = () => {
+      if (!canvas.parentElement) return;
+      width = canvas.width = canvas.parentElement.clientWidth;
+      height = canvas.height = canvas.parentElement.clientHeight;
     };
 
-    updateMode();
+    window.addEventListener("resize", handleResize);
 
-    reducedMotionMedia.addEventListener?.("change", updateMode);
-    compactModeMedia.addEventListener?.("change", updateMode);
+    const onMouseDown = (e) => {
+      mouseRef.current.down = true;
+      mouseRef.current.lastX = e.clientX;
+      mouseRef.current.lastY = e.clientY;
+      setIsInteracting(true);
+    };
+
+    const onMouseMove = (e) => {
+      if (!mouseRef.current.down) return;
+      const dx = e.clientX - mouseRef.current.lastX;
+      const dy = e.clientY - mouseRef.current.lastY;
+      rotRef.current.y += dx * 0.008;
+      rotRef.current.x += dy * 0.008;
+      rotRef.current.vx = dy * 0.001;
+      rotRef.current.vy = dx * 0.001;
+      mouseRef.current.lastX = e.clientX;
+      mouseRef.current.lastY = e.clientY;
+    };
+
+    const onMouseUp = () => {
+      mouseRef.current.down = false;
+      setIsInteracting(false);
+    };
+
+    const targetEl = canvas.parentElement || canvas;
+    targetEl.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+
+    // Touch support
+    const onTouchStart = (e) => {
+      if (e.touches.length > 0) {
+        mouseRef.current.down = true;
+        mouseRef.current.lastX = e.touches[0].clientX;
+        mouseRef.current.lastY = e.touches[0].clientY;
+      }
+    };
+    const onTouchMove = (e) => {
+      if (!mouseRef.current.down || e.touches.length === 0) return;
+      const dx = e.touches[0].clientX - mouseRef.current.lastX;
+      const dy = e.touches[0].clientY - mouseRef.current.lastY;
+      rotRef.current.y += dx * 0.008;
+      rotRef.current.x += dy * 0.008;
+      mouseRef.current.lastX = e.touches[0].clientX;
+      mouseRef.current.lastY = e.touches[0].clientY;
+    };
+    const onTouchEnd = () => {
+      mouseRef.current.down = false;
+    };
+
+    targetEl.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onTouchEnd);
+
+    // Animation loop: runs immediately on frame 0
+    let t = 0;
+    const render = () => {
+      t += 0.016;
+      ctx.clearRect(0, 0, width, height);
+
+      const cx = width / 2;
+      const cy = height / 2;
+      const baseRadius = Math.min(width, height) * 0.32;
+
+      // Natural damping & rotation
+      if (!mouseRef.current.down) {
+        rotRef.current.x += rotRef.current.vx;
+        rotRef.current.y += rotRef.current.vy;
+        rotRef.current.vx *= 0.98;
+        rotRef.current.vy *= 0.98;
+        rotRef.current.x += 0.002;
+        rotRef.current.y += 0.005;
+      }
+
+      const rx = rotRef.current.x;
+      const ry = rotRef.current.y;
+
+      const cosX = Math.cos(rx);
+      const sinX = Math.sin(rx);
+      const cosY = Math.cos(ry);
+      const sinY = Math.sin(ry);
+
+      // Rotate 3D vector helper
+      const project = (x, y, z) => {
+        // Rotate Y
+        const x1 = x * cosY + z * sinY;
+        const z1 = -x * sinY + z * cosY;
+        // Rotate X
+        const y2 = y * cosX - z1 * sinX;
+        const z2 = y * sinX + z1 * cosX;
+
+        // Perspective
+        const fov = 480;
+        const scale = fov / (fov + z2);
+        return {
+          x: cx + x1 * scale,
+          y: cy + y2 * scale,
+          z: z2,
+          scale,
+        };
+      };
+
+      // 1. Draw Starfield Particles
+      for (let p of PARTICLES) {
+        p.pulse += p.speed;
+        const pp = project(p.x, p.y, p.z);
+        if (pp.z > -400) {
+          const alpha = (0.25 + 0.25 * Math.sin(p.pulse)) * pp.scale;
+          ctx.fillStyle = lotmMode ? `rgba(240, 184, 91, ${alpha})` : `rgba(0, 245, 160, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(pp.x, pp.y, p.size * pp.scale, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 2. Dynamic Pulsing Core
+      const pulseScale = 1 + Math.sin(t * 2.2) * 0.04;
+      const currentRadius = baseRadius * pulseScale;
+
+      // Transform Icosahedron Vertices
+      const projectedVertices = ICO_VERTICES.map(([vx, vy, vz]) =>
+        project(vx * currentRadius, vy * currentRadius, vz * currentRadius)
+      );
+
+      // 3. Draw Icosahedron Edges with Glowing Shader Effect
+      ctx.lineWidth = 1.35;
+      for (const [i, j] of ICO_EDGES) {
+        const p1 = projectedVertices[i];
+        const p2 = projectedVertices[j];
+        const avgZ = (p1.z + p2.z) / 2;
+        const alpha = Math.max(0.12, Math.min(0.85, 0.45 + (avgZ / currentRadius) * 0.35));
+
+        const edgeGrad = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        if (lotmMode) {
+          edgeGrad.addColorStop(0, `rgba(212, 154, 63, ${alpha})`);
+          edgeGrad.addColorStop(1, `rgba(240, 184, 91, ${alpha * 1.2})`);
+        } else {
+          edgeGrad.addColorStop(0, `rgba(0, 217, 245, ${alpha})`);
+          edgeGrad.addColorStop(1, `rgba(0, 245, 160, ${alpha * 1.2})`);
+        }
+
+        ctx.strokeStyle = edgeGrad;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
+
+      // 4. Draw Core Glow & Nodes
+      for (const p of projectedVertices) {
+        const nodeAlpha = Math.max(0.2, Math.min(1, 0.5 + (p.z / currentRadius) * 0.45));
+        ctx.fillStyle = lotmMode
+          ? `rgba(240, 184, 91, ${nodeAlpha})`
+          : `rgba(0, 245, 160, ${nodeAlpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.5 * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 5. Draw Orbital Rings
+      const ringSteps = 64;
+      const drawRing = (radiusX, radiusZ, tilt, color, widthLine = 1) => {
+        ctx.beginPath();
+        ctx.lineWidth = widthLine;
+        ctx.strokeStyle = color;
+        for (let i = 0; i <= ringSteps; i++) {
+          const theta = (i / ringSteps) * Math.PI * 2;
+          const rx0 = Math.cos(theta) * radiusX;
+          const rz0 = Math.sin(theta) * radiusZ;
+          // Tilt along X/Z
+          const rx = rx0;
+          const ry = rz0 * Math.sin(tilt);
+          const rz = rz0 * Math.cos(tilt);
+          const pt = project(rx, ry, rz);
+          if (i === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.stroke();
+      };
+
+      const ringColor1 = lotmMode ? "rgba(212, 154, 63, 0.35)" : "rgba(0, 217, 245, 0.35)";
+      const ringColor2 = lotmMode ? "rgba(240, 184, 91, 0.25)" : "rgba(0, 245, 160, 0.25)";
+
+      drawRing(currentRadius * 1.45, currentRadius * 1.45, 0.45, ringColor1, 1.2);
+      drawRing(currentRadius * 1.25, currentRadius * 1.25, -0.65, ringColor2, 0.9);
+
+      // Central Quantum Core Node
+      const centerGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, currentRadius * 0.4);
+      centerGrad.addColorStop(0, lotmMode ? "rgba(240, 184, 91, 0.35)" : "rgba(0, 245, 160, 0.35)");
+      centerGrad.addColorStop(0.5, lotmMode ? "rgba(212, 154, 63, 0.12)" : "rgba(0, 217, 245, 0.12)");
+      centerGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = centerGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, currentRadius * 0.4, 0, Math.PI * 2);
+      ctx.fill();
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
 
     return () => {
-      reducedMotionMedia.removeEventListener?.("change", updateMode);
-      compactModeMedia.removeEventListener?.("change", updateMode);
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", handleResize);
+      targetEl.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+      targetEl.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
     };
-  }, []);
+  }, [lotmMode]);
 
   return (
-    <Canvas
-      dpr={compactMode ? [1, 1.1] : [1, 1.4]}
-      camera={{ position: [0.2, 0.25, 7.3], fov: 36 }}
-      gl={{ alpha: true, antialias: !compactMode, powerPreference: "high-performance" }}
-      shadows={!compactMode && !reducedMotion}
-      className="h-full w-full"
-    >
-      <fog attach="fog" args={[lotmMode ? "#060a12" : "#f8fafc", 7.5, 14]} />
-
-      <ambientLight intensity={lotmMode ? 0.58 : 0.82} />
-      <hemisphereLight
-        intensity={lotmMode ? 0.5 : 0.72}
-        color={lotmMode ? "#d49a3f" : "#fef9c3"}
-        groundColor={lotmMode ? "#081322" : "#bfdbfe"}
-      />
-      <directionalLight
-        castShadow={!compactMode && !reducedMotion}
-        position={[3.8, 5.5, 3.2]}
-        intensity={lotmMode ? 1.0 : 1.3}
-        color={lotmMode ? "#ffd089" : "#fff7ed"}
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-      />
-      <directionalLight
-        position={[-4.2, -2.6, 2.4]}
-        intensity={lotmMode ? 0.45 : 0.76}
-        color={lotmMode ? "#0d3b66" : "#67e8f9"}
-      />
-      <pointLight
-        position={[0, 2.4, 2.2]}
-        intensity={lotmMode ? 0.48 : 0.9}
-        color={lotmMode ? "#f0b85b" : "#a5f3fc"}
-      />
-
-      {starCount > 0 ? (
-        <Stars
-          radius={24}
-          depth={10}
-          count={starCount}
-          factor={compactMode ? 1.2 : 1.7}
-          fade
-          speed={0.16 * motionFactor}
-          saturation={lotmMode ? 0.3 : 1}
-        />
-      ) : null}
-
-      <ArcaneOrrery
-        threads={normalizedThreads}
-        activeSkill={activeSkill}
-        onActiveChange={onActiveChange}
-        lotmMode={lotmMode}
-        motionFactor={motionFactor}
-        sparklesCount={sparklesCount}
-      />
-
-      <OrbitControls
-        enablePan={false}
-        enableZoom={!compactMode && !reducedMotion}
-        minDistance={5.8}
-        maxDistance={9.2}
-        autoRotate={!reducedMotion}
-        autoRotateSpeed={0.26 * motionFactor}
-        enableDamping
-        dampingFactor={compactMode ? 0.1 : 0.08}
-        maxPolarAngle={Math.PI * 0.68}
-        minPolarAngle={Math.PI * 0.22}
-      />
-    </Canvas>
+    <div className="relative h-full w-full cursor-grab active:cursor-grabbing select-none overflow-hidden">
+      <canvas ref={canvasRef} className="h-full w-full block" />
+      {activeSkill && (
+        <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-cyan-400/30 bg-[#050608]/90 px-3.5 py-1 text-center font-mono text-xs text-cyan-300 backdrop-blur-md shadow-[0_0_15px_rgba(0,217,245,0.2)]">
+          Focused: {activeSkill}
+        </div>
+      )}
+    </div>
   );
 }
