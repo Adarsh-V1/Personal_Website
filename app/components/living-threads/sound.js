@@ -311,6 +311,12 @@ export const Sound = {
     setTimeout(() => tone(784, 0.18, 'sine', 0.08), 180);
   },
 
+  aiInterface() {
+    tone(740, 0.04, 'sine', 0.06);
+    setTimeout(() => tone(980, 0.05, 'sine', 0.05), 40);
+    setTimeout(() => tone(1320, 0.07, 'sine', 0.04), 85);
+  },
+
   tick() {
     tone(1800, 0.015, 'square', 0.02);
   },

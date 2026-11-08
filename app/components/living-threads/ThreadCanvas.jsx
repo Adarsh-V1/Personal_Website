@@ -70,12 +70,12 @@ export default function ThreadCanvas({
 
       // ── 1. ATMOSPHERIC LIGHTING & NEBULA BACKGROUND ──────
       if (lightingMode === 'light') {
-        // Modern Clean Apple / Linear Style Light Atmosphere
-        ctx.fillStyle = '#f8fafc';
+        // Luxury Editorial Beige / Warm Architectural Paper
+        ctx.fillStyle = '#f7f4ee';
         ctx.fillRect(0, 0, w, h);
 
-        // Subtle architectural dot grid
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.045)';
+        // Subtle tactile paper micro-dots
+        ctx.fillStyle = 'rgba(90, 70, 45, 0.055)';
         const dotStep = 32;
         for (let x = 16; x < w; x += dotStep) {
           for (let y = 16; y < h; y += dotStep) {
@@ -85,11 +85,11 @@ export default function ThreadCanvas({
           }
         }
 
-        // Dual ambient sunlit sky gradient
-        const sunGrad = ctx.createRadialGradient(w * 0.15, 60, 30, w * 0.2, 100, Math.max(w, h) * 0.85);
-        sunGrad.addColorStop(0, 'rgba(251, 191, 36, 0.08)');
-        sunGrad.addColorStop(0.4, 'rgba(59, 130, 246, 0.05)');
-        sunGrad.addColorStop(1, 'rgba(248, 250, 252, 0)');
+        // Warm ambient sunlit gradient (golden ivory warmth)
+        const sunGrad = ctx.createRadialGradient(w * 0.25, 80, 40, w * 0.35, 120, Math.max(w, h) * 0.9);
+        sunGrad.addColorStop(0, 'rgba(255, 238, 205, 0.45)');
+        sunGrad.addColorStop(0.5, 'rgba(245, 230, 210, 0.20)');
+        sunGrad.addColorStop(1, 'rgba(247, 244, 238, 0)');
         ctx.fillStyle = sunGrad;
         ctx.fillRect(0, 0, w, h);
       } else if (lightingMode === 'blueprint') {
@@ -244,7 +244,7 @@ export default function ThreadCanvas({
           ctx.save();
           ctx.fillStyle =
             lightingMode === 'light'
-              ? `rgba(15, 23, 42, ${currentAlpha * 0.4})`
+              ? `rgba(90, 70, 45, ${currentAlpha * 0.45})`
               : lightingMode === 'synthwave'
               ? `rgba(244, 114, 182, ${currentAlpha * 0.7})`
               : lightingMode === 'matrix'
@@ -282,24 +282,24 @@ export default function ThreadCanvas({
           if (isExplored) {
             strokeColor =
               lightingMode === 'light'
-                ? '#d97706'
+                ? '#b45309'
                 : lightingMode === 'synthwave'
                 ? '#f472b6'
                 : '#fbbf24';
             glowColor =
               lightingMode === 'light'
-                ? 'rgba(217, 119, 6, 0.45)'
+                ? 'rgba(180, 83, 9, 0.45)'
                 : lightingMode === 'synthwave'
                 ? 'rgba(244,114,182,0.8)'
                 : 'rgba(251,191,36,0.85)';
             lineWidth += 0.8;
           } else if (isActive) {
-            strokeColor = lightingMode === 'light' ? '#0f172a' : '#ffffff';
-            glowColor = lightingMode === 'light' ? 'rgba(15,23,42,0.5)' : 'rgba(255,255,255,0.95)';
+            strokeColor = lightingMode === 'light' ? '#3d2f21' : '#ffffff';
+            glowColor = lightingMode === 'light' ? 'rgba(61,47,33,0.5)' : 'rgba(255,255,255,0.95)';
             lineWidth += 1.2;
           } else if (lightingMode === 'light') {
-            strokeColor = '#2563eb';
-            glowColor = 'rgba(37, 99, 235, 0.35)';
+            strokeColor = '#9c7953';
+            glowColor = 'rgba(156, 121, 83, 0.35)';
           } else if (lightingMode === 'synthwave') {
             strokeColor = '#ec4899';
             glowColor = 'rgba(236, 72, 153, 0.45)';

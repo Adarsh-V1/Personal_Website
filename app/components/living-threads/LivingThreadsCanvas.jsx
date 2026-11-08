@@ -188,7 +188,7 @@ export default function LivingThreadsCanvas() {
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       className={`fixed inset-0 w-screen h-screen overflow-hidden select-none transition-colors duration-700
-        ${lightingMode === 'light' ? 'bg-[#f8fafc]' : ''}
+        ${lightingMode === 'light' ? 'bg-[#f7f4ee]' : ''}
         ${lightingMode === 'blueprint' ? 'bg-[#04111d]' : ''}
         ${lightingMode === 'lo-fi-lamp' ? 'bg-[#16120e]' : ''}
         ${lightingMode === 'synthwave' ? 'bg-[#0a0118]' : ''}

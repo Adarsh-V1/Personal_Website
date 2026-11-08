@@ -14,9 +14,11 @@ export class Point {
     this.pinned = opts.pinned ?? false;
     this.radius = opts.radius ?? 0;
     this.id = opts.id ?? null;
+    this.baseX = x;
+    this.baseY = y;
     this.swayPhase = opts.swayPhase ?? Math.random() * Math.PI * 2;
-    this.swaySpeed = opts.swaySpeed ?? 0.85;
-    this.swayAmp = opts.swayAmp ?? 0.25;
+    this.swaySpeed = opts.swaySpeed ?? 0.75;
+    this.swayAmp = opts.swayAmp ?? 7.5; // ~1 cm total amplitude
   }
 }
 
@@ -59,7 +61,21 @@ export class PhysicsWorld {
   update(time = 0) {
     const g = this.zeroGravity ? 0 : this.gravity;
 
-    // --- 1. Verlet Integration + Gentle Ambient Harmonic Sway ---
+    // --- 1. Kinematic Micro-Sway on Pinned Anchors (~1 cm graceful breeze) ---
+    // Moving the pinned ceiling anchor naturally drives the hanging pendulum
+    // with strictly bounded physical oscillation (never accumulates runaway energy!)
+    if (!this.zeroGravity) {
+      for (let i = 0; i < this.points.length; i++) {
+        const p = this.points[i];
+        if (p.pinned && p.baseX !== undefined) {
+          const swayOffset = Math.sin(time * p.swaySpeed + p.swayPhase) * p.swayAmp;
+          p.x = p.baseX + swayOffset;
+          p.oldX = p.x; // Keep velocity 0 so it acts as a smooth kinematic anchor
+        }
+      }
+    }
+
+    // --- 2. Verlet Integration ---
     for (let i = 0; i < this.points.length; i++) {
       const p = this.points[i];
       if (p.pinned) continue;
@@ -79,18 +95,14 @@ export class PhysicsWorld {
       p.x += vx;
       p.y += vy + g;
 
-      // Infinite slow ambient pendulum sway
-      if (!this.zeroGravity) {
-        const sway = Math.sin(time * p.swaySpeed + p.swayPhase) * p.swayAmp;
-        p.x += sway;
-      } else {
+      if (this.zeroGravity) {
         // Zero-gravity smooth drift
-        p.x += (Math.random() - 0.5) * 0.35;
-        p.y += (Math.random() - 0.5) * 0.35;
+        p.x += (Math.random() - 0.5) * 0.25;
+        p.y += (Math.random() - 0.5) * 0.25;
       }
     }
 
-    // --- 2. Constraint Solving (Spring Distance Conservation) ---
+    // --- 3. Constraint Solving (Spring Distance Conservation) ---
     const iterations = this.zeroGravity ? 1 : 6;
     for (let iter = 0; iter < iterations; iter++) {
       for (let i = 0; i < this.sticks.length; i++) {
@@ -161,6 +173,8 @@ export class PhysicsWorld {
       p.y *= sy;
       p.oldX *= sx;
       p.oldY *= sy;
+      if (p.baseX !== undefined) p.baseX *= sx;
+      if (p.baseY !== undefined) p.baseY *= sy;
     }
   }
 
@@ -203,10 +217,17 @@ export class PhysicsWorld {
  * Creates a Verlet thread chain with harmonic phase offsets
  */
 export function createThread(world, anchorX, anchorY, nodeX, nodeY, segments = 7, nodeId = null, threadIdx = 0) {
-  const anchor = world.addPoint(anchorX, anchorY, { pinned: true, mass: 0 });
+  const basePhase = threadIdx * 0.75;
+  const swaySpeed = 0.65 + (threadIdx % 3) * 0.12;
 
-  const basePhase = threadIdx * 0.65;
-  const swaySpeed = 0.85 + (threadIdx % 3) * 0.15;
+  // The ceiling anchor is the kinematic harmonic driver (~1 cm gentle sway)
+  const anchor = world.addPoint(anchorX, anchorY, {
+    pinned: true,
+    mass: 0,
+    swayPhase: basePhase,
+    swaySpeed,
+    swayAmp: 7.0, // ~1 cm gentle breath
+  });
 
   const points = [anchor];
   for (let i = 1; i <= segments; i++) {
@@ -214,15 +235,11 @@ export function createThread(world, anchorX, anchorY, nodeX, nodeY, segments = 7
     const x = anchorX + (nodeX - anchorX) * t;
     const y = anchorY + (nodeY - anchorY) * t;
     const isNode = i === segments;
-    const swayAmp = isNode ? 0.32 : 0.08 * t;
 
     const p = world.addPoint(x, y, {
       mass: isNode ? 4.0 : 0.35,
       radius: isNode ? 48 : 0,
       id: isNode ? nodeId : null,
-      swayPhase: basePhase + i * 0.12,
-      swaySpeed,
-      swayAmp,
     });
     points.push(p);
   }

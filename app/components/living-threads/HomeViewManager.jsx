@@ -21,8 +21,8 @@ export default function HomeViewManager() {
 
   return (
     <div className="relative min-h-screen">
-      {/* View Switcher Floating Pill in Bottom Center */}
-      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 hidden sm:flex items-center gap-1 p-1 rounded-full bg-black/60 border border-white/20 backdrop-blur-xl shadow-2xl">
+      {/* Top Center Master View Switcher Pill (Guarantees ZERO collision with bottom Lo-Fi Radio!) */}
+      <div className="fixed top-4 sm:top-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 p-1.5 rounded-full bg-[#0a0f1d]/85 border border-white/20 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
         <button
           onClick={() => {
             Sound.themeSwitch();

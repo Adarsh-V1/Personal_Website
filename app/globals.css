@@ -98,8 +98,11 @@
     letter-spacing: -0.011em;
   }
 
-  body.living-threads-active header {
+  body.living-threads-active header,
+  body.living-threads-active [data-site-navbar] {
     display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 
   body::before {

@@ -96,11 +96,11 @@ export default function QuestionNode({
   const isLight = lightingMode === 'light';
 
   const nodeColor = isExplored
-    ? (isLight ? '#d97706' : lightingMode === 'synthwave' ? '#f472b6' : '#fbbf24')
+    ? (isLight ? '#b45309' : lightingMode === 'synthwave' ? '#f472b6' : '#fbbf24')
     : isDanger
     ? '#ef4444'
     : isLight
-    ? '#2563eb'
+    ? '#9c7953'
     : nodeData.color || '#00f0ff';
 
   // Dynamic Theme Styling
@@ -111,14 +111,15 @@ export default function QuestionNode({
 
   if (isDanger) {
     themeCardStyle = isLight
-      ? 'bg-red-50/95 border-red-300 text-red-900 shadow-md'
+      ? 'bg-rose-50/95 border-rose-300 text-rose-900 shadow-md'
       : 'bg-red-950/50 border-red-500/60 text-red-200';
-    titleColor = isLight ? 'text-red-700 font-bold' : 'text-red-300 font-bold tracking-wider';
+    titleColor = isLight ? 'text-rose-800 font-bold' : 'text-red-300 font-bold tracking-wider';
   } else if (isLight) {
-    themeCardStyle = 'bg-white/95 border-slate-300 text-slate-900 shadow-xl shadow-slate-200/50';
-    titleColor = 'text-slate-900 font-semibold group-hover:text-blue-600';
-    subtextColor = 'text-slate-500 font-mono font-medium';
-    arrowColor = '#2563eb';
+    // Warm Luxury Beige / Cream Editorial Card
+    themeCardStyle = 'bg-[#fffefb]/95 border-[#e0d6c5] text-[#28211a] shadow-[0_12px_32px_rgba(70,50,30,0.08)] hover:border-[#b89f7a] hover:shadow-[0_16px_40px_rgba(70,50,30,0.14)]';
+    titleColor = 'text-[#28211a] font-semibold group-hover:text-[#9a3412]';
+    subtextColor = 'text-[#7d7060] font-mono font-medium';
+    arrowColor = '#b45309';
   } else if (lightingMode === 'lo-fi-lamp') {
     themeCardStyle = 'bg-[#231b14]/95 border-amber-500/40 text-amber-100 shadow-[0_15px_35px_rgba(0,0,0,0.6)]';
     titleColor = 'text-amber-100 group-hover:text-amber-300 font-serif';

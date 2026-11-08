@@ -282,11 +282,11 @@ export const THEME_COLORS = {
     explored: '#fbbf24',
   },
   'light': {
-    bg: '#f8fafc',
-    threadBase: '#2563eb',
-    threadGlow: 'rgba(37, 99, 235, 0.28)',
-    particle: 'rgba(15, 23, 42, 0.16)',
-    explored: '#d97706',
+    bg: '#f7f4ee',
+    threadBase: '#9c7953',
+    threadGlow: 'rgba(156, 121, 83, 0.35)',
+    particle: 'rgba(90, 70, 45, 0.15)',
+    explored: '#b45309',
   },
   'lo-fi-lamp': {
     bg: '#16120e',
@@ -329,13 +329,6 @@ export const THEME_COLORS = {
     threadGlow: 'rgba(0,240,255,0.25)',
     particle: 'rgba(255,255,255,0.25)',
     explored: '#fbbf24',
-  },
-  'light': {
-    bg: '#faf8f5',
-    threadBase: '#3b82f6',
-    threadGlow: 'rgba(59,130,246,0.2)',
-    particle: 'rgba(0,0,0,0.06)',
-    explored: '#f59e0b',
   },
 };
 

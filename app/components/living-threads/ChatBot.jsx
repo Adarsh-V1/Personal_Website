@@ -14,12 +14,11 @@ export default function ChatBot({
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: `Hey! I'm Adarsh's in-modal avatar. Click any question below or type your own question to get real answers in my voice.`,
+      text: `Hey! I'm Adarsh's neural twin. Tap any question below to inspect real systems, architecture decisions, and code solutions.`,
       timestamp: 'just now',
     },
   ]);
   const [availableFollowUps, setAvailableFollowUps] = useState(initialFollowUps);
-  const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -132,37 +131,29 @@ export default function ChatBot({
     }, 280);
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    if (!inputText.trim()) return;
-    const q = inputText;
-    setInputText('');
-    handleAskQuestion(q);
-  };
-
   return (
     <div
-      className="mt-8 rounded-2xl border bg-black/40 p-4 sm:p-6 backdrop-blur-xl space-y-4"
+      className="mt-3 rounded-2xl border bg-black/50 p-3 sm:p-4 backdrop-blur-xl space-y-3"
       style={{ borderColor: `${accentColor}25` }}
     >
       {/* Bot Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-white/10">
-        <div className="flex items-center gap-2.5">
+      <div className="flex items-center justify-between pb-2 border-b border-white/10">
+        <div className="flex items-center gap-2">
           <div
-            className="w-2.5 h-2.5 rounded-full animate-pulse"
+            className="w-2 h-2 rounded-full animate-pulse"
             style={{ backgroundColor: accentColor }}
           />
-          <span className="text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
-            In-Modal Intelligence // Adarsh's AI Twin
+          <span className="text-[11px] font-mono uppercase tracking-wider text-slate-300 font-semibold">
+            In-Modal Neural Assistant // Adarsh
           </span>
         </div>
-        <span className="text-[11px] font-mono text-slate-500">
-          Streaming Cadence: 18ms
+        <span className="text-[10px] font-mono text-slate-500">
+          Latency: ~18ms
         </span>
       </div>
 
       {/* Message Stream */}
-      <div className="max-h-[220px] overflow-y-auto space-y-3 pr-2 scrollbar-thin">
+      <div className="max-h-[160px] overflow-y-auto space-y-2.5 pr-1.5 scrollbar-thin">
         {messages.map((m, idx) => (
           <div
             key={idx}
@@ -171,7 +162,7 @@ export default function ChatBot({
             }`}
           >
             <div
-              className={`max-w-[85%] sm:max-w-[78%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm leading-relaxed ${
+              className={`max-w-[90%] sm:max-w-[85%] rounded-2xl px-3.5 py-2 text-xs leading-relaxed ${
                 m.sender === 'user'
                   ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-tr-none shadow-md'
                   : 'bg-white/10 border border-white/15 text-slate-200 rounded-tl-none'
@@ -179,31 +170,28 @@ export default function ChatBot({
             >
               {m.text}
               {isTyping && idx === messages.length - 1 && (
-                <span className="inline-block w-1.5 h-3.5 ml-1 bg-current animate-pulse align-middle" />
+                <span className="inline-block w-1.5 h-3 ml-1 bg-current animate-pulse align-middle" />
               )}
             </div>
-            <span className="text-[10px] font-mono text-slate-500 mt-1 px-1">
-              {m.sender === 'user' ? 'You' : 'Adarsh AI'} • {m.timestamp}
+            <span className="text-[9px] font-mono text-slate-500 mt-0.5 px-1">
+              {m.sender === 'user' ? 'You' : 'Adarsh'} • {m.timestamp}
             </span>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Suggested Follow-Up Pills (Prebuilt Curated Questions Only) */}
+      {/* Suggested Follow-Up Pills */}
       {availableFollowUps.length > 0 && (
-        <div className="pt-2">
-          <p className="text-[11px] font-mono text-slate-400 mb-2">
-            Select Follow-Up Question:
-          </p>
-          <div className="flex flex-wrap gap-2">
+        <div className="pt-1 border-t border-white/10">
+          <div className="flex flex-wrap gap-1.5">
             {availableFollowUps.map((q, idx) => (
               <button
                 key={idx}
                 type="button"
                 disabled={isTyping}
                 onClick={() => handleAskQuestion(q)}
-                className="text-xs px-3.5 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/15 hover:border-white/40 text-slate-200 hover:text-white transition-all cursor-pointer text-left disabled:opacity-50"
+                className="text-[11px] px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/15 hover:border-white/40 text-slate-200 hover:text-white transition-all cursor-pointer text-left disabled:opacity-50"
               >
                 ✦ {q}
               </button>
