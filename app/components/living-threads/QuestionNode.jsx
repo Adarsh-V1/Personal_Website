@@ -171,19 +171,19 @@ export default function QuestionNode({
         transform: `translate3d(${physicsPoint.x}px, ${physicsPoint.y}px, 0) translate(-50%, -50%)`,
         borderColor: isDragging || isFocused ? (isLight ? '#0f172a' : '#ffffff') : nodeColor,
         boxShadow: isDragging || isFocused
-          ? `0 0 40px ${nodeColor}, 0 12px 45px rgba(0,0,0,0.85)`
+          ? `0 0 35px ${nodeColor}, 0 10px 35px rgba(0,0,0,0.85)`
           : isHovered
-          ? `0 0 24px ${nodeData.glow || 'rgba(0,240,255,0.4)'}, 0 8px 30px rgba(0,0,0,0.6)`
+          ? `0 0 20px ${nodeData.glow || 'rgba(0,240,255,0.4)'}, 0 6px 25px rgba(0,0,0,0.6)`
           : isLight
-          ? `0 4px 20px rgba(0,0,0,0.08), 0 0 10px ${nodeColor}25`
-          : `0 0 14px ${nodeData.glow ? nodeData.glow.replace('0.35', '0.18') : 'rgba(0,240,255,0.15)'}, 0 4px 20px rgba(0,0,0,0.5)`,
+          ? `0 4px 15px rgba(0,0,0,0.06), 0 0 8px ${nodeColor}25`
+          : `0 0 12px ${nodeData.glow ? nodeData.glow.replace('0.35', '0.15') : 'rgba(0,240,255,0.12)'}, 0 4px 15px rgba(0,0,0,0.5)`,
         touchAction: 'none',
       }}
       className={`
         absolute select-none cursor-grab active:cursor-grabbing z-20 outline-none
-        group rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5
+        group rounded-xl sm:rounded-2xl p-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3.5
         backdrop-blur-xl border transition-shadow duration-150 will-change-transform
-        flex items-center gap-3 max-w-[280px] sm:max-w-[320px] md:max-w-[350px]
+        flex items-center gap-2 sm:gap-3 max-w-[155px] sm:max-w-[260px] md:max-w-[340px]
         ${themeCardStyle}
         ${isExplored ? (isLight ? 'ring-1 ring-amber-500/50' : 'ring-1 ring-amber-400/40') : ''}
         ${isFocused ? (isLight ? 'ring-2 ring-blue-600 scale-105 z-30' : 'ring-2 ring-white scale-105 z-30') : ''}
@@ -192,13 +192,13 @@ export default function QuestionNode({
       {/* Tether Socket Indicator (hidden in zero-g) */}
       {!zeroGravity && (
         <div
-          className={`absolute -top-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center ${
-            isLight ? 'bg-white' : 'bg-[#050608]'
+          className={`absolute -top-1.5 sm:-top-2 left-1/2 -translate-x-1/2 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full border-2 flex items-center justify-center ${
+            isLight ? 'bg-[#fffdfa]' : 'bg-[#050608]'
           }`}
           style={{ borderColor: nodeColor }}
         >
           <div
-            className="w-1.5 h-1.5 rounded-full animate-pulse"
+            className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full animate-pulse"
             style={{ backgroundColor: nodeColor }}
           />
         </div>
@@ -206,19 +206,19 @@ export default function QuestionNode({
 
       {/* Icon Beacon */}
       <div
-        className="shrink-0 w-8 h-8 rounded-xl flex items-center justify-center text-sm font-semibold transition-transform duration-300 group-hover:scale-110"
+        className="shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl flex items-center justify-center text-xs sm:text-sm font-semibold transition-transform duration-300 group-hover:scale-110"
         style={{
           backgroundColor: isExplored
-            ? (isLight ? 'rgba(217, 119, 6, 0.12)' : 'rgba(251, 191, 36, 0.15)')
+            ? (isLight ? 'rgba(180, 83, 9, 0.12)' : 'rgba(251, 191, 36, 0.15)')
             : `${nodeColor}18`,
           color: nodeColor,
           border: `1px solid ${nodeColor}40`,
         }}
       >
         {isExplored ? (
-          <span className={isLight ? 'text-amber-600 font-bold' : 'text-amber-400'}>✓</span>
+          <span className={isLight ? 'text-amber-800 font-bold' : 'text-amber-400'}>✓</span>
         ) : isDanger ? (
-          <span className="text-red-400 animate-pulse">⚠️</span>
+          <span className="text-red-400 animate-pulse text-[10px] sm:text-xs">⚠️</span>
         ) : (
           <span>✦</span>
         )}
@@ -227,18 +227,18 @@ export default function QuestionNode({
       {/* Question Text */}
       <div className="flex-1 min-w-0">
         <p
-          className={`text-xs sm:text-sm font-medium leading-snug tracking-tight transition-colors duration-200 ${titleColor}`}
+          className={`text-[11px] sm:text-xs md:text-sm font-medium leading-tight sm:leading-snug tracking-tight line-clamp-2 sm:line-clamp-none transition-colors duration-200 ${titleColor}`}
         >
           {nodeData.label}
         </p>
-        <div className="flex items-center gap-2 mt-1">
-          <span className={`text-[10px] uppercase font-mono tracking-wider ${subtextColor}`}>
-            {isExplored ? 'Explored' : isFocused ? '[Press Enter]' : 'Drag / Click'}
+        <div className="flex items-center gap-1.5 mt-0.5 sm:mt-1">
+          <span className={`text-[8px] sm:text-[10px] uppercase font-mono tracking-wider ${subtextColor}`}>
+            {isExplored ? 'Explored' : isFocused ? '[Enter]' : 'Tap / Drag'}
           </span>
           {isExplored && (
             <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                isLight ? 'bg-amber-600 shadow-[0_0_8px_#d97706]' : 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'
+              className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full ${
+                isLight ? 'bg-amber-700 shadow-[0_0_8px_#b45309]' : 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'
               }`}
             />
           )}
@@ -246,7 +246,7 @@ export default function QuestionNode({
       </div>
 
       <div
-        className="shrink-0 text-xs font-mono opacity-40 group-hover:opacity-100 transition-all duration-200 group-hover:translate-x-0.5"
+        className="shrink-0 text-xs font-mono opacity-40 group-hover:opacity-100 transition-all duration-200 group-hover:translate-x-0.5 hidden sm:block"
         style={{ color: arrowColor }}
       >
         →

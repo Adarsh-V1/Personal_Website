@@ -103,7 +103,8 @@ export class PhysicsWorld {
     }
 
     // --- 3. Constraint Solving (Spring Distance Conservation) ---
-    const iterations = this.zeroGravity ? 1 : 6;
+    // 3 iterations on mobile devices for locked 60fps/120fps with minimal CPU drain
+    const iterations = this.zeroGravity ? 1 : (this.width < 640 ? 3 : 6);
     for (let iter = 0; iter < iterations; iter++) {
       for (let i = 0; i < this.sticks.length; i++) {
         const s = this.sticks[i];

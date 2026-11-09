@@ -18,7 +18,8 @@ export default function ThreadCanvas({
   const particlesRef = useRef([]);
 
   useEffect(() => {
-    const count = 65;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    const count = isMobile ? 22 : 60;
     const particles = [];
     const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
     const h = typeof window !== 'undefined' ? window.innerHeight : 800;
@@ -45,7 +46,8 @@ export default function ThreadCanvas({
     let animId;
 
     const handleResize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      // Clamp DPR to 1.5 max on mobile to prevent GPU fill-rate thermal throttling
+      const dpr = Math.min(window.devicePixelRatio || 1, window.innerWidth < 640 ? 1.5 : 2);
       const w = window.innerWidth;
       const h = window.innerHeight;
       canvas.width = w * dpr;

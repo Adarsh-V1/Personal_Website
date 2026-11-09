@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import ModalBackdrop from './ModalBackdrop';
+import ModalBackdrop, { HudWindow } from './ModalBackdrop';
 import ChatBot from './ChatBot';
 import { SHOWCASE_PROJECTS, PROJECT_TAGS, QUESTIONS, PERSONAL } from './data';
 import { Sound } from './sound';
@@ -29,7 +29,6 @@ export default function ProjectsModal({ isOpen, onClose }) {
     setActiveProjectIdx(idx);
   };
 
-  // Dynamic Media Morphing on Chatbot Follow-Up Click
   const handleFollowUpSync = (question) => {
     if (question.includes('hardest')) {
       const idx = SHOWCASE_PROJECTS.findIndex((p) => p.title.includes('Atella'));
@@ -48,31 +47,39 @@ export default function ProjectsModal({ isOpen, onClose }) {
       isOpen={isOpen}
       onClose={onClose}
       title="THE WORKSHOP // FLAGSHIP COOKBOOK"
-      subtitle="ISOMETRIC BLUEPRINT VIEW • SYSTEM ARCHITECTURE & PROOF"
+      subtitle="4 HOLOGRAPHIC BLUEPRINT PODS MATERIALIZED • SYSTEM ARCHITECTURE"
       accentColor="#f97316"
-      maxWidth="max-w-6xl"
+      maxWidth="max-w-7xl"
     >
-      <div className="space-y-4 animate-in fade-in duration-300">
-        {/* Interactive Stack Combiner Filter Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-orange-950/20 border border-orange-500/20 backdrop-blur-md">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-start">
+        {/* POD 1: System Selector Deck (4 Cols) */}
+        <HudWindow
+          title="SYSTEM SELECTOR"
+          tag={`${filteredProjects.length} BLUEPRINTS`}
+          accentColor="#f97316"
+          delay={0.04}
+          animationType="slideRight"
+          className="md:col-span-4"
+        >
+          {/* Tag Filter Pills */}
+          <div className="flex flex-wrap gap-1 pb-2 border-b border-white/10 mb-2">
             <button
               onClick={() => handleSelectTag('All')}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+              className={`px-2 py-0.5 rounded text-[10px] font-mono transition-all cursor-pointer ${
                 selectedTag === 'All'
-                  ? 'bg-orange-500 text-black font-bold shadow-[0_0_12px_rgba(249,115,22,0.4)]'
+                  ? 'bg-orange-500 text-black font-bold shadow-[0_0_8px_#f97316]'
                   : 'bg-white/5 hover:bg-white/10 text-slate-300'
               }`}
             >
-              All Systems ({SHOWCASE_PROJECTS.length})
+              All
             </button>
             {PROJECT_TAGS.map((tag) => (
               <button
                 key={tag}
                 onClick={() => handleSelectTag(tag)}
-                className={`px-3 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+                className={`px-2 py-0.5 rounded text-[10px] font-mono transition-all cursor-pointer ${
                   selectedTag === tag
-                    ? 'bg-orange-500 text-black font-bold shadow-[0_0_12px_rgba(249,115,22,0.4)]'
+                    ? 'bg-orange-500 text-black font-bold shadow-[0_0_8px_#f97316]'
                     : 'bg-white/5 hover:bg-white/10 text-slate-300'
                 }`}
               >
@@ -80,115 +87,129 @@ export default function ProjectsModal({ isOpen, onClose }) {
               </button>
             ))}
           </div>
-          <span className="text-[11px] font-mono text-orange-400">
-            Showing {filteredProjects.length} Systems
-          </span>
-        </div>
 
-        {/* Blueprint Workshop Deck (Zero Overflow 2-Column Split) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-          {/* Project List Strip (Left 5 Cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-2 max-h-[58vh] overflow-y-auto pr-1 scrollbar-thin">
+          <div className="space-y-1.5 max-h-[38vh] overflow-y-auto pr-1 scrollbar-thin">
             {filteredProjects.map((project, idx) => {
               const isSelected = project.title === currentProject?.title;
               return (
                 <div
                   key={project.title}
                   onClick={() => handleSelectProject(idx)}
-                  className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                  className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-orange-950/40 border-orange-400/80 shadow-[0_0_18px_rgba(249,115,22,0.25)] translate-x-1'
-                      : 'bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/[0.04]'
+                      ? 'bg-orange-950/40 border-orange-400/80 shadow-[0_0_15px_rgba(249,115,22,0.25)] translate-x-0.5'
+                      : 'bg-white/[0.02] border-white/10 hover:border-white/20'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <h4 className="font-semibold text-white text-sm">
-                      {project.title}
-                    </h4>
-                    <span className="text-[10px] font-mono text-orange-400 font-bold">
+                    <h5 className="font-semibold text-white text-xs">{project.title}</h5>
+                    <span className="text-[9px] font-mono text-orange-400 font-bold">
                       {isSelected ? '● ACTIVE' : '○'}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300 mt-0.5 line-clamp-1">
-                    {project.desc}
-                  </p>
-                  <div className="flex flex-wrap gap-1 mt-1.5">
-                    {project.tags.slice(0, 3).map((t) => (
-                      <span
-                        key={t}
-                        className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/5 text-slate-400 border border-white/5"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="text-[11px] text-slate-300 mt-0.5 line-clamp-1">{project.desc}</p>
                 </div>
               );
             })}
           </div>
+        </HudWindow>
 
-          {/* Detailed Holographic Workshop Table (Right 7 Cols) */}
-          <div className="lg:col-span-7 flex flex-col justify-between rounded-2xl border border-orange-500/30 bg-black/60 backdrop-blur-xl p-4 sm:p-5 space-y-3.5">
-            {/* Visual Preview */}
-            <div className="relative aspect-video max-h-44 w-full rounded-xl overflow-hidden border border-orange-500/25 bg-slate-950/80 group shrink-0">
-              {currentProject?.image ? (
-                <Image
-                  src={currentProject.image}
-                  alt={currentProject.title}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 550px"
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 to-black">
-                  <p className="font-mono text-xs text-orange-300">
-                    DIAGNOSTIC PIPELINE ARCHITECTURE PREVIEW
-                  </p>
-                </div>
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-xs font-mono">
-                <span className="px-2 py-0.5 rounded bg-black/70 backdrop-blur-md text-orange-300 border border-orange-500/30 text-[10px]">
-                  ● {currentProject?.title}
-                </span>
-                <a
-                  href={PERSONAL.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-2.5 py-0.5 rounded bg-orange-500 text-black font-semibold hover:bg-orange-400 transition-colors cursor-pointer text-[10px]"
-                >
-                  GitHub Spec →
-                </a>
+        {/* POD 2: Holographic Video/Image Preview (5 Cols) */}
+        <HudWindow
+          title="BLUEPRINT PREVIEW"
+          tag="LIVE RENDERING"
+          accentColor="#fb923c"
+          delay={0.12}
+          animationType="scale"
+          className="md:col-span-5"
+        >
+          <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-orange-500/30 bg-slate-950 group">
+            {currentProject?.image ? (
+              <Image
+                src={currentProject.image}
+                alt={currentProject.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 420px"
+                className="object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 to-black">
+                <p className="font-mono text-xs text-orange-300">
+                  DIAGNOSTIC PIPELINE ARCHITECTURE PREVIEW
+                </p>
               </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[10px] font-mono">
+              <span className="px-2 py-0.5 rounded bg-black/70 backdrop-blur-md text-orange-300 border border-orange-500/30">
+                ● {currentProject?.title}
+              </span>
+              <a
+                href={PERSONAL.github}
+                target="_blank"
+                rel="noreferrer"
+                className="px-2 py-0.5 rounded bg-orange-500 text-black font-semibold hover:bg-orange-400 transition-colors"
+              >
+                GitHub Spec →
+              </a>
             </div>
+          </div>
+          <p className="text-xs text-slate-300 mt-2.5 leading-relaxed">
+            {currentProject?.desc}
+          </p>
+        </HudWindow>
 
-            <p className="text-xs text-slate-300 leading-relaxed">
-              {currentProject?.desc}
-            </p>
-
-            {/* Architecture Stack Breakdown */}
-            <div className="flex flex-wrap gap-1.5">
+        {/* POD 3: Stack Matrix Pod (3 Cols) */}
+        <HudWindow
+          title="TECH SPECS"
+          tag="ARCHITECTURE"
+          accentColor="#ea580c"
+          delay={0.18}
+          animationType="slideLeft"
+          className="md:col-span-3"
+        >
+          <div className="space-y-2">
+            <span className="text-[10px] font-mono uppercase text-slate-400 block">
+              Stack Composition:
+            </span>
+            <div className="flex flex-wrap gap-1">
               {currentProject?.tech.map((t) => (
                 <span
                   key={t}
-                  className="px-2.5 py-0.5 rounded-lg text-[10px] font-mono bg-white/5 border border-orange-500/20 text-orange-200"
+                  className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 border border-orange-500/25 text-orange-200"
                 >
                   {t}
                 </span>
               ))}
             </div>
-
-            {/* In-Modal Chatbot with Dynamic Media Sync */}
-            <ChatBot
-              nodeId="projects"
-              initialFollowUps={nodeConfig.followUps || []}
-              responsesMap={nodeConfig.responses || {}}
-              accentColor="#f97316"
-              onFollowUpClick={handleFollowUpSync}
-            />
+            <div className="pt-2 border-t border-white/10 text-[10px] font-mono text-slate-400 space-y-1">
+              <div>⚡ Latency Target: &lt; 50ms</div>
+              <div>🔒 Auth: RBAC / Edge JWT</div>
+              <div>🌐 Deployment: Edge Nodes</div>
+            </div>
           </div>
-        </div>
+        </HudWindow>
+
+        {/* POD 4: In-Modal Chatbot Dynamic Deep-Dive (12 Cols) */}
+        <HudWindow
+          title="AI ARCHITECT TRANSCEIVER"
+          tag="SYNCED REASONING"
+          accentColor="#f97316"
+          delay={0.24}
+          animationType="slideUp"
+          className="md:col-span-12"
+        >
+          <ChatBot
+            nodeId="projects"
+            initialFollowUps={nodeConfig.followUps || []}
+            responsesMap={nodeConfig.responses || {}}
+            accentColor="#f97316"
+            onFollowUpClick={handleFollowUpSync}
+          />
+        </HudWindow>
       </div>
     </ModalBackdrop>
+  );
+}
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import ModalBackdrop from './ModalBackdrop';
+import ModalBackdrop, { HudWindow } from './ModalBackdrop';
 import ChatBot from './ChatBot';
 import { QUESTIONS } from './data';
 import { Sound } from './sound';
@@ -16,15 +16,15 @@ export default function GoalsModal({ isOpen, onClose }) {
       title: 'Scalable Distributed Systems',
       horizon: '1–2 Years',
       icon: '🌐',
-      description: 'Diving deep into consensus protocols (Raft/Paxos), event-driven architectures with Kafka/NATS, and building backends in Go that handle 100k+ req/sec with single-digit millisecond latency.',
+      description: 'Consensus protocols (Raft/Paxos), event-driven pipelines in Go with Kafka/NATS, handling 100k+ req/sec with single-digit ms latency.',
       tech: ['Go', 'Kafka', 'Redis Clusters', 'Event Sourcing', 'gRPC'],
     },
     {
       id: 'ai-native',
       title: 'AI-Native Applications & Agents',
-      horizon: 'Current & Ongoing',
+      horizon: 'Current Focus',
       icon: '🧠',
-      description: 'Moving beyond simple prompt wrappers to autonomous agent swarms, deterministic tool-calling pipelines, local LLM evaluation harnesses, and sub-second multi-modal video/audio generation.',
+      description: 'Moving beyond simple prompt wrappers to deterministic tool-calling pipelines, agent swarms, and sub-second multi-modal video/audio generation.',
       tech: ['LangChain', 'OpenAI SDK', 'fal.ai', 'Vector DBs', 'RAG Pipelines'],
     },
     {
@@ -32,7 +32,7 @@ export default function GoalsModal({ isOpen, onClose }) {
       title: 'High-Impact Engineering Teams',
       horizon: 'Immediate Goal',
       icon: '🚀',
-      description: 'Joining an ambitious startup or product engineering team where ownership is high, deployment cycles are measured in hours, and code quality directly drives business revenue.',
+      description: 'Joining an ambitious product engineering team where ownership is high, deployment cycles are measured in hours, and code drives direct revenue.',
       tech: ['Full-Ownership', 'Rapid Shipping', 'Architecture Reviews', 'Mentorship'],
     },
     {
@@ -40,19 +40,18 @@ export default function GoalsModal({ isOpen, onClose }) {
       title: 'Products Used by 100,000+ Daily',
       horizon: '2–3 Years',
       icon: '📈',
-      description: 'Building and scaling consumer or developer software that becomes a daily habit for hundreds of thousands of active users globally. High availability, zero downtime, delightful UX.',
+      description: 'Building and scaling consumer or developer software that becomes a daily habit for hundreds of thousands of users globally.',
       tech: ['Edge Compute', 'Multi-Region DBs', 'Global CDN', 'Resilience Testing'],
     },
   ];
 
-  // Dynamic Media Morphing on Chatbot Follow-Up Click
   const handleFollowUpSync = (question) => {
     if (question.includes('role') || question.includes('team')) {
-      setSelectedTarget(2); // High-Impact Engineering Teams
+      setSelectedTarget(2);
     } else if (question.includes('learning') || question.includes('technologies')) {
-      setSelectedTarget(0); // Scalable Distributed Systems
+      setSelectedTarget(0);
     } else if (question.includes('bet on you') || question.includes('founder')) {
-      setSelectedTarget(1); // AI-Native Applications & Agents
+      setSelectedTarget(1);
     }
   };
 
@@ -61,32 +60,32 @@ export default function GoalsModal({ isOpen, onClose }) {
       isOpen={isOpen}
       onClose={onClose}
       title="RADAR PROJECTION // 1-3 YEAR HORIZON"
-      subtitle="VECTOR TARGETING • DISTRIBUTED SYSTEMS & AI-NATIVE HORIZONS"
+      subtitle="3 HOLOGRAPHIC TARGETING PODS • DISTRIBUTED SYSTEMS & AI-NATIVE HORIZONS"
       accentColor="#22d3ee"
+      maxWidth="max-w-7xl"
     >
-      <div className="space-y-8 animate-in fade-in duration-500">
-        {/* Radar HUD View */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          {/* Radar Visualizer (Left) */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 rounded-3xl bg-cyan-950/20 border border-cyan-500/25 relative overflow-hidden">
-            {/* Spinning Radar Beam */}
-            <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-full border border-cyan-500/30 flex items-center justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-start">
+        {/* POD 1: Radar Visualizer (5 Cols) */}
+        <HudWindow
+          title="RADAR ACQUISITION"
+          tag="SWEEP ACTIVE"
+          accentColor="#22d3ee"
+          delay={0.04}
+          animationType="scale"
+          className="md:col-span-5"
+        >
+          <div className="flex flex-col items-center justify-center py-2">
+            <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full border border-cyan-500/30 flex items-center justify-center">
               <div className="absolute inset-4 rounded-full border border-cyan-500/20" />
               <div className="absolute inset-10 rounded-full border border-cyan-500/20" />
-              <div className="absolute inset-16 rounded-full border border-cyan-500/20" />
-
-              {/* Crosshair lines */}
               <div className="absolute inset-x-0 top-1/2 h-px bg-cyan-500/30" />
               <div className="absolute inset-y-0 left-1/2 w-px bg-cyan-500/30" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-500/25 to-transparent animate-spin duration-3000 pointer-events-none" />
 
-              {/* Sweep line */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-500/20 to-transparent animate-spin duration-3000 pointer-events-none" />
-
-              {/* Glowing Vector Targets on Radar */}
               {targets.map((t, idx) => {
                 const isSelected = selectedTarget === idx;
                 const angle = (idx * Math.PI) / 2 + Math.PI / 4;
-                const radius = 65;
+                const radius = 55;
                 const tx = Math.cos(angle) * radius;
                 const ty = Math.sin(angle) * radius;
 
@@ -100,7 +99,7 @@ export default function GoalsModal({ isOpen, onClose }) {
                     style={{
                       transform: `translate(${tx}px, ${ty}px)`,
                     }}
-                    className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono transition-all cursor-pointer ${
+                    className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-mono transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-cyan-400 text-black font-bold shadow-[0_0_15px_#22d3ee] scale-125 z-10'
                         : 'bg-black/80 text-cyan-300 border border-cyan-400/50 hover:scale-110'
@@ -111,77 +110,72 @@ export default function GoalsModal({ isOpen, onClose }) {
                 );
               })}
             </div>
-
-            <p className="font-mono text-xs text-cyan-300 mt-4 tracking-widest uppercase">
+            <p className="font-mono text-[11px] text-cyan-300 mt-2 tracking-widest uppercase">
               [ TARGET {selectedTarget + 1} LOCKED ]
             </p>
           </div>
+        </HudWindow>
 
-          {/* Target Spec Sheet (Right) */}
-          <div className="lg:col-span-7 space-y-4">
+        {/* POD 2: Target Vector Sheet (7 Cols) */}
+        <HudWindow
+          title="TARGET VECTOR SHEET"
+          tag={targets[selectedTarget].horizon}
+          accentColor="#06b6d4"
+          delay={0.12}
+          animationType="slideLeft"
+          className="md:col-span-7"
+        >
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest">
-                TARGET VECTOR // {targets[selectedTarget].horizon}
+              <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">
+                TARGET SPEC // {targets[selectedTarget].id.toUpperCase()}
               </span>
-              <span className="text-2xl">{targets[selectedTarget].icon}</span>
+              <span className="text-xl">{targets[selectedTarget].icon}</span>
             </div>
 
-            <h3 className="text-2xl font-bold text-white">
+            <h3 className="text-base sm:text-lg font-bold text-white">
               {targets[selectedTarget].title}
             </h3>
 
-            <p className="text-sm text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed">
               {targets[selectedTarget].description}
             </p>
 
-            {/* Target Tech Stack */}
             <div>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-2">
-                Focus Stack & Competencies:
+              <span className="text-[10px] font-mono uppercase text-slate-400 block mb-1">
+                Required Core Tooling:
               </span>
-              <div className="flex flex-wrap gap-2">
-                {targets[selectedTarget].tech.map((tech) => (
+              <div className="flex flex-wrap gap-1">
+                {targets[selectedTarget].tech.map((t) => (
                   <span
-                    key={tech}
-                    className="px-3 py-1 rounded-xl text-xs font-mono bg-cyan-950/40 border border-cyan-500/30 text-cyan-200"
+                    key={t}
+                    className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 border border-cyan-400/25 text-cyan-200"
                   >
-                    {tech}
+                    {t}
                   </span>
                 ))}
               </div>
             </div>
-
-            {/* Target Selector Tabs */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
-              {targets.map((t, idx) => (
-                <button
-                  key={t.id}
-                  onClick={() => {
-                    Sound.click();
-                    setSelectedTarget(idx);
-                  }}
-                  className={`p-2.5 rounded-xl border text-left text-xs font-mono transition-all cursor-pointer ${
-                    selectedTarget === idx
-                      ? 'bg-cyan-500/20 border-cyan-400 text-white'
-                      : 'bg-white/[0.02] border-white/10 text-slate-400 hover:border-white/20'
-                  }`}
-                >
-                  <div className="font-semibold text-cyan-300">T{idx + 1}</div>
-                  <div className="truncate mt-0.5">{t.title}</div>
-                </button>
-              ))}
-            </div>
           </div>
-        </div>
+        </HudWindow>
 
-        {/* In-Modal Chatbot with Dynamic Media Sync */}
-        <ChatBot
-          nodeId="goals"
-          initialFollowUps={nodeConfig.followUps || []}
-          responsesMap={nodeConfig.responses || {}}
+        {/* POD 3: Neural AI Assistant Transceiver (12 Cols) */}
+        <HudWindow
+          title="AI AMBITION TRANSCEIVER"
+          tag="INTERACTIVE"
           accentColor="#22d3ee"
-          onFollowUpClick={handleFollowUpSync}
-        />
+          delay={0.18}
+          animationType="slideUp"
+          className="md:col-span-12"
+        >
+          <ChatBot
+            nodeId="goals"
+            initialFollowUps={nodeConfig.followUps || []}
+            responsesMap={nodeConfig.responses || {}}
+            accentColor="#22d3ee"
+            onFollowUpClick={handleFollowUpSync}
+          />
+        </HudWindow>
       </div>
     </ModalBackdrop>
   );

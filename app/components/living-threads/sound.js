@@ -317,6 +317,14 @@ export const Sound = {
     setTimeout(() => tone(1320, 0.07, 'sine', 0.04), 85);
   },
 
+  matrixDeploy() {
+    tone(440, 0.03, 'sine', 0.05);
+    setTimeout(() => tone(660, 0.04, 'sine', 0.04), 50);
+    setTimeout(() => tone(880, 0.04, 'triangle', 0.05), 110);
+    setTimeout(() => tone(1175, 0.05, 'sine', 0.04), 170);
+    setTimeout(() => tone(1568, 0.07, 'sine', 0.03), 230);
+  },
+
   tick() {
     tone(1800, 0.015, 'square', 0.02);
   },

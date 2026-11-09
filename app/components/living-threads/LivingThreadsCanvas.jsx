@@ -20,6 +20,41 @@ import PullCord from './PullCord';
 import RecruiterView from './RecruiterView';
 import ProgressTracker from './ProgressTracker';
 
+function computeNodePlacement(q, idx, w, h) {
+  if (w < 640) {
+    // 2 Staggered Alternating Columns on Mobile (Zero collision, zero card bunching!)
+    const col = idx % 2; // 0 (left) or 1 (right)
+    const row = Math.floor(idx / 2); // 0, 1, 2, 3, 4, 5
+    const totalRows = Math.ceil(QUESTIONS.length / 2);
+    const anchorX = col === 0 ? w * 0.27 : w * 0.73;
+    const anchorY = -8;
+    const nodeX = col === 0 ? w * 0.27 : w * 0.73;
+    const rowProgress = (row + (col === 1 ? 0.45 : 0)) / (totalRows + 0.2);
+    const nodeY = h * 0.13 + rowProgress * (h * 0.70);
+    const segments = 4 + (idx % 2);
+    return { anchorX, anchorY, nodeX, nodeY, segments };
+  } else if (w < 1024) {
+    // 3 Columns on Tablet
+    const col = idx % 3;
+    const row = Math.floor(idx / 3);
+    const totalRows = Math.ceil(QUESTIONS.length / 3);
+    const anchorX = ((col + 0.5) / 3) * w;
+    const anchorY = -8;
+    const nodeX = anchorX;
+    const nodeY = h * 0.16 + ((row + (col % 2) * 0.25) / (totalRows + 0.2)) * (h * 0.65);
+    return { anchorX, anchorY, nodeX, nodeY, segments: 6 };
+  } else {
+    // Desktop Constellation
+    return {
+      anchorX: q.anchorRatio.x * w,
+      anchorY: q.anchorRatio.y * h,
+      nodeX: q.nodeRatio.x * w,
+      nodeY: q.nodeRatio.y * h,
+      segments: q.segments,
+    };
+  }
+}
+
 export default function LivingThreadsCanvas() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -67,11 +102,8 @@ export default function LivingThreadsCanvas() {
     worldRef.current = world;
 
     const threads = QUESTIONS.map((q, idx) => {
-      const anchorX = q.anchorRatio.x * w;
-      const anchorY = q.anchorRatio.y * h;
-      const nodeX = q.nodeRatio.x * w;
-      const nodeY = q.nodeRatio.y * h;
-      return createThread(world, anchorX, anchorY, nodeX, nodeY, q.segments, q.id, idx);
+      const coords = computeNodePlacement(q, idx, w, h);
+      return createThread(world, coords.anchorX, coords.anchorY, coords.nodeX, coords.nodeY, coords.segments, q.id, idx);
     });
     threadsRef.current = threads;
 
@@ -104,6 +136,21 @@ export default function LivingThreadsCanvas() {
       const newW = window.innerWidth;
       const newH = window.innerHeight;
       world.resize(newW, newH);
+
+      // Smoothly update anchor points on screen orientation/size change
+      for (let i = 0; i < threads.length; i++) {
+        const thread = threads[i];
+        const q = QUESTIONS[i];
+        if (thread && thread.anchor && q) {
+          const coords = computeNodePlacement(q, i, newW, newH);
+          thread.anchor.baseX = coords.anchorX;
+          thread.anchor.baseY = coords.anchorY;
+          thread.anchor.x = coords.anchorX;
+          thread.anchor.y = coords.anchorY;
+          thread.anchor.oldX = coords.anchorX;
+          thread.anchor.oldY = coords.anchorY;
+        }
+      }
     };
     window.addEventListener('resize', handleResize);
 
