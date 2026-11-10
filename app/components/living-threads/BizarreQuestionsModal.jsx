@@ -19,74 +19,78 @@ export default function BizarreQuestionsModal({
   const renderWindows = () => {
     if (nodeId === 'why-hate-software') {
       return (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-          {/* Window 1: Anti-Bloat Manifesto Pod */}
+        <>
+          {/* Corner 1: Top-Left (Manifesto) */}
           <HudWindow
-            title="MANIFESTO // ANTI-BLOAT DISPATCH"
-            tag="OPINION // LEVEL 4"
+            title="MANIFESTO // ANTI-BLOAT"
+            tag="OPINION // LVL 4"
             accentColor="#ec4899"
-            animationType="scale"
-            delay={0.04}
-            className="lg:col-span-7"
+            animationType="pixelate"
+            delay={0.02}
+            floatIndex={0}
+            pos={{ top: '6%', left: '3%', width: '38%' }}
           >
-            <div className="space-y-3 font-mono text-xs">
-              <div className="p-3.5 rounded-xl bg-pink-950/30 border border-pink-500/30 text-pink-200">
-                <span className="text-[10px] uppercase font-bold text-pink-400 block pb-1">
-                  [ PRIMARY THESIS ]
-                </span>
-                <p className="text-sm font-sans font-bold text-white leading-snug">
+            <div className="space-y-2.5 font-mono text-xs">
+              <div className="p-3 rounded-xl bg-pink-950/40 border border-pink-500/30 text-pink-200">
+                <span className="text-[9px] uppercase font-bold text-pink-400 block pb-1">[ PRIMARY THESIS ]</span>
+                <p className="text-xs sm:text-sm font-sans font-bold text-white leading-snug">
                   &quot;Computers are 10,000x faster than 20 years ago, but software feels slower than ever.&quot;
                 </p>
               </div>
-              <p className="text-slate-300 leading-relaxed text-[11px] sm:text-xs">
-                Every day we open applications that consume 2GB of RAM just to render a login box. Why? Because teams stack 450 NPM packages, nest 8 layers of state wrappers, and ignore how the browser event loop actually operates.
+              <p className="text-slate-300 text-[11px] leading-relaxed">
+                450 NPM packages just to render a login box. We need zero layout shift, sub-50ms TTFB, and native APIs first.
               </p>
-              <div className="flex items-center gap-2 pt-1 text-[10px] text-pink-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-                <span>Bloat Index: 98.4% unnecessary dependencies in modern web tooling.</span>
-              </div>
             </div>
           </HudWindow>
 
-          {/* Window 2: Engineering Axioms Pod */}
+          {/* Corner 2: Top-Right (Axioms) */}
           <HudWindow
-            title="SYSTEM AXIOMS // PERFORMANCE LAWS"
-            tag="STANDARD OPERATING RULES"
+            title="SYSTEM AXIOMS"
+            tag="STANDARD LAWS"
             accentColor="#ec4899"
-            animationType="slideRight"
-            delay={0.1}
-            className="lg:col-span-5"
+            animationType="slideLeft"
+            delay={0.08}
+            floatIndex={1}
+            pos={{ top: '6%', right: '3%', width: '34%' }}
           >
-            <div className="space-y-2 text-xs">
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-pink-500/20">
-                <div className="font-mono text-pink-400 text-[11px] font-bold">1. Zero-Jank Rule</div>
-                <p className="text-[11px] text-slate-300 mt-0.5">
-                  If an interaction cannot render at a locked 60fps on a budget laptop, it gets rewritten.
-                </p>
+            <div className="space-y-2 text-xs font-mono">
+              <div className="p-2 rounded-lg bg-white/[0.03] border border-pink-500/20">
+                <div className="text-pink-400 text-[10px] font-bold">1. Zero-Jank Rule</div>
+                <p className="text-[10px] text-slate-300">Locked 60/120fps on budget hardware or rewrite.</p>
               </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-pink-500/20">
-                <div className="font-mono text-pink-400 text-[11px] font-bold">2. Optimistic UI</div>
-                <p className="text-[11px] text-slate-300 mt-0.5">
-                  Update the DOM at 0ms. Never make a user stare at a spinner while waiting for a database round-trip.
-                </p>
-              </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-pink-500/20">
-                <div className="font-mono text-pink-400 text-[11px] font-bold">3. Native APIs First</div>
-                <p className="text-[11px] text-slate-300 mt-0.5">
-                  150 lines of pure Canvas 2D math beats an 800KB physics library every single time.
-                </p>
+              <div className="p-2 rounded-lg bg-white/[0.03] border border-pink-500/20">
+                <div className="text-pink-400 text-[10px] font-bold">2. Optimistic UI</div>
+                <p className="text-[10px] text-slate-300">Update DOM at 0ms. Never stall for roundtrips.</p>
               </div>
             </div>
           </HudWindow>
 
-          {/* Window 3: Neural AI Debrief Pod */}
+          {/* Corner 3: Bottom-Right (Metrics) */}
           <HudWindow
-            title="NEURAL AI TRANSCEIVER // SOFTWARE CLINIC"
-            tag="INTERACTIVE PHILOSOPHY"
+            title="BLOAT TELEMETRY"
+            tag="METRICS"
             accentColor="#ec4899"
             animationType="glitch"
-            delay={0.16}
-            className="lg:col-span-12"
+            delay={0.14}
+            floatIndex={2}
+            pos={{ bottom: '10%', right: '4%', width: '28%' }}
+          >
+            <div className="space-y-2 text-center font-mono">
+              <div className="text-2xl font-bold text-pink-400">98.4%</div>
+              <div className="text-[9px] text-slate-400">Unnecessary packages eliminated</div>
+              <div className="text-[10px] text-emerald-400 font-semibold mt-1">✓ Canvas 2D & Native Web APIs</div>
+            </div>
+          </HudWindow>
+
+          {/* Corner 4: Bottom-Left (Chatbot) */}
+          <HudWindow
+            title="NEURAL AI TRANSCEIVER"
+            tag="DISCUSS SOFTWARE"
+            accentColor="#ec4899"
+            animationType="slideUp"
+            delay={0.2}
+            floatIndex={3}
+            pos={{ bottom: '8%', left: '3%', width: '46%' }}
           >
             <ChatBot
               nodeId={nodeId}
@@ -95,286 +99,275 @@ export default function BizarreQuestionsModal({
               accentColor="#ec4899"
             />
           </HudWindow>
-        </div>
+        </>
       );
     }
 
     if (nodeId === 'biggest-mistake') {
       return (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-          {/* Window 1: Incident Dossier Pod */}
+        <>
+          {/* Corner 1: Top-Left */}
           <HudWindow
-            title="INCIDENT LOG #041 // SEV-1 SUMMARY"
-            tag="CRITICAL OUTAGE DEBRIEF"
-            accentColor="#ef4444"
-            animationType="glitch"
-            delay={0.04}
-            className="lg:col-span-6"
-          >
-            <div className="space-y-3 font-mono text-xs">
-              <div className="p-3.5 rounded-xl bg-red-950/40 border border-red-500/40 text-red-200">
-                <div className="flex items-center justify-between pb-1">
-                  <span className="text-[10px] font-bold text-red-400">[ CLASSIFICATION ]</span>
-                  <span className="text-[9px] px-2 py-0.5 rounded bg-red-500/30 text-red-200 border border-red-500/40">
-                    SEV-1 PRODUCTION
-                  </span>
-                </div>
-                <h4 className="text-sm font-sans font-bold text-white mt-1">
-                  The Night the Staging Script Hit Production
-                </h4>
-              </div>
-              <p className="text-slate-300 leading-relaxed text-[11px] sm:text-xs">
-                3:54 AM. Week 2 of a multi-tenant client build. I had two terminal splits open. Ran an SQL backfill migration meant for local staging... except the shell environment had an active production connection pool.
-              </p>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-red-500/20 text-[10px] text-slate-300 space-y-1">
-                <div className="text-red-400 font-bold">Hard Lesson Learned:</div>
-                <p>Never rely on mental discipline for environment separation. Production writes require cryptographic branch protection & locked DB read-only proxies.</p>
-              </div>
-            </div>
-          </HudWindow>
-
-          {/* Window 2: Resolution Timeline Pod */}
-          <HudWindow
-            title="CADENCE // 22-MINUTE RESOLUTION"
-            tag="TIMELINE TELEMETRY"
-            accentColor="#ef4444"
-            animationType="slideRight"
-            delay={0.1}
-            className="lg:col-span-6"
+            title="INCIDENT #041 // SEV-1"
+            tag="CRITICAL CRASH"
+            accentColor="#f43f5e"
+            animationType="pixelate"
+            delay={0.02}
+            floatIndex={0}
+            pos={{ top: '6%', left: '3%', width: '38%' }}
           >
             <div className="space-y-2 font-mono text-xs">
-              <div className="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-red-500/20">
-                <span className="text-red-400 font-bold shrink-0">03:54 AM</span>
-                <span className="text-slate-300 text-[11px]">Incident detected via instant Sentry anomaly alert.</span>
+              <div className="p-2.5 rounded-xl bg-red-950/40 border border-red-500/40 text-red-200">
+                <span className="text-[9px] font-bold text-red-400 block">[ 03:54 AM PRODUCTION HIT ]</span>
+                <p className="text-xs sm:text-sm font-sans font-bold text-white mt-0.5">
+                  The Night the Staging Script Ran on Production
+                </p>
               </div>
-              <div className="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-amber-500/20">
-                <span className="text-amber-400 font-bold shrink-0">03:57 AM</span>
-                <span className="text-slate-300 text-[11px]">Isolated DB traffic, rotated write keys, paused ingestion queues.</span>
-              </div>
-              <div className="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-cyan-500/20">
-                <span className="text-cyan-400 font-bold shrink-0">04:08 AM</span>
-                <span className="text-slate-300 text-[11px]">Initiated point-in-time recovery on Neon Postgres from 03:50 snapshot.</span>
-              </div>
-              <div className="flex items-start gap-2.5 p-2 rounded-lg bg-black/40 border border-emerald-500/20">
-                <span className="text-emerald-400 font-bold shrink-0">04:16 AM</span>
-                <span className="text-emerald-300 font-semibold text-[11px]">Verified table checksums, restored traffic. 0 bytes customer data lost.</span>
-              </div>
+              <p className="text-slate-300 text-[11px] leading-relaxed">
+                Local shell had production connection pool. Detected within 30s via Sentry. Point-in-time recovery on Neon Postgres restored all data.
+              </p>
             </div>
           </HudWindow>
 
-          {/* Window 3: Neural Incident Debrief Pod */}
+          {/* Corner 2: Top-Right */}
           <HudWindow
-            title="NEURAL AI TRANSCEIVER // POST-MORTEM CLINIC"
-            tag="ASK ABOUT BACKUPS & PROTOCOLS"
-            accentColor="#ef4444"
+            title="22-MIN RESOLUTION"
+            tag="TIMELINE"
+            accentColor="#f43f5e"
+            animationType="slideLeft"
+            delay={0.08}
+            floatIndex={1}
+            pos={{ top: '6%', right: '3%', width: '34%' }}
+          >
+            <div className="space-y-1.5 font-mono text-[10px]">
+              <div className="flex gap-2 text-slate-300"><span className="text-red-400 font-bold">03:54</span> Sentry alert fires.</div>
+              <div className="flex gap-2 text-slate-300"><span className="text-amber-400 font-bold">03:57</span> DB traffic isolated, keys rotated.</div>
+              <div className="flex gap-2 text-slate-300"><span className="text-cyan-400 font-bold">04:08</span> PITR snapshot restore begun.</div>
+              <div className="flex gap-2 text-emerald-300 font-bold"><span>04:16</span> 0 bytes customer data lost. Restored.</div>
+            </div>
+          </HudWindow>
+
+          {/* Corner 3: Bottom-Right */}
+          <HudWindow
+            title="SAFEGUARDS CODIFIED"
+            tag="LESSONS"
+            accentColor="#f43f5e"
+            animationType="glitch"
+            delay={0.14}
+            floatIndex={2}
+            pos={{ bottom: '10%', right: '4%', width: '28%' }}
+          >
+            <div className="space-y-1.5 font-mono text-[10px] text-slate-300">
+              <div className="p-1.5 rounded bg-white/5 border border-red-500/20">● Dry-run transactions required</div>
+              <div className="p-1.5 rounded bg-white/5 border border-red-500/20">● 30-min automated snapshots</div>
+              <div className="p-1.5 rounded bg-white/5 border border-red-500/20">● Zero local write keys</div>
+            </div>
+          </HudWindow>
+
+          {/* Corner 4: Bottom-Left */}
+          <HudWindow
+            title="NEURAL POST-MORTEM"
+            tag="DEBRIEF CHAT"
+            accentColor="#f43f5e"
             animationType="slideUp"
-            delay={0.16}
-            className="lg:col-span-12"
+            delay={0.2}
+            floatIndex={3}
+            pos={{ bottom: '8%', left: '3%', width: '46%' }}
           >
             <ChatBot
               nodeId={nodeId}
               initialFollowUps={nodeConfig.followUps || []}
               responsesMap={nodeConfig.responses || {}}
-              accentColor="#ef4444"
+              accentColor="#f43f5e"
             />
           </HudWindow>
-        </div>
+        </>
       );
     }
 
     if (nodeId === 'unknown-stack') {
       return (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-          {/* Window 1: Adaptation Thesis Pod */}
+        <>
+          {/* Corner 1: Top-Left */}
           <HudWindow
-            title="CORE FORMULA // 48-HOUR ADAPTATION"
-            tag="SYSTEMS GENERALIST"
-            accentColor="#a855f7"
-            animationType="scale"
-            delay={0.04}
-            className="lg:col-span-5"
+            title="CORE THESIS // 48-HR ADAPTATION"
+            tag="GENERALIST"
+            accentColor="#8b5cf6"
+            animationType="pixelate"
+            delay={0.02}
+            floatIndex={0}
+            pos={{ top: '6%', left: '3%', width: '38%' }}
           >
-            <div className="space-y-3 font-mono text-xs">
-              <div className="p-3.5 rounded-xl bg-purple-950/30 border border-purple-500/30 text-purple-200">
-                <span className="text-[10px] uppercase font-bold text-purple-400 block pb-1">
-                  [ PRIMARY PRINCIPLE ]
-                </span>
-                <h4 className="text-sm font-sans font-bold text-white">
+            <div className="space-y-2 font-mono text-xs">
+              <div className="p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-200">
+                <span className="text-[9px] font-bold text-purple-400 block">[ PHILOSOPHY ]</span>
+                <p className="text-xs sm:text-sm font-sans font-bold text-white mt-0.5">
                   Give me 48 hours in any language or framework.
-                </h4>
+                </p>
               </div>
-              <p className="text-slate-300 leading-relaxed text-[11px] sm:text-xs">
-                Syntax is trivial. Framework trends change every 18 months. What doesn&apos;t change is data structures, network protocols, memory lifecycles, and concurrency patterns.
+              <p className="text-slate-300 text-[11px] leading-relaxed">
+                Syntax is trivial. Data structures, memory lifecycles, and concurrency models are universal.
               </p>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-purple-500/20 text-[10px] text-purple-300">
-                <span>Verified in production: Rust, Go, TypeScript, Python, Dart/Flutter, Elixir.</span>
-              </div>
             </div>
           </HudWindow>
 
-          {/* Window 2: 48-Hour Protocol Grid Pod */}
+          {/* Corner 2: Top-Right */}
           <HudWindow
-            title="EXECUTION MATRIX // 4-STAGE RAMP-UP"
-            tag="SYSTEMATIC PROTOCOL"
-            accentColor="#a855f7"
-            animationType="slideRight"
-            delay={0.1}
-            className="lg:col-span-7"
+            title="EXECUTION MATRIX"
+            tag="48-HR PROTOCOL"
+            accentColor="#8b5cf6"
+            animationType="slideLeft"
+            delay={0.08}
+            floatIndex={1}
+            pos={{ top: '6%', right: '3%', width: '34%' }}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-purple-500/20">
-                <div className="text-purple-400 font-mono text-[10px] font-bold">Hours 0–6</div>
-                <div className="text-white font-semibold text-[11px] mt-0.5">Trace the Pulse</div>
-                <p className="text-[10px] text-slate-400 mt-0.5">Follow one user request from socket to database and back.</p>
+            <div className="grid grid-cols-2 gap-1.5 font-mono text-[10px]">
+              <div className="p-1.5 rounded bg-white/5 border border-purple-500/20">
+                <div className="text-purple-400 font-bold">0–6h</div>
+                <div className="text-white">Trace Pulse</div>
               </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-purple-500/20">
-                <div className="text-purple-400 font-mono text-[10px] font-bold">Hours 7–18</div>
-                <div className="text-white font-semibold text-[11px] mt-0.5">First-Party Specs</div>
-                <p className="text-[10px] text-slate-400 mt-0.5">Read language spec & official architecture internals.</p>
+              <div className="p-1.5 rounded bg-white/5 border border-purple-500/20">
+                <div className="text-purple-400 font-bold">7–18h</div>
+                <div className="text-white">Read Specs</div>
               </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-purple-500/20">
-                <div className="text-purple-400 font-mono text-[10px] font-bold">Hours 19–30</div>
-                <div className="text-white font-semibold text-[11px] mt-0.5">Throwaway Prototype</div>
-                <p className="text-[10px] text-slate-400 mt-0.5">Build the hardest mechanical loop in complete isolation.</p>
+              <div className="p-1.5 rounded bg-white/5 border border-purple-500/20">
+                <div className="text-purple-400 font-bold">19–30h</div>
+                <div className="text-white">Micro-Prototype</div>
               </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-purple-500/20">
-                <div className="text-purple-400 font-mono text-[10px] font-bold">Hours 31–48</div>
-                <div className="text-white font-semibold text-[11px] mt-0.5">Ship Tested PR</div>
-                <p className="text-[10px] text-slate-400 mt-0.5">Fix an open issue, write tests, submit production PR.</p>
+              <div className="p-1.5 rounded bg-white/5 border border-purple-500/20">
+                <div className="text-purple-400 font-bold">31–48h</div>
+                <div className="text-white">Ship PR</div>
               </div>
             </div>
           </HudWindow>
 
-          {/* Window 3: Neural Adaptation Engine Pod */}
+          {/* Corner 3: Bottom-Right */}
           <HudWindow
-            title="NEURAL AI TRANSCEIVER // ADAPTATION CONSULTANT"
-            tag="CHALLENGE MY STACK"
-            accentColor="#a855f7"
+            title="VERIFIED STACKS"
+            tag="PRODUCTION"
+            accentColor="#8b5cf6"
+            animationType="glitch"
+            delay={0.14}
+            floatIndex={2}
+            pos={{ bottom: '10%', right: '4%', width: '28%' }}
+          >
+            <div className="flex flex-wrap gap-1 font-mono text-[9px] text-purple-200">
+              <span className="px-2 py-1 rounded bg-purple-500/20 border border-purple-500/30">Next.js 15</span>
+              <span className="px-2 py-1 rounded bg-purple-500/20 border border-purple-500/30">Hono.js</span>
+              <span className="px-2 py-1 rounded bg-purple-500/20 border border-purple-500/30">Go</span>
+              <span className="px-2 py-1 rounded bg-purple-500/20 border border-purple-500/30">Python</span>
+              <span className="px-2 py-1 rounded bg-purple-500/20 border border-purple-500/30">Rust/WASM</span>
+            </div>
+          </HudWindow>
+
+          {/* Corner 4: Bottom-Left */}
+          <HudWindow
+            title="NEURAL ADAPTATION TRANSCEIVER"
+            tag="CHALLENGE ME"
+            accentColor="#8b5cf6"
             animationType="slideUp"
-            delay={0.16}
-            className="lg:col-span-12"
+            delay={0.2}
+            floatIndex={3}
+            pos={{ bottom: '8%', left: '3%', width: '46%' }}
           >
             <ChatBot
               nodeId={nodeId}
               initialFollowUps={nodeConfig.followUps || []}
               responsesMap={nodeConfig.responses || {}}
-              accentColor="#a855f7"
+              accentColor="#8b5cf6"
             />
           </HudWindow>
-        </div>
+        </>
       );
     }
 
     if (nodeId === 'turing-test') {
       return (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
-          {/* Window 1: Turing Benchmark Pod */}
+        <>
+          {/* Corner 1: Top-Left */}
           <HudWindow
-            title="BENCHMARK PROTOCOL // HUMAN VS SYNTHETIC"
-            tag="TURING TEST SUITE"
-            accentColor="#00f0ff"
-            animationType="scale"
-            delay={0.04}
-            className="lg:col-span-6"
+            title="TURING PROTOCOL"
+            tag="HUMAN OR SYNTHETIC"
+            accentColor="#06b6d4"
+            animationType="pixelate"
+            delay={0.02}
+            floatIndex={0}
+            pos={{ top: '6%', left: '3%', width: '38%' }}
           >
-            <div className="space-y-3 font-mono text-xs">
-              <div className="p-3.5 rounded-xl bg-cyan-950/30 border border-cyan-500/30 text-cyan-200">
-                <span className="text-[10px] uppercase font-bold text-cyan-400 block pb-1">
-                  [ INQUIRY SPECIFICATION ]
-                </span>
-                <h4 className="text-sm font-sans font-bold text-white">
-                  Is Adarsh an autonomous AI twin, or a real caffeine-powered human?
-                </h4>
-              </div>
-              <p className="text-slate-300 leading-relaxed text-[11px] sm:text-xs">
-                Modern agents can write boilerplate in 200ms. But can an AI explain the existential dread of watching a Docker container take 45 minutes to build on a Friday afternoon? Cast your vote:
+            <div className="space-y-2 font-mono text-xs">
+              <p className="text-white font-bold text-xs sm:text-sm">
+                Is Adarsh an AI twin or a real caffeine-powered human?
               </p>
-
-              <div className="flex flex-wrap gap-2 pt-1">
+              <div className="flex gap-2 pt-1">
                 <button
-                  onClick={() => {
-                    Sound.click();
-                    setTuringVerdict('human');
-                  }}
-                  className={`px-3 py-1.5 rounded-xl font-mono text-xs transition-all cursor-pointer font-semibold ${
-                    turingVerdict === 'human'
-                      ? 'bg-cyan-400 text-black shadow-[0_0_15px_#00f0ff]'
-                      : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30'
+                  onClick={() => { Sound.click(); setTuringVerdict('human'); }}
+                  className={`px-3 py-1.5 rounded-xl font-mono text-[10px] font-bold cursor-pointer transition-all ${
+                    turingVerdict === 'human' ? 'bg-cyan-400 text-black shadow-[0_0_15px_#06b6d4]' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                   }`}
                 >
-                  100% Real Human (Verified) 👤
+                  100% Real Human 👤
                 </button>
                 <button
-                  onClick={() => {
-                    Sound.click();
-                    setTuringVerdict('bot');
-                  }}
-                  className={`px-3 py-1.5 rounded-xl font-mono text-xs transition-all cursor-pointer ${
-                    turingVerdict === 'bot'
-                      ? 'bg-purple-500 text-white shadow-[0_0_15px_#a855f7]'
-                      : 'bg-white/10 hover:bg-white/20 text-slate-200 border border-white/20'
+                  onClick={() => { Sound.click(); setTuringVerdict('bot'); }}
+                  className={`px-3 py-1.5 rounded-xl font-mono text-[10px] cursor-pointer transition-all ${
+                    turingVerdict === 'bot' ? 'bg-purple-500 text-white shadow-[0_0_15px_#a855f7]' : 'bg-white/10 text-slate-300 border border-white/20'
                   }`}
                 >
-                  Sentient AI Model in a Trenchcoat 🤖
+                  AI in a Trenchcoat 🤖
                 </button>
               </div>
-
               {turingVerdict && (
-                <div className="p-3 rounded-xl bg-black/60 border border-cyan-400/40 text-xs text-cyan-300 animate-in fade-in">
-                  {turingVerdict === 'human'
-                    ? '✓ Correct! Proof: I require 2 pour-over coffees before 9 AM and I have 2000 Rapid Chess rating.'
-                    : '⚠️ Flattering! But I write real code by hand, break things in staging, and care deeply about latency.'}
+                <div className="p-2 rounded bg-black/60 border border-cyan-400/40 text-[10px] text-cyan-300">
+                  {turingVerdict === 'human' ? '✓ Verified: 2000 Elo chess player, runs on pour-over coffee!' : '⚠️ Nope! Real human engineer shipping production code.'}
                 </div>
               )}
             </div>
           </HudWindow>
 
-          {/* Window 2: Telemetry Metrics Pod */}
+          {/* Corner 2: Top-Right */}
           <HudWindow
-            title="BIOMETRIC PROOF // HUMAN TELEMETRY"
-            tag="VERIFIABLE ATTRIBUTES"
-            accentColor="#00f0ff"
-            animationType="slideRight"
-            delay={0.1}
-            className="lg:col-span-6"
+            title="BIOMETRIC PROOF"
+            tag="ATTRIBUTES"
+            accentColor="#06b6d4"
+            animationType="slideLeft"
+            delay={0.08}
+            floatIndex={1}
+            pos={{ top: '6%', right: '3%', width: '32%' }}
           >
-            <div className="space-y-2.5 font-mono text-xs">
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-cyan-500/20 flex items-center justify-between">
-                <span className="text-slate-400 text-[11px]">Chess.com / Lichess:</span>
-                <span className="text-cyan-300 font-bold">2000 Rapid Elo</span>
+            <div className="space-y-1.5 font-mono text-[10px]">
+              <div className="p-1.5 rounded bg-white/5 flex justify-between">
+                <span className="text-slate-400">Chess Rating:</span>
+                <span className="text-cyan-300 font-bold">2000 Rapid</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-cyan-500/20 flex items-center justify-between">
-                <span className="text-slate-400 text-[11px]">Primary Fuel:</span>
-                <span className="text-amber-300 font-bold">Medium Roast Pour-Over</span>
+              <div className="p-1.5 rounded bg-white/5 flex justify-between">
+                <span className="text-slate-400">Fuel:</span>
+                <span className="text-amber-300 font-bold">Pour-Over Coffee</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-cyan-500/20 flex items-center justify-between">
-                <span className="text-slate-400 text-[11px]">Keyboard Switch Preference:</span>
-                <span className="text-purple-300 font-bold">Gateron Oil Kings (Linear)</span>
-              </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-cyan-500/20 flex items-center justify-between">
-                <span className="text-slate-400 text-[11px]">Preferred Editor:</span>
-                <span className="text-emerald-300 font-bold">Neovim + LazyVim / VS Code</span>
+              <div className="p-1.5 rounded bg-white/5 flex justify-between">
+                <span className="text-slate-400">Editor:</span>
+                <span className="text-emerald-300 font-bold">Neovim + VS Code</span>
               </div>
             </div>
           </HudWindow>
 
-          {/* Window 3: Neural Turing Interrogator Pod */}
+          {/* Corner 3: Bottom-Left */}
           <HudWindow
-            title="NEURAL AI TRANSCEIVER // TURING INTERROGATION"
-            tag="TEST MY INTELLIGENCE"
-            accentColor="#00f0ff"
-            animationType="glitch"
+            title="TURING TRANSCEIVER"
+            tag="TEST ME"
+            accentColor="#06b6d4"
+            animationType="slideUp"
             delay={0.16}
-            className="lg:col-span-12"
+            floatIndex={2}
+            pos={{ bottom: '8%', left: '3%', width: '48%' }}
           >
             <ChatBot
               nodeId={nodeId}
               initialFollowUps={nodeConfig.followUps || []}
               responsesMap={nodeConfig.responses || {}}
-              accentColor="#00f0ff"
+              accentColor="#06b6d4"
             />
           </HudWindow>
-        </div>
+        </>
       );
     }
 
@@ -386,9 +379,8 @@ export default function BizarreQuestionsModal({
       isOpen={isOpen}
       onClose={onClose}
       title={nodeConfig.label}
-      subtitle="UNFILTERED HUMAN PERSPECTIVE • 3 HOLOGRAPHIC WINDOWS MATERIALIZED"
+      subtitle="SCATTERED HOLOGRAPHIC DRAGGABLE PODS"
       accentColor={nodeConfig.color}
-      maxWidth="max-w-6xl"
     >
       {renderWindows()}
     </ModalBackdrop>

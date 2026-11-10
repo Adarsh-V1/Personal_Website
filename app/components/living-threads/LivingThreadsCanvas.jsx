@@ -282,6 +282,30 @@ export default function LivingThreadsCanvas() {
         })}
       </div>
 
+      {/* 2.5 Dedicated Top-Right Zero-G vs Hanging Mode Switch Button */}
+      <div className="fixed top-3 sm:top-5 right-3 sm:right-6 z-40 flex items-center gap-2">
+        <button
+          onClick={() => {
+            if (!zeroGravity) {
+              Sound.glitch();
+              setZeroGravity(true);
+            } else {
+              Sound.themeSwitch();
+              setZeroGravity(false);
+            }
+          }}
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl font-mono text-xs font-bold transition-all cursor-pointer shadow-lg flex items-center gap-2 border ${
+            zeroGravity
+              ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_20px_#fbbf24] hover:bg-amber-300'
+              : 'bg-[#080d19]/90 text-cyan-300 border-cyan-500/40 hover:border-cyan-400 backdrop-blur-xl hover:text-white'
+          }`}
+          title="Toggle between Hanging Verlet Threads and Zero-Gravity Cosmic Drift"
+        >
+          <span>{zeroGravity ? '⚡' : '⚓'}</span>
+          <span>{zeroGravity ? 'Zero-G Mode' : 'Hanging Mode'}</span>
+        </button>
+      </div>
+
       {/* 3. Pull-Cord Physical Theme Switcher on the far right */}
       <PullCord
         lightingMode={lightingMode}

@@ -95,13 +95,8 @@ export default function QuestionNode({
   const isDanger = nodeData.id === 'easter-egg';
   const isLight = lightingMode === 'light';
 
-  const nodeColor = isExplored
-    ? (isLight ? '#b45309' : lightingMode === 'synthwave' ? '#f472b6' : '#fbbf24')
-    : isDanger
-    ? '#ef4444'
-    : isLight
-    ? '#9c7953'
-    : nodeData.color || '#00f0ff';
+  // Rope and box must match 100% with distinct color and shade per question
+  const nodeColor = nodeData.color || (isDanger ? '#ef4444' : '#00f0ff');
 
   // Dynamic Theme Styling
   let themeCardStyle = 'bg-[#080d1a]/90 border-white/15 text-slate-100';

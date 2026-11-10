@@ -96,23 +96,51 @@ export class PhysicsWorld {
       p.y += vy + g;
 
       if (this.zeroGravity) {
-        // Zero-gravity smooth drift
-        p.x += (Math.random() - 0.5) * 0.25;
-        p.y += (Math.random() - 0.5) * 0.25;
+        // Zero-gravity smooth cosmic drift
+        p.x += (Math.random() - 0.5) * 0.4;
+        p.y += (Math.random() - 0.5) * 0.4;
+      }
+    }
+
+    // --- 2.5 Zero-Gravity Node Repulsion ---
+    if (this.zeroGravity) {
+      for (let i = 0; i < this.points.length; i++) {
+        const p1 = this.points[i];
+        if (p1.pinned || !p1.id) continue;
+        for (let j = i + 1; j < this.points.length; j++) {
+          const p2 = this.points[j];
+          if (p2.pinned || !p2.id) continue;
+          const dx = p2.x - p1.x;
+          const dy = p2.y - p1.y;
+          const dist = Math.hypot(dx, dy) || 1;
+          const minDist = 180;
+          if (dist < minDist) {
+            const force = ((minDist - dist) / dist) * 0.08;
+            if (p1 !== this.dragPoint) {
+              p1.x -= dx * force;
+              p1.y -= dy * force;
+            }
+            if (p2 !== this.dragPoint) {
+              p2.x += dx * force;
+              p2.y += dy * force;
+            }
+          }
+        }
       }
     }
 
     // --- 3. Constraint Solving (Spring Distance Conservation) ---
-    // 3 iterations on mobile devices for locked 60fps/120fps with minimal CPU drain
-    const iterations = this.zeroGravity ? 1 : (this.width < 640 ? 3 : 6);
-    for (let iter = 0; iter < iterations; iter++) {
-      for (let i = 0; i < this.sticks.length; i++) {
-        const s = this.sticks[i];
-        const dx = s.b.x - s.a.x;
-        const dy = s.b.y - s.a.y;
-        const dist = Math.hypot(dx, dy) || 0.0001;
-        const diff = (s.length - dist) / dist * s.stiffness;
-        const ox = dx * diff * 0.5;
+    // In zero-gravity mode, strings are cut
+    if (!this.zeroGravity) {
+      const iterations = this.width < 640 ? 3 : 6;
+      for (let iter = 0; iter < iterations; iter++) {
+        for (let i = 0; i < this.sticks.length; i++) {
+          const s = this.sticks[i];
+          const dx = s.b.x - s.a.x;
+          const dy = s.b.y - s.a.y;
+          const dist = Math.hypot(dx, dy) || 0.0001;
+          const diff = (s.length - dist) / dist * s.stiffness;
+          const ox = dx * diff * 0.5;
         const oy = dy * diff * 0.5;
 
         if (s.a === this.dragPoint) {
@@ -136,8 +164,9 @@ export class PhysicsWorld {
           }
         }
       }
+    }
 
-      // --- 3. Boundary Collisions & Bounce ---
+    // --- 3. Boundary Collisions & Bounce ---
       for (let i = 0; i < this.points.length; i++) {
         const p = this.points[i];
         if (p.pinned || p === this.dragPoint) continue;

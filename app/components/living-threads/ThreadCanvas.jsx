@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { THEME_COLORS } from './data';
+import { QUESTIONS } from './data';
 
 export default function ThreadCanvas({
   world,
@@ -19,7 +19,7 @@ export default function ThreadCanvas({
 
   useEffect(() => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
-    const count = isMobile ? 22 : 60;
+    const count = isMobile ? 26 : 70;
     const particles = [];
     const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
     const h = typeof window !== 'undefined' ? window.innerHeight : 800;
@@ -28,11 +28,10 @@ export default function ThreadCanvas({
       particles.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35 - 0.1,
-        radius: Math.random() * 2.2 + 0.6,
-        alpha: Math.random() * 0.6 + 0.25,
-        pulseSpeed: Math.random() * 0.025 + 0.01,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        radius: Math.random() * 1.8 + 0.8,
+        alpha: Math.random() * 0.5 + 0.25,
         pulseOffset: Math.random() * Math.PI * 2,
       });
     }
@@ -43,19 +42,15 @@ export default function ThreadCanvas({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     let animId;
 
     const handleResize = () => {
-      // Clamp DPR to 1.5 max on mobile to prevent GPU fill-rate thermal throttling
-      const dpr = Math.min(window.devicePixelRatio || 1, window.innerWidth < 640 ? 1.5 : 2);
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (world) world.resize(w, h);
     };
 
     handleResize();
@@ -72,11 +67,9 @@ export default function ThreadCanvas({
 
       // ── 1. ATMOSPHERIC LIGHTING & NEBULA BACKGROUND ──────
       if (lightingMode === 'light') {
-        // Luxury Editorial Beige / Warm Architectural Paper
         ctx.fillStyle = '#f7f4ee';
         ctx.fillRect(0, 0, w, h);
 
-        // Subtle tactile paper micro-dots
         ctx.fillStyle = 'rgba(90, 70, 45, 0.055)';
         const dotStep = 32;
         for (let x = 16; x < w; x += dotStep) {
@@ -87,7 +80,6 @@ export default function ThreadCanvas({
           }
         }
 
-        // Warm ambient sunlit gradient (golden ivory warmth)
         const sunGrad = ctx.createRadialGradient(w * 0.25, 80, 40, w * 0.35, 120, Math.max(w, h) * 0.9);
         sunGrad.addColorStop(0, 'rgba(255, 238, 205, 0.45)');
         sunGrad.addColorStop(0.5, 'rgba(245, 230, 210, 0.20)');
@@ -111,12 +103,6 @@ export default function ThreadCanvas({
           ctx.lineTo(w, y);
         }
         ctx.stroke();
-
-        ctx.strokeStyle = 'rgba(0, 240, 255, 0.35)';
-        ctx.strokeRect(20, 20, 30, 30);
-        ctx.strokeRect(w - 50, 20, 30, 30);
-        ctx.strokeRect(20, h - 50, 30, 30);
-        ctx.strokeRect(w - 50, h - 50, 30, 30);
       } else if (lightingMode === 'synthwave') {
         ctx.fillStyle = '#0a0118';
         ctx.fillRect(0, 0, w, h);
@@ -127,22 +113,6 @@ export default function ThreadCanvas({
         radGrad.addColorStop(1, 'rgba(10, 1, 24, 0)');
         ctx.fillStyle = radGrad;
         ctx.fillRect(0, 0, w, h);
-
-        ctx.save();
-        ctx.strokeStyle = 'rgba(236, 72, 153, 0.15)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        const horizon = h * 0.68;
-        for (let y = horizon; y < h; y += (y - horizon) * 0.35 + 8) {
-          ctx.moveTo(0, y);
-          ctx.lineTo(w, y);
-        }
-        for (let x = -w * 0.2; x <= w * 1.2; x += 70) {
-          ctx.moveTo(w * 0.5, horizon);
-          ctx.lineTo(x, h);
-        }
-        ctx.stroke();
-        ctx.restore();
       } else if (lightingMode === 'matrix') {
         ctx.fillStyle = '#021208';
         ctx.fillRect(0, 0, w, h);
@@ -167,15 +137,6 @@ export default function ThreadCanvas({
         lampGrad.addColorStop(0.8, 'rgba(20, 16, 14, 0.0)');
         ctx.fillStyle = lampGrad;
         ctx.fillRect(0, 0, w, h);
-
-        ctx.save();
-        ctx.fillStyle = '#ffdfa0';
-        ctx.shadowColor = '#ffb347';
-        ctx.shadowBlur = 40;
-        ctx.beginPath();
-        ctx.arc(lampX, 10, 18, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
       } else {
         // Cyber-Void
         const radGrad = ctx.createRadialGradient(
@@ -186,21 +147,15 @@ export default function ThreadCanvas({
           h * 0.5,
           Math.max(w, h) * 0.8
         );
-        if (theme === 'lotm' || lightingMode === 'lotm') {
-          radGrad.addColorStop(0, 'rgba(240, 184, 91, 0.11)');
-          radGrad.addColorStop(0.4, 'rgba(120, 70, 20, 0.06)');
-          radGrad.addColorStop(1, 'rgba(2, 5, 10, 0)');
-        } else {
-          radGrad.addColorStop(0, 'rgba(0, 240, 255, 0.08)');
-          radGrad.addColorStop(0.35, 'rgba(168, 85, 247, 0.05)');
-          radGrad.addColorStop(0.7, 'rgba(16, 185, 129, 0.03)');
-          radGrad.addColorStop(1, 'rgba(5, 6, 8, 0)');
-        }
+        radGrad.addColorStop(0, 'rgba(0, 240, 255, 0.08)');
+        radGrad.addColorStop(0.35, 'rgba(168, 85, 247, 0.05)');
+        radGrad.addColorStop(0.7, 'rgba(16, 185, 129, 0.03)');
+        radGrad.addColorStop(1, 'rgba(5, 6, 8, 0)');
         ctx.fillStyle = radGrad;
         ctx.fillRect(0, 0, w, h);
       }
 
-      // ── 2. PARTICLES & HYPERSPACE WARP STREAKS ──────────
+      // ── 2. MOLECULES & PARTICLES THAT REACT TO FLOATING BOXES & ROPES ──
       const particles = particlesRef.current;
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -214,13 +169,8 @@ export default function ThreadCanvas({
           const ny = (dy / dist) * speed;
 
           ctx.save();
-          ctx.strokeStyle =
-            lightingMode === 'light'
-              ? '#2563eb'
-              : lightingMode === 'synthwave'
-              ? '#ec4899'
-              : '#00f0ff';
-          ctx.shadowColor = lightingMode === 'light' ? '#2563eb' : '#00f0ff';
+          ctx.strokeStyle = '#00f0ff';
+          ctx.shadowColor = '#00f0ff';
           ctx.shadowBlur = 10;
           ctx.lineWidth = 1.5;
           ctx.beginPath();
@@ -232,8 +182,44 @@ export default function ThreadCanvas({
           p.x += nx;
           p.y += ny;
         } else {
-          p.x += p.vx;
-          p.y += p.vy;
+          // Reactive molecular repulsion from floating question nodes & ropes!
+          if (threads && threads.length > 0) {
+            for (let t = 0; t < threads.length; t++) {
+              const th = threads[t];
+              const nodePt = th.node;
+              if (nodePt) {
+                const ndx = p.x - nodePt.x;
+                const ndy = p.y - nodePt.y;
+                const ndist = Math.hypot(ndx, ndy) || 1;
+                if (ndist < 140) {
+                  const repulseForce = (140 - ndist) / 140 * 1.5;
+                  p.vx += (ndx / ndist) * repulseForce * 0.3;
+                  p.vy += (ndy / ndist) * repulseForce * 0.3;
+                }
+              }
+
+              // Also react to ropes when not in zero-g
+              if (!zeroGravity && th.points) {
+                const mid = th.points[Math.floor(th.points.length / 2)];
+                if (mid) {
+                  const rdx = p.x - mid.x;
+                  const rdy = p.y - mid.y;
+                  const rdist = Math.hypot(rdx, rdy) || 1;
+                  if (rdist < 70) {
+                    const rForce = (70 - rdist) / 70 * 0.8;
+                    p.vx += (rdx / rdist) * rForce * 0.2;
+                    p.vy += (rdy / rdist) * rForce * 0.2;
+                  }
+                }
+              }
+            }
+          }
+
+          // Damping & drift update
+          p.vx *= 0.94;
+          p.vy *= 0.94;
+          p.x += p.vx + Math.sin(time + p.pulseOffset) * 0.2;
+          p.y += p.vy + Math.cos(time + p.pulseOffset) * 0.2;
 
           if (p.x < 0) p.x = w;
           if (p.x > w) p.x = 0;
@@ -251,11 +237,7 @@ export default function ThreadCanvas({
               ? `rgba(244, 114, 182, ${currentAlpha * 0.7})`
               : lightingMode === 'matrix'
               ? `rgba(52, 211, 153, ${currentAlpha * 0.7})`
-              : lightingMode === 'lo-fi-lamp'
-              ? `rgba(255, 210, 150, ${currentAlpha * 0.65})`
-              : lightingMode === 'lotm' || theme === 'lotm'
-              ? `rgba(240, 184, 91, ${currentAlpha * 0.75})`
-              : `rgba(255, 255, 255, ${currentAlpha * 0.55})`;
+              : `rgba(0, 240, 255, ${currentAlpha * 0.65})`;
 
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
@@ -264,65 +246,33 @@ export default function ThreadCanvas({
         }
       }
 
-      // (Box-to-box cross-lines removed entirely per user request: "there shall only be top string okay .. not one box connecting to another box")
-
-      // ── 3. RENDER VERLET TOP STRINGS ONLY ─────────────────
-      // If zeroGravity is enabled: DO NOT DRAW ANY STRINGS AT ALL per user request!
+      // ── 3. RENDER VERLET TOP STRINGS — ROPE & BOX COLOR MATCH 100%! ──────
       if (!zeroGravity && threads && threads.length > 0) {
         for (const thread of threads) {
           const { anchor, node, points, sticks } = thread;
           if (!points || points.length < 2) continue;
 
-          const isExplored = node?.id && exploredMap[node.id];
+          // Find specific question color to match the box color exactly!
+          const qConfig = QUESTIONS.find((q) => q.id === node?.id);
+          const baseColor = qConfig?.color || '#00f0ff';
           const isActive = node?.id === activeNodeId;
+          const isExplored = node?.id && exploredMap[node.id];
           const tension = world ? world.getThreadTension(sticks) : 0;
 
-          let strokeColor;
-          let glowColor;
-          let lineWidth = 2 + tension * 2.5;
+          let strokeColor = baseColor;
+          let glowColor = qConfig?.glow || `${baseColor}60`;
+          let lineWidth = 2.2 + tension * 2.5;
 
-          if (isExplored) {
-            strokeColor =
-              lightingMode === 'light'
-                ? '#b45309'
-                : lightingMode === 'synthwave'
-                ? '#f472b6'
-                : '#fbbf24';
-            glowColor =
-              lightingMode === 'light'
-                ? 'rgba(180, 83, 9, 0.45)'
-                : lightingMode === 'synthwave'
-                ? 'rgba(244,114,182,0.8)'
-                : 'rgba(251,191,36,0.85)';
+          if (isActive) {
+            strokeColor = '#ffffff';
+            glowColor = baseColor;
+            lineWidth += 1.5;
+          } else if (isExplored) {
             lineWidth += 0.8;
-          } else if (isActive) {
-            strokeColor = lightingMode === 'light' ? '#3d2f21' : '#ffffff';
-            glowColor = lightingMode === 'light' ? 'rgba(61,47,33,0.5)' : 'rgba(255,255,255,0.95)';
-            lineWidth += 1.2;
-          } else if (lightingMode === 'light') {
-            strokeColor = '#9c7953';
-            glowColor = 'rgba(156, 121, 83, 0.35)';
-          } else if (lightingMode === 'synthwave') {
-            strokeColor = '#ec4899';
-            glowColor = 'rgba(236, 72, 153, 0.45)';
-          } else if (lightingMode === 'matrix') {
-            strokeColor = '#10b981';
-            glowColor = 'rgba(16, 185, 129, 0.45)';
-          } else if (lightingMode === 'blueprint') {
-            strokeColor = '#00f0ff';
-            glowColor = 'rgba(0, 240, 255, 0.4)';
-          } else if (lightingMode === 'lo-fi-lamp') {
-            strokeColor = '#ffb347';
-            glowColor = 'rgba(255, 179, 71, 0.35)';
-          } else if (lightingMode === 'lotm' || theme === 'lotm') {
-            strokeColor = '#d49a3f';
-            glowColor = 'rgba(212, 154, 63, 0.4)';
-          } else {
-            strokeColor = 'rgba(0, 240, 255, 0.75)';
-            glowColor = 'rgba(0, 240, 255, 0.4)';
+            glowColor = baseColor;
           }
 
-          const blurAmount = 8 + tension * 20;
+          const blurAmount = 8 + tension * 18;
 
           // Anchor Socket on the ceiling
           ctx.save();
@@ -357,14 +307,9 @@ export default function ThreadCanvas({
             const yc = (points[i].y + points[i + 1].y) / 2;
             ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
           }
-          const lastPoint = points[points.length - 1];
-          ctx.lineTo(lastPoint.x, lastPoint.y);
-          ctx.stroke();
 
-          // Luminous core line
-          ctx.strokeStyle = lightingMode === 'light' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.65)';
-          ctx.lineWidth = Math.max(1, lineWidth * 0.35);
-          ctx.shadowBlur = 4;
+          const last = points[points.length - 1];
+          ctx.lineTo(last.x, last.y);
           ctx.stroke();
           ctx.restore();
         }

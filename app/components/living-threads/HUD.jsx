@@ -83,7 +83,7 @@ export default function HUD({
       </div>
 
       {/* Top-Right: Sound Mute & Lighting Mode indicator */}
-      <div className="fixed top-3 sm:top-5 right-14 sm:right-20 z-40 hidden sm:flex items-center gap-2 font-mono text-[11px] text-slate-400">
+      <div className="fixed top-3 sm:top-5 right-40 sm:right-48 z-40 hidden md:flex items-center gap-2 font-mono text-[11px] text-slate-400">
         <button
           onClick={handleToggleMute}
           className="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 backdrop-blur-md text-slate-300 hover:text-white transition-all cursor-pointer flex items-center gap-1.5"
