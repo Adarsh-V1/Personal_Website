@@ -105,6 +105,14 @@
     pointer-events: none !important;
   }
 
+  body.modal-open header,
+  body.modal-open [data-site-navbar],
+  body.modal-open [data-view-switcher] {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
   body::before {
     content: "";
     position: fixed;

@@ -21,8 +21,11 @@ export default function HomeViewManager() {
 
   return (
     <div className="relative min-h-screen">
-      {/* Top Center Master View Switcher Pill (Responsive & Compact for Mobile & Desktop) */}
-      <div className="fixed top-3 sm:top-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-[#0a0f1d]/90 border border-white/20 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] max-w-[92vw]">
+      {/* Top Center Master View Switcher Pill (Responsive & Compact for Mobile & Desktop; hidden when modal is open) */}
+      <div
+        data-view-switcher
+        className="fixed top-3 sm:top-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-[#0a0f1d]/90 border border-white/20 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] max-w-[92vw]"
+      >
         <button
           onClick={() => {
             Sound.themeSwitch();

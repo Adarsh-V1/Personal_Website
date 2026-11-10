@@ -211,5 +211,3 @@ export default function ProjectsModal({ isOpen, onClose }) {
     </ModalBackdrop>
   );
 }
-  );
-}

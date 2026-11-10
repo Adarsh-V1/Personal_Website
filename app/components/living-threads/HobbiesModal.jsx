@@ -240,5 +240,3 @@ export default function HobbiesModal({ isOpen, onClose }) {
     </ModalBackdrop>
   );
 }
-  );
-}
